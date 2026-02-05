@@ -1,0 +1,27 @@
+GLFW_ICON ICON "icon.ico"
+
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    //BLOCK "080904E4"  // English UK
+    BLOCK "040904E4"    // English US
+    BEGIN
+      //VALUE "CompanyName", "Rainb0_0"
+      VALUE "FileDescription", "Plants Vs. Zombie implemented using raylib"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "InternalName", "PVZ"
+      VALUE "LegalCopyright", "(c) 2026 Rainb0_0"
+      //VALUE "OriginalFilename", "raylib_app"
+      VALUE "ProductName", "Plants Vs. Zombies"
+      VALUE "ProductVersion", "1.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    //VALUE "Translation", 0x809, 1252  // English UK
+    VALUE "Translation", 0x409, 1252    // English US
+  END
+END
