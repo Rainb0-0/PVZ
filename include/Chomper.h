@@ -16,7 +16,7 @@ typedef struct Chomper {
     void (*draw)(struct Chomper *self);
 } Chomper;
 
-extern Texture2D CHOMPER_TEXTURE;
+extern Texture2D CHOMPER_IDLE_TEXTURE;
 
 extern const Vector2 VEL_COEF;
 

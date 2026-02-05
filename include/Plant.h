@@ -6,9 +6,9 @@
 typedef enum PlantType {
     PEASHOOTER,
     SUNFLOWER,
-    CHOMPER,
     POTATO,
-    MARIGOLD, // TODO : CHANGE WITH SOMETHING ELSE
+    CHOMPER,
+    MARIGOLD,
     PLANTCOUNT
 } PlantType;
 

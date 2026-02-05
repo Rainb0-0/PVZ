@@ -7,9 +7,9 @@
 #include "raylib.h"
 #include <stdlib.h>
 
-Texture2D CHOMPER_TEXTURE;
+Texture2D CHOMPER_IDLE_TEXTURE;
 
-const char *CHOMPER_TEXTURE_PATH = "Sprites/Chomper.png";
+const char *CHOMPER_IDLE_TEXTURE_PATH = "Sprites/Chomper.png";
 
 const float CHOMPER_HP = 100;
 const float CHOMPER_LIFE = 20;
@@ -25,7 +25,7 @@ State CHOMPER_IDLE = {
     CHOMPER_IDLE_FRAME_HEIGHT,
     CHOMPER_IDLE_MAX_FRAMES,
     CHOMPER_IDLE_FRAME_TIME,
-    &CHOMPER_TEXTURE,
+    &CHOMPER_IDLE_TEXTURE,
 };
 
 Plant *newChomperPlant(Chomper *self) {
@@ -53,7 +53,7 @@ Chomper *newChomper(Vector2 pos) {
 }
 
 void Chomper_Init() {
-    CHOMPER_TEXTURE = LoadTexture(CHOMPER_TEXTURE_PATH);
+    CHOMPER_IDLE_TEXTURE = LoadTexture(CHOMPER_IDLE_TEXTURE_PATH);
 }
 void Chomper_Draw(Chomper *self) {
     int index = FindObjectIndex(self, true);

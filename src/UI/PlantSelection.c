@@ -72,7 +72,7 @@ PlantButton SunflowerButton = {
 };
 
 PlantButton ChomperButton = {
-    &CHOMPER_TEXTURE,
+    &CHOMPER_IDLE_TEXTURE,
     &CHOMPER_IDLE_FRAME_WIDTH,
     &CHOMPER_IDLE_FRAME_HEIGHT,
     (Object * (*)(void *)) newChomperObject,
