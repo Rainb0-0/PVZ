@@ -1,10 +1,12 @@
 #include "PlantSelection.h"
 #include "Chomper.h"
+#include "Font.h"
 #include "Game.h"
 #include "GameGrid.h"
 #include "Object.h"
 #include "Peashooter.h"
 #include "Potato.h"
+#include "Shop.h"
 #include "Sound.h"
 #include "Sunflower.h"
 #include "raylib.h"
@@ -18,23 +20,31 @@ Texture2D BACKGROUND;
 Texture2D SEED_PACKET;
 Texture2D SUN_BANK;
 Texture2D LOCK;
+Texture2D COINS_TEXTURE;
 const char *SEED_PACKET_PATH = "Sprites/Packet.png";
 const char *BACKGROUND_PATH = "Sprites/SeedBank.png";
 const char *SUN_BANK_PATH = "Sprites/SunBank.png";
 const char *LOCK_PATH = "Sprites/Lock.png";
+const char *COINS_PATH = "Sprites/CoinBank.png";
 const char *PLANT_SOUND_PATH = "Sounds/Game/Plant/";
 
-const float SCALE = 3;
-const int BUTTON_WIDTH = 100 * SCALE;
-const int BUTTON_HEIGHT = 140 * SCALE;
-const int BUTTON_MARGIN = 16 * SCALE;
-const int PRICE_FONT_SIZE = 16 * SCALE;
-const Rectangle BUTTON_TEXTURE_RECT = {7 * SCALE,
-                                       18 * SCALE,
-                                       85 * SCALE,
-                                       85 * SCALE};
+const float HUD_SCALE = 3;
+const int BUTTON_WIDTH = 100 * HUD_SCALE;
+const int BUTTON_HEIGHT = 140 * HUD_SCALE;
+const int BUTTON_MARGIN = 16 * HUD_SCALE;
+const int PRICE_FONT_SIZE = 20 * HUD_SCALE;
+const Rectangle BUTTON_TEXTURE_RECT = {7 * HUD_SCALE,
+                                       18 * HUD_SCALE,
+                                       85 * HUD_SCALE,
+                                       85 * HUD_SCALE};
 const Rectangle BUTTON_PRICE_RECT = {
-    5 * SCALE, 110 * SCALE, 60 * SCALE, 25 * SCALE};
+    5 * HUD_SCALE, 110 * HUD_SCALE, 60 * HUD_SCALE, 25 * HUD_SCALE};
+Rectangle COINS_TEXT_RECT = {
+    37 * HUD_SCALE,
+    10 * HUD_SCALE,
+    86 * HUD_SCALE,
+    16 * HUD_SCALE,
+};
 Color HOVER_COLOR;
 
 const int CHOMPER_PRICE = 75;
@@ -52,7 +62,7 @@ PlantButton PeashooterButton = {
     PEASHOOTER_PRICE,
     0,
     false,
-    true,
+    &IsPlantUnlocked[PEASHOOTER],
     true,
     false,
 };
@@ -66,7 +76,7 @@ PlantButton SunflowerButton = {
     SUNFLOWER_PRICE,
     0,
     false,
-    true,
+    &IsPlantUnlocked[SUNFLOWER],
     true,
     false,
 };
@@ -80,7 +90,7 @@ PlantButton ChomperButton = {
     CHOMPER_PRICE,
     0,
     false,
-    true,
+    &IsPlantUnlocked[CHOMPER],
     true,
     false,
 };
@@ -94,7 +104,7 @@ PlantButton PotatoButton = {
     CHOMPER_PRICE,
     0,
     false,
-    true,
+    &IsPlantUnlocked[POTATO],
     true,
     false,
 };
@@ -120,7 +130,7 @@ void PlantButton_Draw(PlantButton *self) {
                              self->topLeft.y,
                              self->bottomRight.x - self->topLeft.x,
                              self->bottomRight.y - self->topLeft.y};
-    DrawTextureEx(SEED_PACKET, self->topLeft, 0, SCALE, WHITE);
+    DrawTextureEx(SEED_PACKET, self->topLeft, 0, HUD_SCALE, WHITE);
     Rectangle src = {0, 0, *self->textureWidth, *self->textureHeight};
     float height = *self->textureHeight;
     float width = *self->textureWidth;
@@ -143,11 +153,11 @@ void PlantButton_Draw(PlantButton *self) {
     DrawTexturePro(*self->texture, src, dst, origin, 0, WHITE);
     char price[] = "0";
     sprintf(price, "%d", self->price);
-    Vector2 textSize = MeasureTextEx(GetFontDefault(), price, PRICE_FONT_SIZE, 1);
+    Vector2 textSize = MeasureTextEx(FONT, price, PRICE_FONT_SIZE, 1);
     Vector2 textPosition = {
         self->topLeft.x + BUTTON_PRICE_RECT.x + (BUTTON_PRICE_RECT.width - textSize.x) / 2,
         self->topLeft.y + BUTTON_PRICE_RECT.y + (BUTTON_PRICE_RECT.height - textSize.y) / 2};
-    DrawTextEx(GetFontDefault(), price, textPosition, PRICE_FONT_SIZE, 1, BLACK);
+    DrawTextEx(FONT, price, textPosition, PRICE_FONT_SIZE, 1, BLACK);
     if (self->hovered && PLANT_COOLDOWN <= self->sinceCooldown) {
         if (self->active)
             DrawRectangleRec(currentRect, HOVER_COLOR);
@@ -155,11 +165,11 @@ void PlantButton_Draw(PlantButton *self) {
     if (self->selected) {
         DrawRectangleLinesEx(currentRect, 10, DARKGRAY);
     }
-    if (self->unlocked == false) {
+    if (*self->unlocked == false) {
         Color dis = HOVER_COLOR;
         dis.a = 'f';
         DrawRectangleRec(currentRect, dis);
-        float lockScale = SCALE / 1.5;
+        float lockScale = HUD_SCALE / 1.5;
         Vector2 lockPos = {currentRect.x + currentRect.width / 2 -
                                LOCK.width * lockScale / 2,
                            currentRect.y + currentRect.height / 2 -
@@ -170,7 +180,7 @@ void PlantButton_Draw(PlantButton *self) {
         DrawTexturePro(LOCK, lockSrc, lockDst, origin, 0, WHITE);
     }
     if ((self->sinceCooldown < PLANT_COOLDOWN || self->active == false) &&
-        self->unlocked) {
+        *self->unlocked) {
         float barHeight = self->sinceCooldown *
                           currentRect.height / PLANT_COOLDOWN;
         if (currentRect.height < barHeight)
@@ -201,10 +211,10 @@ void SunCount_Draw() {
     DrawTexturePro(SUN_BANK, src, dst, origin, 0, WHITE);
     char suns[10];
     sprintf(suns, "%d", SunCount);
-    Vector2 textSize = MeasureTextEx(GetFontDefault(), suns, PRICE_FONT_SIZE, 1);
+    Vector2 textSize = MeasureTextEx(FONT, suns, PRICE_FONT_SIZE, 1);
     Vector2 textPos = {X_OFFSET + BUTTON_MARGIN + (width - textSize.x) / 2,
                        GetScreenHeight() - BUTTON_MARGIN * 1.5 - textSize.y};
-    DrawTextPro(GetFontDefault(),
+    DrawTextPro(FONT,
                 suns, textPos, origin, 0, PRICE_FONT_SIZE, 1, BLACK);
 }
 
@@ -219,6 +229,7 @@ void PlantSelection_Init() {
     BACKGROUND = LoadTexture(BACKGROUND_PATH);
     SUN_BANK = LoadTexture(SUN_BANK_PATH);
     LOCK = LoadTexture(LOCK_PATH);
+    COINS_TEXTURE = LoadTexture(COINS_PATH);
     const float cellHeight = BUTTON_HEIGHT + BUTTON_MARGIN;
     for (int i = 0; i < PlantButtonsSize; i++) {
         PlantButton *current = PlantButtons[i];
@@ -255,8 +266,20 @@ void PlantSelection_Draw() {
         PlantButton_Draw(PlantButtons[i]);
     }
     SunCount_Draw();
-    // it should draw an overlay for the locked plants
-    // TODO
+    Rectangle src = {0, 0, COINS_TEXTURE.width, COINS_TEXTURE.height};
+    Rectangle dst = {0, GetScreenHeight() - src.height * HUD_SCALE,
+                     src.width * HUD_SCALE, src.height * HUD_SCALE};
+    DrawTexturePro(COINS_TEXTURE, src, dst, origin, 0, WHITE);
+    char bal[10];
+    sprintf(bal, "%d", CoinCount);
+    float coinFontSize = 16 * HUD_SCALE;
+    Vector2 textSize = MeasureTextEx(FONT, bal, coinFontSize, 1);
+    Vector2 textPosition = {
+        COINS_TEXT_RECT.x + (COINS_TEXT_RECT.width - textSize.x) / 2,
+        GetScreenHeight() - dst.height + COINS_TEXT_RECT.y +
+            (COINS_TEXT_RECT.height - textSize.y) / 2,
+    };
+    DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
 }
 
 void PlantSelection_Update() {
@@ -273,13 +296,13 @@ void PlantSelection_Update() {
         } else {
             current->active = true;
         }
-        if (IsPositionInsideRect(currentRect, mousePos) && current->unlocked) {
+        if (IsPositionInsideRect(currentRect, mousePos) && *current->unlocked) {
             current->hovered = true;
         } else {
             current->hovered = false;
         }
         if (isClicked && IsPositionInsideRect(currentRect, mousePos) &&
-            current->unlocked) {
+            *current->unlocked) {
             if (current->sinceCooldown < PLANT_COOLDOWN ||
                 current->active == false)
                 continue;

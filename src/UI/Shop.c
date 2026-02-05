@@ -114,9 +114,9 @@ void Shop_WriteDefaults() {
             case PEASHOOTER:
                 unlocked = true;
                 break;
-            case SUNFLOWER:
-                unlocked = true;
-                break;
+            // case SUNFLOWER:
+            //     unlocked = true;
+            //     break;
             default:
                 unlocked = false;
                 break;
@@ -145,7 +145,8 @@ void Shop_SaveState() {
     rewind(SHOP_FILE);
     for (int i = 0; i <= PLANTCOUNT; i++) {
         if (i < PLANTCOUNT) {
-            fwrite(&IsPlantUnlocked[i], sizeof(int), 1, SHOP_FILE);
+            int temp = IsPlantUnlocked[i] ? 1 : 0;
+            fwrite(&temp, sizeof(int), 1, SHOP_FILE);
         } else {
             fwrite(&CoinCount, sizeof(int), 1, SHOP_FILE);
         }
@@ -159,6 +160,7 @@ void Shop_Init() {
     } else {
         SHOP_FILE = fopen(SHOP_FILE_PATH, "rb+");
     }
+    rewind(SHOP_FILE);
     Shop_ReadFile();
     SHOP_BUTTON_WIDTH = SEED_PACKET.width * SHOP_SCALE;
     SHOP_BUTTON_HEIGHT = SEED_PACKET.height * SHOP_SCALE;
@@ -311,6 +313,8 @@ void Shop_Update() {
                     CoinCount -= current->price;
                     IsPlantUnlocked[current->type] = true;
                     Shop_SaveState();
+                    fflush(SHOP_FILE);
+                    break;
                 }
             }
         } else {

@@ -13,7 +13,7 @@ typedef struct PlantButton {
     int price;
     float sinceCooldown;
     bool active;
-    bool unlocked; // for shop
+    bool *unlocked; // for shop
     bool hovered;
     bool selected;
     Vector2 topLeft;

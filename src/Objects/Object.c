@@ -1,5 +1,6 @@
 #include "Object.h"
 #include "Chomper.h"
+#include "Coin.h"
 #include "Game.h"
 #include "LawnMower.h"
 #include "Pea.h"
@@ -196,6 +197,19 @@ Object *newSunObject(Sun *self) {
     so->frameIndex = &self->frameIndex;
     so->state = &self->state;
     so->type = SUN;
+    so->frameTime = &self->frameTime;
+    so->pos = &self->pos;
+    so->self = self;
+    return so;
+}
+
+Object *newCoinObject(Coin *self) {
+    Object *so = (Object *)malloc(sizeof(Object));
+    so->draw = self->draw;
+    so->update = self->update;
+    so->frameIndex = &self->frameIndex;
+    so->state = &self->state;
+    so->type = COIN;
     so->frameTime = &self->frameTime;
     so->pos = &self->pos;
     so->self = self;

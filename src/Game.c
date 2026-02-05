@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Chomper.h"
+#include "Coin.h"
 #include "GameGrid.h"
 #include "LawnMower.h"
 #include "Level.h"
@@ -257,6 +258,7 @@ void Game_Init() {
     Sunflower_Init();
     Pea_Init();
     Sun_Init();
+    Coin_Init();
     Level_Init();
     PlantSelection_Init();
     for (int i = 0; i < GRID_ROWS; i++) {

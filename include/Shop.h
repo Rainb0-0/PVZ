@@ -15,6 +15,12 @@ typedef struct ShopButton {
     bool *unlocked;
 } ShopButton;
 
+extern int CoinCount;
+
+extern bool IsPlantUnlocked[PLANTCOUNT];
+
+void Shop_SaveState();
+
 void Shop_Init();
 void Shop_Draw();
 void Shop_Update();

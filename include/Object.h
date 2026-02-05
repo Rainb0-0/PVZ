@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include "Chomper.h"
+#include "Coin.h"
 #include "LawnMower.h"
 #include "Pea.h"
 #include "Peashooter.h"
@@ -18,6 +19,7 @@ typedef enum ObjectType {
     LAWNMOWER,
     SUN,
     ZOMBIE,
+    COIN,
     TYPECOUNT
 } ObjectType;
 
@@ -48,5 +50,6 @@ Object *newPeashooterObject(Peashooter *self);
 Object *newChomperObject(Chomper *self);
 Object *newSunflowerObject(Sunflower *self);
 Object *newSunObject(Sun *self);
+Object *newCoinObject(Coin *self);
 
 #endif

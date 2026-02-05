@@ -42,6 +42,31 @@
       "-std=c++17",
       "-c",
       "-o",
+      "obj/x64/Debug/PVZ/Coin.o",
+      "../../include/Coin.h"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/include/Coin.h",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Coin.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
       "obj/x64/Debug/PVZ/Font.o",
       "../../include/Font.h"
     ],
@@ -623,6 +648,31 @@
     "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
     "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/Levels/Level.c",
     "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Level.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "obj/x64/Debug/PVZ/Coin.o",
+      "../../src/Objects/Coin.c"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/Objects/Coin.c",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Coin.o"
   },
   {
     "arguments": [
