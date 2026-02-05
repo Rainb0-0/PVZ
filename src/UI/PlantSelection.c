@@ -306,7 +306,4 @@ void PlantSelection_Update() {
         }
         // TODO reset selected if not in the grid
     }
-    //  if the plant hasnt been unlocked yet it shouldnt let the user
-    //  select it
-    //  TODO
 }

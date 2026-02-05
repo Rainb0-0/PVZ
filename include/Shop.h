@@ -1,6 +1,7 @@
 #ifndef SHOP_H
 #define SHOP_H
 
+#include "Plant.h"
 #include "raylib.h"
 
 typedef struct ShopButton {
@@ -8,10 +9,10 @@ typedef struct ShopButton {
     int *textureWidth;
     int *textureHeight;
     bool hovered;
-    bool *unlocked;
     int price;
     PlantType type;
     Rectangle bounds;
+    bool *unlocked;
 } ShopButton;
 
 void Shop_Init();
