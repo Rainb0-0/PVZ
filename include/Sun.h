@@ -10,8 +10,10 @@ extern const int SUN_FRAME_WIDTH;
 extern const int SUN_FRAME_HEIGHT;
 
 typedef struct Sun {
+    Vector2 initPos;
     Vector2 pos;
     Vector2 vel;
+    Vector2 accel;
     Vector2 dest;
     bool isFalling;
     bool isClicked;

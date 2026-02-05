@@ -9,6 +9,8 @@
 
 const int SunWorth = 10;
 
+const float TARGET_TIME = 0.45;
+
 Texture2D SUN_TEXTURE;
 
 const char *SUN_PATH = "Sprites/Sun.png";
@@ -45,8 +47,11 @@ Sun *newSun(Vector2 dest) {
     new->dest.y = dest.y;
     new->pos.x = dest.x;
     new->pos.y = -GetCellDimensions().y;
+    new->initPos = dest;
     new->vel.x = 0;
     new->vel.y = 0;
+    new->accel.x = 0;
+    new->accel.y = 0;
     new->state = &SUN_IDLE;
     new->frameIndex = 0;
     new->alpha = 0;
@@ -65,13 +70,14 @@ void Sun_Draw(Sun *self) {
 }
 
 void Sun_Update(Sun *self) {
+    float dt = GetFrameTime();
     float xDistance = fabs(self->pos.x - self->dest.x);
     float yDistance = fabs(self->pos.y - self->dest.y);
     if (self->isFalling) {
         if (yDistance < POSITION_TOLERANCE.y)
             self->isFalling = false;
         self->vel.y = SUN_FALLING_VEL;
-    } else {
+    } else if (self->isFalling == false && !self->isClicked) {
         self->vel.y = 0;
     }
     if (self->isClicked) {
@@ -80,10 +86,13 @@ void Sun_Update(Sun *self) {
             RemoveObject(self, false);
         }
         float d = sqrt(xDistance * xDistance + yDistance * yDistance);
-        self->vel.x = SUN_MOVING_VEL * xDistance / d;
-        self->vel.y = SUN_MOVING_VEL * yDistance / d;
+        self->accel.x = (xDistance - self->vel.x * TARGET_TIME) /
+                        TARGET_TIME / TARGET_TIME * 2;
+        self->accel.y = (yDistance - self->vel.y * TARGET_TIME) /
+                        TARGET_TIME / TARGET_TIME * 2;
+        self->vel.x += self->accel.x * dt;
+        self->vel.y += self->accel.y * dt;
     }
-    float dt = GetFrameTime();
     self->pos.x += self->vel.x * dt;
     self->pos.y += self->vel.y * dt;
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -95,6 +104,7 @@ void Sun_Update(Sun *self) {
         if (IsPositionInsideCircle(center, radius / SUN_SCALE / 2, mousePosition) &&
             self->isClicked == false) {
             self->isClicked = true;
+            self->isFalling = false;
             self->dest.x = X_OFFSET + (GetScreenWidth() - X_OFFSET) / 2;
             self->dest.y = GetScreenHeight() - 250;
             PlayRandomOggWithPitch(SUN_COLLECT_SOUND_PATH, 1);
