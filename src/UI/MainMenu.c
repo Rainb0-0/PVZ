@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "Font.h"
 #include "Game.h"
 #include "SceneManager.h"
 #include "main.h"
@@ -21,7 +22,7 @@ const float TITLE_SCALE = 3.3;
 const float BUTTON_SCALE = 4;
 const float BUTTONS_Y_OFFSET = 1000;
 const float MENU_BUTTON_MARGIN = 10 * BUTTON_SCALE;
-const float BUTTON_FONT_SIZE = 24 * BUTTON_SCALE;
+const float BUTTON_FONT_SIZE = 30 * BUTTON_SCALE;
 float MENU_BUTTON_WIDTH;
 float MENU_BUTTON_HEIGHT;
 
@@ -34,17 +35,17 @@ typedef struct Button {
 
 Button Play = {
     SCENE_GAME,
-    "Play",
+    "PLAY",
     false,
 };
 Button Shop = {
     SCENE_SHOP,
-    "Shop",
+    "SHOP",
     false,
 };
 Button Quit = {
     QUIT,
-    "Quit",
+    "QUIT",
     false,
 };
 
@@ -62,7 +63,7 @@ void Buttons_Draw() {
         else
             DrawTexturePro(BUTTON_NORMAL_TEXTURE,
                            src, Buttons[i]->bounds, origin, 0, WHITE);
-        Vector2 textSize = MeasureTextEx(GetFontDefault(),
+        Vector2 textSize = MeasureTextEx(FONT,
                                          Buttons[i]->text,
                                          BUTTON_FONT_SIZE, 1);
         Vector2 textPos = {Buttons[i]->bounds.x +
@@ -71,8 +72,8 @@ void Buttons_Draw() {
                                MENU_BUTTON_HEIGHT / 2 - textSize.y / 2};
         if (Buttons[i]->hovered)
             textPos.y += 1 * BUTTON_SCALE;
-        DrawText(Buttons[i]->text, textPos.x, textPos.y,
-                 BUTTON_FONT_SIZE, BLACK);
+        DrawTextPro(FONT, Buttons[i]->text, textPos, origin, 0,
+                    BUTTON_FONT_SIZE, 1, BLACK);
     }
 }
 

@@ -3,16 +3,23 @@
 #include "Game.h"
 #include "Plant.h"
 #include "PlantSelection.h"
+#include "SceneManager.h"
 #include "raylib.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int CoinCount = 0;
+int CoinCount = 10;
+
+// TODO Add sound for clicks
 
 Texture2D SHOP_BACKGROUND_TEXTURE;
+Texture2D COIN_BANK_TEXTURE;
+Texture2D BACK_TEXTURE;
 const char *SHOP_BACKGROUND_PATH = "Shop.png";
+const char *COIN_BANK_PATH = "Sprites/CoinBank.png";
+const char *BACK_PATH = "Back.png";
 
 const int PEASHOOTER_SHOP_PRICE = 0;
 const int SUNFLOWER_SHOP_PRICE = 0;
@@ -23,20 +30,31 @@ const int MARIGOLD_SHOP_PRICE = 20;
 FILE *SHOP_FILE;
 const char *SHOP_FILE_PATH = "shop.bin";
 
-const float SHOP_BUTTON_SCALE = 6;
-const float SHOP_PRICE_FONT_SIZE = 24 * SHOP_BUTTON_SCALE;
+const float SHOP_SCALE = 5;
+const float COIN_BANK_SCALE = SHOP_SCALE * 1.3;
+const float SHOP_PRICE_FONT_SIZE = 24 * SHOP_SCALE;
 float SHOP_BUTTON_WIDTH;
 float SHOP_BUTTON_HEIGHT;
-const float SHOP_BUTTON_MARGIN = 40 * SHOP_BUTTON_SCALE;
-const Rectangle SHOP_BUTTON_TEXTURE_RECT = {7 * SHOP_BUTTON_SCALE,
-                                            18 * SHOP_BUTTON_SCALE,
-                                            85 * SHOP_BUTTON_SCALE,
-                                            85 * SHOP_BUTTON_SCALE};
+const float SHOP_BUTTON_MARGIN = 40 * SHOP_SCALE;
+const Rectangle SHOP_BUTTON_TEXTURE_RECT = {7 * SHOP_SCALE,
+                                            18 * SHOP_SCALE,
+                                            85 * SHOP_SCALE,
+                                            85 * SHOP_SCALE};
 const Rectangle SHOP_BUTTON_PRICE_RECT = {
-    5 * SHOP_BUTTON_SCALE,
-    110 * SHOP_BUTTON_SCALE,
-    60 * SHOP_BUTTON_SCALE,
-    25 * SHOP_BUTTON_SCALE,
+    5 * SHOP_SCALE,
+    110 * SHOP_SCALE,
+    60 * SHOP_SCALE,
+    25 * SHOP_SCALE,
+};
+
+Rectangle BackButton = {10 * SHOP_SCALE, 10 * SHOP_SCALE};
+bool BackButtonHover = false;
+
+Rectangle SHOP_COIN_TEXT_RECT = {
+    37 * COIN_BANK_SCALE,
+    10 * COIN_BANK_SCALE,
+    86 * COIN_BANK_SCALE,
+    16 * COIN_BANK_SCALE,
 };
 
 bool IsPlantUnlocked[PLANTCOUNT];
@@ -99,9 +117,6 @@ void Shop_WriteDefaults() {
             case SUNFLOWER:
                 unlocked = true;
                 break;
-            case POTATO:
-                unlocked = true;
-                break;
             default:
                 unlocked = false;
                 break;
@@ -145,8 +160,8 @@ void Shop_Init() {
         SHOP_FILE = fopen(SHOP_FILE_PATH, "rb+");
     }
     Shop_ReadFile();
-    SHOP_BUTTON_WIDTH = SEED_PACKET.width * SHOP_BUTTON_SCALE;
-    SHOP_BUTTON_HEIGHT = SEED_PACKET.height * SHOP_BUTTON_SCALE;
+    SHOP_BUTTON_WIDTH = SEED_PACKET.width * SHOP_SCALE;
+    SHOP_BUTTON_HEIGHT = SEED_PACKET.height * SHOP_SCALE;
     float totalWidth = (PLANTCOUNT - 1) * SHOP_BUTTON_WIDTH +
                        (PLANTCOUNT - 2) * SHOP_BUTTON_MARGIN;
     float X_OFFSET = (GetScreenWidth() - totalWidth) / 2;
@@ -160,6 +175,10 @@ void Shop_Init() {
         ShopButtons[i]->unlocked = &IsPlantUnlocked[i];
     }
     SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
+    COIN_BANK_TEXTURE = LoadTexture(COIN_BANK_PATH);
+    BACK_TEXTURE = LoadTexture(BACK_PATH);
+    BackButton.width = BACK_TEXTURE.width * SHOP_SCALE;
+    BackButton.height = BACK_TEXTURE.height * SHOP_SCALE;
 }
 
 void DrawShopButton(ShopButton *self) {
@@ -191,7 +210,12 @@ void DrawShopButton(ShopButton *self) {
         overlay.a = 'f';
         DrawRectangleRec(self->bounds, overlay);
     }
-    if (self->hovered && *self->unlocked == false) {
+    if (CoinCount < self->price && *self->unlocked == false) {
+        Color overlay = BLACK;
+        overlay.a = 'f';
+        DrawRectangleRec(self->bounds, overlay);
+    }
+    if (self->hovered && *self->unlocked == false && self->price <= CoinCount) {
         Color HoverColor = BLACK;
         HoverColor.a = '0';
         DrawRectangleRec(self->bounds, HoverColor);
@@ -215,15 +239,48 @@ void DrawShopBackground() {
     float height = SHOP_BACKGROUND_TEXTURE.height;
     float sw = GetScreenWidth();
     float sh = GetScreenHeight();
-    float scale;
-    scale = fmax(sw / width, sh / height);
-    width = width * scale;
-    height = height * scale;
+    float COIN_BANK_SCALE;
+    COIN_BANK_SCALE = fmax(sw / width, sh / height);
+    width = width * COIN_BANK_SCALE;
+    height = height * COIN_BANK_SCALE;
     Rectangle src = {0, 0, SHOP_BACKGROUND_TEXTURE.width,
                      SHOP_BACKGROUND_TEXTURE.height};
     Rectangle dst = {(sw - width) / 2, 0, width, height};
     Vector2 origin = {0, 0};
     DrawTexturePro(SHOP_BACKGROUND_TEXTURE, src, dst, origin, 0, WHITE);
+    char title[] = "SHOP";
+    float titleScale = 1.5;
+    Vector2 textSize = MeasureTextEx(FONT, title,
+                                     SHOP_PRICE_FONT_SIZE * titleScale, 1);
+    Vector2 textPosition = {(sw - textSize.x) / 2, 120};
+    DrawTextPro(FONT, title, textPosition,
+                origin, 0, SHOP_PRICE_FONT_SIZE * titleScale, 1, BLACK);
+}
+
+void DrawCoinBank() {
+    Rectangle src = {0, 0, COIN_BANK_TEXTURE.width, COIN_BANK_TEXTURE.height};
+    float x = (GetScreenWidth() - src.width * COIN_BANK_SCALE) / 2;
+    Rectangle dst = {
+        x,
+        GetScreenHeight() - 250,
+        src.width * COIN_BANK_SCALE,
+        src.height * COIN_BANK_SCALE,
+    };
+    Vector2 origin = {0, 0};
+    DrawTexturePro(COIN_BANK_TEXTURE, src, dst, origin, 0, WHITE);
+    char bal[10];
+    sprintf(bal, "%d", CoinCount);
+    Vector2 textSize = MeasureTextEx(FONT, bal,
+                                     SHOP_PRICE_FONT_SIZE, 1);
+    Vector2 textPosition = {
+        dst.x + SHOP_COIN_TEXT_RECT.x +
+            (SHOP_COIN_TEXT_RECT.width - textSize.x) / 2,
+        dst.y + SHOP_COIN_TEXT_RECT.y +
+            (SHOP_COIN_TEXT_RECT.height - textSize.y) / 2,
+    };
+    float sw = GetScreenWidth();
+    float sh = GetScreenHeight();
+    DrawTextEx(FONT, bal, textPosition, SHOP_PRICE_FONT_SIZE, 1, WHITE);
 }
 
 void Shop_Draw() {
@@ -231,12 +288,41 @@ void Shop_Draw() {
     for (int i = 0; i < PLANTCOUNT - 1; i++) { // TODO marigold support
         DrawShopButton(ShopButtons[i]);
     }
+    DrawCoinBank();
+    Rectangle src = {0, 0, BACK_TEXTURE.width, BACK_TEXTURE.height};
+    Vector2 origin = {0, 0};
+    Color tint;
+    if (BackButtonHover) {
+        tint = GRAY;
+    } else {
+        tint = WHITE;
+    }
+    DrawTexturePro(BACK_TEXTURE, src, BackButton, origin, 0, tint);
 }
 
 void Shop_Update() {
     Vector2 mousePos = GetMousePosition();
     for (int i = 0; i < PLANTCOUNT - 1; i++) {
         ShopButton *current = ShopButtons[i];
-        current->hovered = IsPositionInsideRect(current->bounds, mousePos);
+        if (IsPositionInsideRect(current->bounds, mousePos)) {
+            current->hovered = true;
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                if (*current->unlocked == false && current->price <= CoinCount) {
+                    CoinCount -= current->price;
+                    IsPlantUnlocked[current->type] = true;
+                    Shop_SaveState();
+                }
+            }
+        } else {
+            current->hovered = false;
+        }
+    }
+    if (IsPositionInsideRect(BackButton, mousePos)) {
+        BackButtonHover = true;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            SceneManager_Change(SCENE_MAINMENU);
+        }
+    } else {
+        BackButtonHover = false;
     }
 }
