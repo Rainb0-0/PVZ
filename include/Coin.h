@@ -6,9 +6,12 @@
 
 typedef struct Coin {
     Vector2 pos;
+    Vector2 vel;
+    Vector2 accel;
     State *state;
     int frameIndex;
     float frameTime;
+    bool isClicked;
     void (*draw)(struct Coin *self);
     void (*update)(struct Coin *self);
 } Coin;

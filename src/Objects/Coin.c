@@ -9,6 +9,7 @@
 
 // TODO add sound for coin collection
 // TODO ??? add some kind of coin count indicator
+float COIN_TARGET_TIME = 0.5;
 
 Texture2D COIN_TEXTURE;
 
@@ -40,6 +41,11 @@ Coin *newCoin(Vector2 pos) {
     nc->state = &COIN_IDLE;
     nc->draw = Coin_Draw;
     nc->update = Coin_Update;
+    nc->isClicked = false;
+    nc->accel.x = 0;
+    nc->accel.y = 0;
+    nc->vel.y = 0;
+    nc->vel.x = 0;
     return nc;
 }
 
@@ -54,14 +60,31 @@ void Coin_Draw(Coin *self) {
 }
 
 void Coin_Update(Coin *self) {
+    if (self->isClicked) {
+        float dt = GetFrameTime();
+        float xDistance = -self->pos.x;
+        float yDistance = GetScreenHeight() - self->pos.y;
+        self->accel.x = (xDistance - self->vel.x * COIN_TARGET_TIME) /
+                        COIN_TARGET_TIME / COIN_TARGET_TIME * 2;
+        self->accel.y = (yDistance - self->vel.y * COIN_TARGET_TIME) /
+                        COIN_TARGET_TIME / COIN_TARGET_TIME * 2;
+        self->vel.x += self->accel.x * dt;
+        self->vel.y += self->accel.y * dt;
+        self->pos.x += self->vel.x * dt;
+        self->pos.y += self->vel.y * dt;
+        if (xDistance < POSITION_TOLERANCE.x &&
+            yDistance < POSITION_TOLERANCE.y) {
+            CoinCount += COIN_WORTH;
+            Shop_SaveState();
+            RemoveObject(self, false);
+        }
+    }
     Vector2 mousePos = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
         IsPositionInsideCircle(self->pos,
                                self->state->frameWidth,
                                mousePos)) {
         PlayRandomOggWithPitch(COIN_COLLECTION_SOUND_PATH, 1);
-        CoinCount += COIN_WORTH;
-        Shop_SaveState();
-        RemoveObject(self, false);
+        self->isClicked = true;
     }
 }

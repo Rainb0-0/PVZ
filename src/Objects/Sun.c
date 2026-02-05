@@ -9,7 +9,7 @@
 
 const int SunWorth = 10;
 
-const float TARGET_TIME = 0.45;
+const float SUN_TARGET_TIME = 0.45;
 
 Texture2D SUN_TEXTURE;
 
@@ -86,10 +86,10 @@ void Sun_Update(Sun *self) {
             RemoveObject(self, false);
         }
         float d = sqrt(xDistance * xDistance + yDistance * yDistance);
-        self->accel.x = (xDistance - self->vel.x * TARGET_TIME) /
-                        TARGET_TIME / TARGET_TIME * 2;
-        self->accel.y = (yDistance - self->vel.y * TARGET_TIME) /
-                        TARGET_TIME / TARGET_TIME * 2;
+        self->accel.x = (xDistance - self->vel.x * SUN_TARGET_TIME) /
+                        SUN_TARGET_TIME / SUN_TARGET_TIME * 2;
+        self->accel.y = (yDistance - self->vel.y * SUN_TARGET_TIME) /
+                        SUN_TARGET_TIME / SUN_TARGET_TIME * 2;
         self->vel.x += self->accel.x * dt;
         self->vel.y += self->accel.y * dt;
     }
