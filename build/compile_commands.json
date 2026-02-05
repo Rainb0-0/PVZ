@@ -42,6 +42,31 @@
       "-std=c++17",
       "-c",
       "-o",
+      "obj/x64/Debug/PVZ/Font.o",
+      "../../include/Font.h"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/include/Font.h",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Font.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
       "obj/x64/Debug/PVZ/Game.o",
       "../../include/Game.h"
     ],
@@ -848,6 +873,31 @@
     "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
     "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/Sound.c",
     "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Sound.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "obj/x64/Debug/PVZ/Font.o",
+      "../../src/UI/Font.c"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/UI/Font.c",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Font.o"
   },
   {
     "arguments": [

@@ -1,3 +1,4 @@
+#include "Font.h"
 #include "SceneManager.h"
 #include "raylib.h"
 #include "resource_dir.h"
@@ -12,6 +13,7 @@ int main(void) {
     ToggleFullscreen();
     SearchAndSetResourceDir("resources");
     SceneManager_Init(SCENE_MAINMENU);
+    Font_Init();
     while (!GameShouldQuit) {
         if (WindowShouldClose())
             if (IsKeyDown(KEY_ESCAPE) == false)

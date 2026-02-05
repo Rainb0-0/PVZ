@@ -1,13 +1,18 @@
 #include "Shop.h"
+#include "Font.h"
 #include "Game.h"
 #include "Plant.h"
 #include "PlantSelection.h"
 #include "raylib.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int CoinCount = 0;
+
+Texture2D SHOP_BACKGROUND_TEXTURE;
+const char *SHOP_BACKGROUND_PATH = "Shop.png";
 
 const int PEASHOOTER_SHOP_PRICE = 0;
 const int SUNFLOWER_SHOP_PRICE = 0;
@@ -19,6 +24,7 @@ FILE *SHOP_FILE;
 const char *SHOP_FILE_PATH = "shop.bin";
 
 const float SHOP_BUTTON_SCALE = 6;
+const float SHOP_PRICE_FONT_SIZE = 24 * SHOP_BUTTON_SCALE;
 float SHOP_BUTTON_WIDTH;
 float SHOP_BUTTON_HEIGHT;
 const float SHOP_BUTTON_MARGIN = 40 * SHOP_BUTTON_SCALE;
@@ -26,6 +32,12 @@ const Rectangle SHOP_BUTTON_TEXTURE_RECT = {7 * SHOP_BUTTON_SCALE,
                                             18 * SHOP_BUTTON_SCALE,
                                             85 * SHOP_BUTTON_SCALE,
                                             85 * SHOP_BUTTON_SCALE};
+const Rectangle SHOP_BUTTON_PRICE_RECT = {
+    5 * SHOP_BUTTON_SCALE,
+    110 * SHOP_BUTTON_SCALE,
+    60 * SHOP_BUTTON_SCALE,
+    25 * SHOP_BUTTON_SCALE,
+};
 
 bool IsPlantUnlocked[PLANTCOUNT];
 
@@ -138,7 +150,7 @@ void Shop_Init() {
     float totalWidth = (PLANTCOUNT - 1) * SHOP_BUTTON_WIDTH +
                        (PLANTCOUNT - 2) * SHOP_BUTTON_MARGIN;
     float X_OFFSET = (GetScreenWidth() - totalWidth) / 2;
-    float Y_OFFSET = (GetScreenHeight() / 2) - SHOP_BUTTON_HEIGHT;
+    float Y_OFFSET = (GetScreenHeight() / 2) - SHOP_BUTTON_HEIGHT / 1.2;
     for (int i = 0; i < PLANTCOUNT - 1; i++) { // TODO marigold support
         Rectangle rect = {X_OFFSET +
                               i * (SHOP_BUTTON_WIDTH + SHOP_BUTTON_MARGIN),
@@ -147,6 +159,7 @@ void Shop_Init() {
         ShopButtons[i]->bounds = rect;
         ShopButtons[i]->unlocked = &IsPlantUnlocked[i];
     }
+    SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
 }
 
 void DrawShopButton(ShopButton *self) {
@@ -173,14 +186,48 @@ void DrawShopButton(ShopButton *self) {
         height,
     };
     DrawTexturePro(*self->texture, src, dst, origin, 0, WHITE);
-    if (self->hovered) {
+    if (*self->unlocked == true) {
+        Color overlay = GREEN;
+        overlay.a = 'f';
+        DrawRectangleRec(self->bounds, overlay);
+    }
+    if (self->hovered && *self->unlocked == false) {
         Color HoverColor = BLACK;
-        HoverColor.a = 'f';
+        HoverColor.a = '0';
         DrawRectangleRec(self->bounds, HoverColor);
     }
+    char price[10];
+    sprintf(price, "%d", self->price);
+    Vector2 textSize = MeasureTextEx(FONT,
+                                     price, SHOP_PRICE_FONT_SIZE, 1);
+    Vector2 textPosition = {
+        self->bounds.x + SHOP_BUTTON_PRICE_RECT.x +
+            (SHOP_BUTTON_PRICE_RECT.width - textSize.x) / 2,
+        self->bounds.y + SHOP_BUTTON_PRICE_RECT.y +
+            (SHOP_BUTTON_PRICE_RECT.height - textSize.y) / 2};
+
+    DrawTextPro(FONT, price, textPosition,
+                origin, 0, SHOP_PRICE_FONT_SIZE, 1, BLACK);
+}
+
+void DrawShopBackground() {
+    float width = SHOP_BACKGROUND_TEXTURE.width;
+    float height = SHOP_BACKGROUND_TEXTURE.height;
+    float sw = GetScreenWidth();
+    float sh = GetScreenHeight();
+    float scale;
+    scale = fmax(sw / width, sh / height);
+    width = width * scale;
+    height = height * scale;
+    Rectangle src = {0, 0, SHOP_BACKGROUND_TEXTURE.width,
+                     SHOP_BACKGROUND_TEXTURE.height};
+    Rectangle dst = {(sw - width) / 2, 0, width, height};
+    Vector2 origin = {0, 0};
+    DrawTexturePro(SHOP_BACKGROUND_TEXTURE, src, dst, origin, 0, WHITE);
 }
 
 void Shop_Draw() {
+    DrawShopBackground();
     for (int i = 0; i < PLANTCOUNT - 1; i++) { // TODO marigold support
         DrawShopButton(ShopButtons[i]);
     }
