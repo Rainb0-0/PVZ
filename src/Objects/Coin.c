@@ -88,3 +88,6 @@ void Coin_Update(Coin *self) {
         self->isClicked = true;
     }
 }
+
+// TODO add level selection
+// TODO win and lose sequence

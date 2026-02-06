@@ -37,9 +37,6 @@ void DrawObject(Object *ob, float scale, Vector2 offset, Color tint) {
     }
     *ob->frameTime += GetFrameTime();
     DrawTexturePro(texture, src, dst, origin, 0, tint);
-#ifdef DEBUG_ME
-    DrawCircle(ob->pos->x, ob->pos->y, 10, RED);
-#endif
 }
 
 int FindObjectIndex(void *self, bool plant) {
@@ -69,10 +66,6 @@ void RemoveObject(void *self, bool plant) {
     int index = FindObjectIndex(self, plant);
     if (index == -1)
         return;
-    // free(Objects[index]);
-    // ObjectsCount--;
-    // memmove(&Objects[index], Objects[index + 1],
-    //         sizeof(Object *) * (ObjectsCount - index));
     if (plant) {
         Plant *cur = (Plant *)(Objects[index]->self);
         free(cur->self);
@@ -82,11 +75,7 @@ void RemoveObject(void *self, bool plant) {
 }
 
 void AddObject(Object *ob) {
-    // Object **temp = realloc(Objects,
-    //                         ObjectsCount * sizeof(Object *));
-    // if (temp != NULL)
-    //     Objects = temp;
-    // TODO
+    // TODO dynamic
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL) {
             Objects[i] = ob;

@@ -47,7 +47,6 @@ LawnMower *newLawnMower(Vector2 pos) {
     nl->draw = LawnMower_Draw;
     nl->update = LawnMower_Update;
     nl->state = &LAWNMOWER_IDLE;
-    lawnMowers[GetRowIndex(pos.y)] = 1;
     return nl;
 }
 

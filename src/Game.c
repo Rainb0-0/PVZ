@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Chomper.h"
 #include "Coin.h"
+#include "Font.h"
 #include "GameGrid.h"
 #include "LawnMower.h"
 #include "Level.h"
@@ -29,7 +30,6 @@ typedef struct Button {
 } Button;
 
 int SunCount = 100;
-float sinceSunSpawn = 0;
 
 const Vector2 POSITION_TOLERANCE = {10, 10};
 
@@ -164,7 +164,7 @@ void KillZombiesInCircle(Vector2 center, float radius) {
 
 void BackToMenu() {
     SceneManager_Change(SCENE_MAINMENU);
-    Level_Reset();
+    Level_Destroy();
     GamePaused = false;
 }
 
@@ -213,7 +213,7 @@ void PauseScreen_Draw() {
         else
             DrawTexturePro(BUTTON_NORMAL_TEXTURE, src,
                            PauseButtons[i]->bounds, origin, 0, WHITE);
-        Vector2 textSize = MeasureTextEx(GetFontDefault(),
+        Vector2 textSize = MeasureTextEx(FONT,
                                          PauseButtons[i]->text,
                                          BUTTON_FONT_SIZE, 1);
         Vector2 textPos = {PauseButtons[i]->bounds.x +
@@ -222,8 +222,8 @@ void PauseScreen_Draw() {
                                MENU_BUTTON_HEIGHT / 2 - textSize.y / 2};
         if (PauseButtons[i]->hovered)
             textPos.y += 1 * BUTTON_SCALE;
-        DrawText(PauseButtons[i]->text, textPos.x, textPos.y,
-                 BUTTON_FONT_SIZE, BLACK);
+        DrawTextPro(FONT, PauseButtons[i]->text,
+                    textPos, origin, 0, BUTTON_FONT_SIZE, 1, WHITE);
     }
 }
 
@@ -248,7 +248,7 @@ void Game_End() {
 
 void Game_Init() {
     // TODO handle the level selection
-    currentLevel = l1;
+    currentLevel = &LEVEL1;
     PauseScreen_Init();
     LawnMower_Init();
     Zombie_Init();
@@ -266,7 +266,6 @@ void Game_Init() {
                   i * GetCellDimensions().y + GetCellDimensions().y / 2;
         calcluateWeight(y);
     }
-    PlayRandomOggWithPitch(GAME_START_SOUND, 1);
 }
 
 void Game_Draw() {
@@ -302,10 +301,6 @@ void Game_Draw() {
 }
 
 void Game_Update() {
-    if (zombiesKilled == currentLevel.normalCount + currentLevel.flagCount) {
-        // TODO start the win sequence
-        // PlayRandomOggWithPitch(GAME_WON_SOUND, 1);
-    }
     if (IsKeyPressed(KEY_ESCAPE))
         GamePaused = !GamePaused;
     if (GamePaused) {
