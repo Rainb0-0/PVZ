@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+const int INIT_COIN_COUNT = 10;
 int CoinCount = 10;
 
 // TODO Add sound for clicks
@@ -107,6 +108,7 @@ ShopButton *ShopButtons[PLANTCOUNT] = {
 // binary file, 1 int for each plant. the last int is for the number
 // of coins from the last save
 void Shop_WriteDefaults() {
+    rewind(SHOP_FILE);
     for (int i = 0; i <= PLANTCOUNT; i++) {
         if (i < PLANTCOUNT) {
             int unlocked = false;
@@ -123,7 +125,7 @@ void Shop_WriteDefaults() {
             }
             fwrite(&unlocked, sizeof(int), 1, SHOP_FILE);
         } else {
-            fwrite(&CoinCount, sizeof(int), 1, SHOP_FILE);
+            fwrite(&INIT_COIN_COUNT, sizeof(int), 1, SHOP_FILE);
         }
     }
 }
@@ -303,6 +305,10 @@ void Shop_Draw() {
 }
 
 void Shop_Update() {
+    if (IsKeyPressed(KEY_R)) {
+        Shop_WriteDefaults();
+        Shop_ReadFile();
+    }
     Vector2 mousePos = GetMousePosition();
     for (int i = 0; i < PLANTCOUNT - 1; i++) {
         ShopButton *current = ShopButtons[i];

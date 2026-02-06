@@ -248,7 +248,7 @@ void Game_End() {
 
 void Game_Init() {
     // TODO handle the level selection
-    currentLevel = &LEVEL1;
+    currentLevel = LEVELS[2];
     PauseScreen_Init();
     LawnMower_Init();
     Zombie_Init();

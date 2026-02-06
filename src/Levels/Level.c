@@ -8,8 +8,10 @@
 #include <time.h>
 
 Texture2D DAY_TEXTURE;
+Texture2D NIGHT_TEXTURE;
 
 const char *DAY_PATH = "Sprites/Levels/day.png";
+const char *NIGHT_PATH = "Sprites/Levels/night.png";
 
 // TODO add sun decay
 
@@ -21,9 +23,54 @@ Level *currentLevel;
 // texture, init sun, infinite?,
 // normal, flag, cooldown, lawnmower, naturla sun, name
 Level LEVEL1 = {
-    &DAY_TEXTURE, 50, false, 30, 0, ZOMBIE_SPAWN_COOLDOWN, true, true, "DAY"};
+    &DAY_TEXTURE,
+    50,
+    false,
+    30,
+    0,
+    ZOMBIE_SPAWN_COOLDOWN,
+    true,
+    true,
+    "DUMB ZOMBIES",
+};
 
-// level2 bg
+Level LEVEL2 = {
+    &DAY_TEXTURE,
+    50,
+    false,
+    0,
+    30,
+    ZOMBIE_SPAWN_COOLDOWN,
+    false,
+    true,
+    "SMART ZOMBIES",
+};
+
+Level LEVEL3 = {
+    &NIGHT_TEXTURE,
+    1000,
+    false,
+    15,
+    15,
+    ZOMBIE_SPAWN_COOLDOWN,
+    true,
+    false,
+    "NIGHT",
+};
+
+Level LEVEL4 = {
+    &DAY_TEXTURE,
+    50,
+    true,
+    0,
+    0,
+    ZOMBIE_SPAWN_COOLDOWN,
+    true,
+    true,
+    "ULTIMATE DAY",
+};
+
+Level *LEVELS[] = {&LEVEL1, &LEVEL2, &LEVEL3, &LEVEL4};
 
 float sinceSunSpawn;
 float sinceZombieSpawn;
@@ -67,6 +114,8 @@ void SpawnLawnMowers() {
 }
 
 void Level_Init() {
+    DAY_TEXTURE = LoadTexture(DAY_PATH);
+    NIGHT_TEXTURE = LoadTexture(NIGHT_PATH);
     SunCount = currentLevel->initSunCount;
     if (currentLevel->lawnMowersActive) {
         SpawnLawnMowers();
@@ -80,7 +129,7 @@ void Level_Draw() {
     float aspectRatio = sw / sh;
     float height = currentLevel->background->height * 0.95;
     float width = height * aspectRatio;
-    Rectangle src = {190, 20, width, height};
+    Rectangle src = {220, 20, width, height};
     Rectangle dst = {0, 0, sw, sh};
     Vector2 origin = {0, 0};
     DrawTexturePro(*(currentLevel->background),
@@ -108,10 +157,13 @@ void Level_Update() {
         SpawnSun();
         sinceSunSpawn = 0;
     }
-    if (currentLevel->spawnCooldown < sinceZombieSpawn)
-        if (currentLevel->infiniteZombies ||
-            (normalZombiesSpawned + flagZombiesSpawned <
-             currentLevel->normalZombieCount + currentLevel->flagZombieCount)) {
+    if (currentLevel->spawnCooldown < sinceZombieSpawn) {
+        if (currentLevel->infiniteZombies) {
+            int chance = rand() % 4;
+            SpawnZombie(chance == 1);
+            // 25% of zombies will be flag
+        } else if (normalZombiesSpawned + flagZombiesSpawned <
+                   currentLevel->normalZombieCount + currentLevel->flagZombieCount) {
             if (normalZombiesSpawned < currentLevel->normalZombieCount) {
                 if (flagZombiesSpawned < currentLevel->flagZombieCount) {
                     // both types can spawn
@@ -126,6 +178,7 @@ void Level_Update() {
                 SpawnZombie(true);
             }
         }
+    }
     sinceSunSpawn += dt;
     sinceZombieSpawn += dt;
 }
@@ -165,11 +218,11 @@ void Draw_Grid() {
     for (int i = 0; i <= GRID_COLS; i++) {
         Vector2 start = {pf.x + i * colW, pf.y};
         Vector2 end = {pf.x + i * colW, pf.y + pf.height};
-        DrawLineEx(start, end, 5, BLUE);
+        DrawLineEx(start, end, 5, RED);
     }
     for (int i = 0; i <= GRID_ROWS; i++) {
         Vector2 start = {pf.x, pf.y + i * colH};
         Vector2 end = {pf.x + pf.width, pf.y + i * colH};
-        DrawLineEx(start, end, 5, BLUE);
+        DrawLineEx(start, end, 5, RED);
     }
 }

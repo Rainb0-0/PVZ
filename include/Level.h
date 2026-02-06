@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 
+#define LEVEL_COUNT 4
+
 typedef struct Level {
     Texture2D *background;
     int initSunCount;
@@ -15,7 +17,7 @@ typedef struct Level {
     char *title;
 } Level;
 
-extern Level LEVEL1;
+extern Level *LEVELS[];
 
 extern Level *currentLevel;
 extern int zombiesKilled;
@@ -25,5 +27,7 @@ void Level_Draw();
 void Level_Update();
 
 void Level_Destroy();
+
+void Draw_Grid();
 
 #endif
