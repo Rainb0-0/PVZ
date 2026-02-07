@@ -7,6 +7,7 @@ typedef struct State {
     int frameWidth;
     int frameHeight;
     int maxFrameIndex;
+    int textureRows;
     float frameTime;
     Texture2D *texture;
 } State;

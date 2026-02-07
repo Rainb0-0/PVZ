@@ -15,13 +15,14 @@ const char *LAWNMOWER_SOUND_PATH = "Sounds/LawnMower/";
 const int DAMAGE = 1000;
 const Vector2 VEL = {700, 0};
 
-const int LAWNMOWER_FRAME_WIDTH = 184;
-const int LAWNMOWER_FRAME_HEIGHT = 149;
-const float LAWNMOWER_FRAME_TIME = FRAME_TIME;
-const int LAWNMOWER_MAX_FRAMES = 17;
+const int LAWNMOWER_FRAME_WIDTH = 92;
+const int LAWNMOWER_FRAME_HEIGHT = 75;
+const float LAWNMOWER_FRAME_TIME = 0.01;
+const int LAWNMOWER_MAX_FRAMES = 48;
 State LAWNMOWER_IDLE = {
     LAWNMOWER_FRAME_WIDTH,
     LAWNMOWER_FRAME_HEIGHT,
+    1,
     1,
     LAWNMOWER_FRAME_TIME,
     &LAWNMOWER_TEXTURE,
@@ -31,6 +32,7 @@ State LAWNMOWER_ACTIVE = {
     LAWNMOWER_FRAME_WIDTH,
     LAWNMOWER_FRAME_HEIGHT,
     LAWNMOWER_MAX_FRAMES,
+    1,
     LAWNMOWER_FRAME_TIME,
     &LAWNMOWER_TEXTURE,
 };
@@ -59,7 +61,7 @@ void LawnMower_Draw(LawnMower *self) {
     Vector2 offset = {-250, -100};
     if (self->active)
         offset.y += rand() % 10;
-    DrawObject(Objects[index], 2, offset, WHITE);
+    DrawObject(Objects[index], 3.5, offset, WHITE);
 }
 
 void LawnMower_Update(LawnMower *self) {
@@ -84,5 +86,9 @@ void LawnMower_Update(LawnMower *self) {
         if (here != NULL) {
             DamageZombie(here, DAMAGE);
         }
+    }
+    if (GetMousePosition().x - self->pos.x < POSITION_TOLERANCE.x &&
+        GetMousePosition().y - self->pos.y < POSITION_TOLERANCE.y) {
+        self->active = true;
     }
 }

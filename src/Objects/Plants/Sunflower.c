@@ -13,15 +13,16 @@ const int SUNFLOWER_HP = 100;
 const float SUNFLOWER_COOLDOWN = 7.5;
 
 const char *SUNFLOWER_IDLE_PATH = "Sprites/Sunflower.png";
-const int SUNFLOWER_IDLE_FRAME_WIDTH = 200;
-const int SUNFLOWER_IDLE_FRAME_HEIGHT = 200;
-const int SUNFLOWER_IDLE_MAX_FRAMES = 24;
-const float SUNFLOWER_IDLE_FRAME_TIME = FRAME_TIME;
+const int SUNFLOWER_IDLE_FRAME_WIDTH = 80;
+const int SUNFLOWER_IDLE_FRAME_HEIGHT = 80;
+const int SUNFLOWER_IDLE_MAX_FRAMES = 125;
+const float SUNFLOWER_IDLE_FRAME_TIME = 0.01;
 
 State SUNFLOWER_IDLE = {
     SUNFLOWER_IDLE_FRAME_WIDTH,
     SUNFLOWER_IDLE_FRAME_HEIGHT,
     SUNFLOWER_IDLE_MAX_FRAMES,
+    1,
     SUNFLOWER_IDLE_FRAME_TIME,
     &SUNFLOWER_IDLE_TEXTURE,
 };
@@ -55,8 +56,8 @@ void Sunflower_Init() {
 
 void Sunflower_Draw(Sunflower *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-70, -40};
-    DrawObject(Objects[index], 1.6, offset, WHITE);
+    Vector2 offset = {-150, -80};
+    DrawObject(Objects[index], 3.8, offset, WHITE);
 }
 
 void Sunflower_Update(Sunflower *self) {

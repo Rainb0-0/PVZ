@@ -12,7 +12,7 @@ Texture2D NORMAL;
 Texture2D DESTRUCTION;
 
 const Vector2 PEA_VELOCITY = {500, 0};
-const float PEA_ATTACK_DAMAGE = 100;
+const float PEA_ATTACK_DAMAGE = 10;
 const char *CREATION_PATH = "Sprites/Pea/creation.png";
 const char *NORMAL_PATH = "Sprites/Pea/normal.png";
 const char *DESTRUCTION_PATH = "Sprites/Pea/destruction.png";
@@ -27,6 +27,7 @@ State PEA_NORMAL = {
     PEA_NORMAL_FRAME_WIDTH,
     PEA_NORMAL_FRAME_HEIGHT,
     PEA_NORMAL_MAX_FRAMES,
+    1,
     PEA_NORMAL_FRAME_TIME,
     &NORMAL};
 // DESTRUCTION
@@ -38,6 +39,7 @@ State PEA_DESTRUCTION = {
     PEA_DESTRUCTION_FRAME_WIDTH,
     PEA_DESTRUCTION_FRAME_HEIGHT,
     PEA_DESTRUCTION_MAX_FRAMES,
+    1,
     PEA_DESTRUCTION_FRAME_TIME,
     &DESTRUCTION};
 
@@ -49,7 +51,7 @@ void Pea_Init() {
 
 Pea *newPea(Peashooter *ps) {
     Pea *p = (Pea *)malloc(sizeof(Pea));
-    float xOffset = +130;
+    float xOffset = +100;
     p->pos.x = ps->pos.x + xOffset;
     p->pos.y = ps->pos.y;
     p->attackDamage = PEA_ATTACK_DAMAGE;

@@ -24,7 +24,7 @@ Level *currentLevel;
 // normal, flag, cooldown, lawnmower, naturla sun, name
 Level LEVEL1 = {
     &DAY_TEXTURE,
-    50,
+    100,
     false,
     30,
     0,

@@ -18,12 +18,18 @@ Object *Objects[1000];
 int ObjectsCount = 1000;
 
 void DrawObject(Object *ob, float scale, Vector2 offset, Color tint) {
-    State state = **ob->state;
-    int height = state.frameHeight;
-    int width = state.frameWidth;
-    int drawOffset = width * *(ob->frameIndex);
-    Texture2D texture = *state.texture;
-    Rectangle src = {drawOffset, 0, width, height};
+    int global = *ob->frameIndex;
+    State *state = *ob->state;
+    int height = state->frameHeight;
+    int width = state->frameWidth;
+    int row = global / (state->maxFrameIndex / state->textureRows);
+    int col = global % (state->maxFrameIndex / state->textureRows);
+    Rectangle src = {
+        col * state->frameWidth,
+        row * state->frameHeight,
+        state->frameWidth,
+        state->frameHeight};
+
     Rectangle dst = {ob->pos->x - width / 2 + offset.x,
                      ob->pos->y - height / 2 + offset.y,
                      width * scale, height * scale};
@@ -36,7 +42,8 @@ void DrawObject(Object *ob, float scale, Vector2 offset, Color tint) {
         }
     }
     *ob->frameTime += GetFrameTime();
-    DrawTexturePro(texture, src, dst, origin, 0, tint);
+    DrawTexturePro(*(*ob->state)->texture, src, dst, origin, 0, tint);
+    DrawCircle(ob->pos->x, ob->pos->y, 10, RED);
 }
 
 int FindObjectIndex(void *self, bool plant) {

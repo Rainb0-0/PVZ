@@ -15,20 +15,21 @@ Texture2D SUN_TEXTURE;
 
 const char *SUN_PATH = "Sprites/Sun.png";
 const char *SUN_COLLECT_SOUND_PATH = "Sounds/Sun/";
-const float SUN_SCALE = 1.5;
+const float SUN_SCALE = 3;
 
 const float SUN_FALLING_VEL = 300;
 const float SUN_MOVING_VEL = 2500;
 
-const int SUN_FRAME_WIDTH = 400;
-const int SUN_FRAME_HEIGHT = 400;
-const int SUN_MAX_FRAMES = 13;
-const float SUN_FRAME_TIME = FRAME_TIME;
+const int SUN_FRAME_WIDTH = 140;
+const int SUN_FRAME_HEIGHT = 140;
+const int SUN_MAX_FRAMES = 65;
+const float SUN_FRAME_TIME = 0.01;
 
 State SUN_IDLE = {
     SUN_FRAME_WIDTH,
     SUN_FRAME_HEIGHT,
     SUN_MAX_FRAMES,
+    1,
     SUN_FRAME_TIME,
     &SUN_TEXTURE};
 
@@ -101,7 +102,7 @@ void Sun_Update(Sun *self) {
         float frameHeight = (*self->state).frameHeight;
         float radius = fmax(frameHeight, frameWidth);
         Vector2 mousePosition = GetMousePosition();
-        if (IsPositionInsideCircle(center, radius / SUN_SCALE / 2, mousePosition) &&
+        if (IsPositionInsideCircle(center, radius, mousePosition) &&
             self->isClicked == false) {
             self->isClicked = true;
             self->isFalling = false;

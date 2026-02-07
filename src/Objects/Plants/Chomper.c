@@ -15,15 +15,16 @@ const float CHOMPER_HP = 100;
 const float CHOMPER_LIFE = 20;
 const Vector2 VEL_COEF = {1.0 / 3, 1.0 / 3};
 
-const int CHOMPER_IDLE_FRAME_WIDTH = 125;
-const int CHOMPER_IDLE_FRAME_HEIGHT = 125;
-const int CHOMPER_IDLE_MAX_FRAMES = 24;
-const float CHOMPER_IDLE_FRAME_TIME = FRAME_TIME;
+const int CHOMPER_IDLE_FRAME_WIDTH = 101;
+const int CHOMPER_IDLE_FRAME_HEIGHT = 105;
+const int CHOMPER_IDLE_MAX_FRAMES = 122;
+const float CHOMPER_IDLE_FRAME_TIME = 0.01;
 
 State CHOMPER_IDLE = {
     CHOMPER_IDLE_FRAME_WIDTH,
     CHOMPER_IDLE_FRAME_HEIGHT,
     CHOMPER_IDLE_MAX_FRAMES,
+    1,
     CHOMPER_IDLE_FRAME_TIME,
     &CHOMPER_IDLE_TEXTURE,
 };
@@ -57,7 +58,7 @@ void Chomper_Init() {
 }
 void Chomper_Draw(Chomper *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-130, -130};
+    Vector2 offset = {-100, -110};
     DrawObject(Objects[index], 3.4, offset, WHITE);
 }
 void Chomper_Update(Chomper *self) {

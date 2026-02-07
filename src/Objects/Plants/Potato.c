@@ -33,6 +33,7 @@ State POTATO_SLEEP = {
     POTATO_SLEEP_FRAME_WIDTH,
     POTATO_SLEEP_FRAME_HEIGHT,
     1,
+    1,
     POTATO_SLEEP_FRAME_TIME,
     &POTATO_SLEEP_TEXTURE,
 };
@@ -41,6 +42,7 @@ State POTATO_ACTIVATION = {
     POTATO_SLEEP_FRAME_WIDTH,
     POTATO_SLEEP_FRAME_HEIGHT,
     POTATO_SLEEP_MAX_FRAMES,
+    1,
     POTATO_SLEEP_FRAME_TIME,
     &POTATO_SLEEP_TEXTURE,
 };
@@ -49,6 +51,7 @@ State POTATO_AWAKE = {
     POTATO_AWAKE_FRAME_WIDTH,
     POTATO_AWAKE_FRAME_HEIGHT,
     POTATO_AWAKE_MAX_FRAMES,
+    1,
     POTATO_AWAKE_FRAME_TIME,
     &POTATO_AWAKE_TEXTURE,
 };
@@ -107,7 +110,10 @@ void Potato_Update(Potato *self) {
             self->state = &POTATO_AWAKE;
         }
     } else {
-        if (ZombieAtPosition(self->pos)) {
+        Vector2 tempPos = {self->pos.x +
+                               POSITION_TOLERANCE.x * 12,
+                           self->pos.y};
+        if (ZombieAtPosition(tempPos)) {
             KillZombiesInCircle(self->pos, BLAST_RADIUS);
             // TODO some kind of cloud ?
             PlayRandomOggWithPitch(POTATO_EXPLODE_SOUND_PATH, 1);
