@@ -16,7 +16,7 @@ typedef struct Coin {
     void (*update)(struct Coin *self);
 } Coin;
 
-Coin *newCoin(Vector2 pos);
+Coin *newCoin(Vector2 pos, bool gold);
 
 void Coin_Init();
 void Coin_Draw(Coin *self);

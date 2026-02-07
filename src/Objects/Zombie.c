@@ -185,9 +185,12 @@ void Zombie_Update(Zombie *self) {
         !(self->state == &DYING || self->state == &DYING_FLAG)) {
         ChangeZombieState(self);
         PlayRandomOggWithPitch(ZOMBIE_DIE_SOUND_PATH, 1);
-        Coin *nc = newCoin(self->pos);
-        Object *co = newCoinObject(nc);
-        AddObject(co);
+        int chance = rand() % 2;
+        if (chance) {
+            Coin *nc = newCoin(self->pos, self->isFlagZombie);
+            Object *co = newCoinObject(nc);
+            AddObject(co);
+        }
     } else if (self->state == &WALKING || self->state == &WALKING_FLAG) {
         if (self->isFlagZombie) {
             int row = GetRowIndex(self->pos.y);

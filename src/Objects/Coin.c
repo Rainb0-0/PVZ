@@ -11,35 +11,56 @@
 // TODO ??? add some kind of coin count indicator
 float COIN_TARGET_TIME = 0.5;
 
-Texture2D COIN_TEXTURE;
+Texture2D SILVER_COIN_TEXTURE;
+Texture2D GOLD_COIN_TEXTURE;
 
-const char *COIN_PATH = "Sprites/Coin.png";
+const char *SILVER_COIN_PATH = "Sprites/Coin/silver.png";
+const char *GOLD_COIN_PATH = "Sprites/Coin/gold.png";
 const char *COIN_COLLECTION_SOUND_PATH = "Sounds/Coin/";
 
-const int COIN_WORTH = 5;
+const int SILVER_COIN_WORTH = 1;
+const int GOLD_COIN_WORTH = 5;
 
-const int COIN_FRAME_WIDTH = 80;
-const int COIN_FRAME_HEIGHT = 80;
-const int COIN_MAX_FRAMES = 20;
-const float COIN_FRAME_TIME = FRAME_TIME;
+const float COIN_FRAME_TIME = 0.01;
 
-const float COIN_SCALE = 3;
+const int SILVER_COIN_FRAME_WIDTH = 80;
+const int SILVER_COIN_FRAME_HEIGHT = 80;
+const int SILVER_COIN_MAX_FRAMES = 42;
 
-State COIN_IDLE = {
-    COIN_FRAME_WIDTH,
-    COIN_FRAME_HEIGHT,
-    COIN_MAX_FRAMES,
+const int GOLD_COIN_FRAME_WIDTH = 95;
+const int GOLD_COIN_FRAME_HEIGHT = 95;
+const int GOLD_COIN_MAX_FRAMES = 42;
+
+const float COIN_SCALE = 2;
+
+State SILVER_COIN = {
+    SILVER_COIN_FRAME_WIDTH,
+    SILVER_COIN_FRAME_HEIGHT,
+    SILVER_COIN_MAX_FRAMES,
     1,
     COIN_FRAME_TIME,
-    &COIN_TEXTURE,
+    &SILVER_COIN_TEXTURE,
 };
 
-Coin *newCoin(Vector2 pos) {
+State GOLD_COIN = {
+    GOLD_COIN_FRAME_WIDTH,
+    GOLD_COIN_FRAME_HEIGHT,
+    GOLD_COIN_MAX_FRAMES,
+    1,
+    COIN_FRAME_TIME,
+    &GOLD_COIN_TEXTURE,
+};
+
+Coin *newCoin(Vector2 pos, bool gold) {
     Coin *nc = (Coin *)malloc(sizeof(Coin));
     nc->frameIndex = 0;
     nc->frameTime = 0;
     nc->pos = pos;
-    nc->state = &COIN_IDLE;
+    if (gold) {
+        nc->state = &GOLD_COIN;
+    } else {
+        nc->state = &SILVER_COIN;
+    }
     nc->draw = Coin_Draw;
     nc->update = Coin_Update;
     nc->isClicked = false;
@@ -51,11 +72,12 @@ Coin *newCoin(Vector2 pos) {
 }
 
 void Coin_Init() {
-    COIN_TEXTURE = LoadTexture(COIN_PATH);
+    SILVER_COIN_TEXTURE = LoadTexture(SILVER_COIN_PATH);
+    GOLD_COIN_TEXTURE = LoadTexture(GOLD_COIN_PATH);
 }
 
 void Coin_Draw(Coin *self) {
-    Vector2 offset = {-105, -105};
+    Vector2 offset = {-60, -60};
     int index = FindObjectIndex(self, false);
     DrawObject(Objects[index], COIN_SCALE * 1.15, offset, WHITE);
 }
@@ -75,7 +97,10 @@ void Coin_Update(Coin *self) {
         self->pos.y += self->vel.y * dt;
         if (xDistance < POSITION_TOLERANCE.x &&
             yDistance < POSITION_TOLERANCE.y) {
-            CoinCount += COIN_WORTH;
+            if (self->state == &GOLD_COIN)
+                CoinCount += GOLD_COIN_WORTH;
+            else
+                CoinCount += SILVER_COIN_WORTH;
             Shop_SaveState();
             RemoveObject(self, false);
         }

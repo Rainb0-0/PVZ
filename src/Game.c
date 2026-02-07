@@ -248,7 +248,7 @@ void Game_End() {
 
 void Game_Init() {
     // TODO handle the level selection
-    currentLevel = LEVELS[0];
+    currentLevel = LEVELS[2];
     PauseScreen_Init();
     Level_Init();
     for (int i = 0; i < GRID_ROWS; i++) {

@@ -87,8 +87,4 @@ void LawnMower_Update(LawnMower *self) {
             DamageZombie(here, DAMAGE);
         }
     }
-    if (GetMousePosition().x - self->pos.x < POSITION_TOLERANCE.x &&
-        GetMousePosition().y - self->pos.y < POSITION_TOLERANCE.y) {
-        self->active = true;
-    }
 }
