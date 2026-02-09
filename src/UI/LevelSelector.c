@@ -19,6 +19,7 @@ const float LEVELSELECTOR_MARGIN = 50 * LEVELSELECTOR_SCALE;
 const float LEVELSELECTOR_FONT_SIZE = 80;
 
 Texture2D LEVELSELECTOR_BACKGROUND_TEXTURE;
+Texture2D LEVELSELECTOR_BACK_TEXTURE;
 
 Texture2D LEVEL1_THUMBNAIL_TEXTURE;
 Texture2D LEVEL2_THUMBNAIL_TEXTURE;
@@ -26,10 +27,18 @@ Texture2D LEVEL3_THUMBNAIL_TEXTURE;
 Texture2D LEVEL4_THUMBNAIL_TEXTURE;
 
 const char *LEVELSELECTOR_BACKGROUND_PATH = "LevelSelector.png";
+const char *LEVELSELECTOR_BACK_PATH = "Back.png";
 const char *LEVEL1_THUMBNAIL_PATH = "Sprites/Thumbnails/1.png";
 const char *LEVEL2_THUMBNAIL_PATH = "Sprites/Thumbnails/2.png";
 const char *LEVEL3_THUMBNAIL_PATH = "Sprites/Thumbnails/3.png";
 const char *LEVEL4_THUMBNAIL_PATH = "Sprites/Thumbnails/4.png";
+
+Rectangle LevelSelectBackButton = {
+    1 * LEVELSELECTOR_MARGIN,
+    1 * LEVELSELECTOR_MARGIN,
+};
+bool LevelSelectorBackButtonHover = false;
+const float LevelSelectorBackButtonScale = 4;
 
 LevelSelectorButton LEVELBUTTON1 = {
     &LEVEL1_THUMBNAIL_TEXTURE,
@@ -108,6 +117,7 @@ void LevelSelector_Init() {
     LEVEL2_THUMBNAIL_TEXTURE = LoadTexture(LEVEL2_THUMBNAIL_PATH);
     LEVEL3_THUMBNAIL_TEXTURE = LoadTexture(LEVEL3_THUMBNAIL_PATH);
     LEVEL4_THUMBNAIL_TEXTURE = LoadTexture(LEVEL4_THUMBNAIL_PATH);
+    LEVELSELECTOR_BACK_TEXTURE = LoadTexture(LEVELSELECTOR_BACK_PATH);
     float width = LEVEL1_THUMBNAIL_TEXTURE.width * LEVELSELECTOR_SCALE;
     float height = LEVEL1_THUMBNAIL_TEXTURE.height * LEVELSELECTOR_SCALE;
     int rows = 2;
@@ -165,6 +175,24 @@ void LevelSelector_Draw() {
             DrawTexturePro(*LEVELBUTTONS[i]->thumbnail, src,
                            LEVELBUTTONS[i]->bounds, origin, 0, GRAY);
     }
+    Rectangle src = {
+        0,
+        0,
+        LEVELSELECTOR_BACK_TEXTURE.width,
+        LEVELSELECTOR_BACK_TEXTURE.height,
+    };
+    Rectangle dst = {
+        LevelSelectBackButton.x,
+        LevelSelectBackButton.y,
+        LEVELSELECTOR_BACK_TEXTURE.width * LevelSelectorBackButtonScale,
+        LEVELSELECTOR_BACK_TEXTURE.height * LevelSelectorBackButtonScale,
+    };
+    Vector2 origin = {0, 0};
+    if (LevelSelectorBackButtonHover) {
+        DrawTexturePro(LEVELSELECTOR_BACK_TEXTURE, src, dst, origin, 0, GRAY);
+    } else {
+        DrawTexturePro(LEVELSELECTOR_BACK_TEXTURE, src, dst, origin, 0, WHITE);
+    }
 }
 
 void LevelSelector_Update() {
@@ -180,5 +208,19 @@ void LevelSelector_Update() {
         } else {
             LEVELBUTTONS[i]->hovered = false;
         }
+    }
+    Rectangle backButtonRect = {
+        LevelSelectBackButton.x,
+        LevelSelectBackButton.y,
+        LEVELSELECTOR_BACK_TEXTURE.width * LevelSelectorBackButtonScale,
+        LEVELSELECTOR_BACK_TEXTURE.height * LevelSelectorBackButtonScale,
+    };
+    if (IsPositionInsideRect(backButtonRect, mousePos)) {
+        LevelSelectorBackButtonHover = true;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            SceneManager_Change(SCENE_MAINMENU);
+        }
+    } else {
+        LevelSelectorBackButtonHover = false;
     }
 }
