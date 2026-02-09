@@ -116,9 +116,9 @@ void Shop_WriteDefaults() {
             case PEASHOOTER:
                 unlocked = true;
                 break;
-            // case SUNFLOWER:
-            //     unlocked = true;
-            //     break;
+            case SUNFLOWER:
+                unlocked = true;
+                break;
             default:
                 unlocked = false;
                 break;

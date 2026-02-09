@@ -19,6 +19,11 @@ typedef struct Level {
 
 extern Level *LEVELS[];
 
+extern Level LEVEL1;
+extern Level LEVEL2;
+extern Level LEVEL3;
+extern Level LEVEL4;
+
 extern Level *currentLevel;
 extern int zombiesKilled;
 

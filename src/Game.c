@@ -53,15 +53,17 @@ float calculateDet(float y) {
             continue;
         if (GetRowIndex(Objects[i]->pos->y) == row) {
             if (Objects[i]->type == PLANT) {
-                n++;
                 Plant *cur = (Plant *)Objects[i]->self;
-                float temp = *cur->hp / cur->MAXHP;
-                S += temp;
-                Q += temp * temp;
+                if (cur->type != SUNFLOWER && cur->type != MARIGOLD) {
+                    n++;
+                    float temp = *cur->hp / cur->MAXHP;
+                    S += temp;
+                    Q += temp * temp;
+                }
             }
         }
     }
-    return (1 - Q * Q) - n * (n - S * Q) + S * (n * Q - S);
+    return (n * n + S * S + Q * Q + 1);
 }
 
 void calcluateWeight(float y) {

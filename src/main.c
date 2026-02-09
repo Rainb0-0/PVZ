@@ -1,6 +1,7 @@
 #include "Chomper.h"
 #include "Font.h"
 #include "LawnMower.h"
+#include "LevelSelector.h"
 #include "Pea.h"
 #include "Peashooter.h"
 #include "PlantSelection.h"
@@ -31,6 +32,7 @@ int main(void) {
     Pea_Init();
     Sun_Init();
     Coin_Init();
+    LevelSelector_Init();
     PlantSelection_Init();
     while (!GameShouldQuit) {
         if (WindowShouldClose())

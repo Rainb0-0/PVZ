@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "Game.h"
+#include "LevelSelector.h"
 #include "MainMenu.h"
 #include "Shop.h"
 #include "main.h"
@@ -9,6 +10,7 @@ static Scene scenes[SCENE_COUNT] = {
     [SCENE_MAINMENU] = {MainMenu_Init, MainMenu_Draw, MainMenu_Update},
     [SCENE_GAME] = {Game_Init, Game_Draw, Game_Update},
     [SCENE_SHOP] = {Shop_Init, Shop_Draw, Shop_Update},
+    [SCENE_LEVELSELECT] = {LevelSelector_Init, LevelSelector_Draw, LevelSelector_Update},
     [QUIT] = {NULL, Quit_Game, Quit_Game},
 };
 
