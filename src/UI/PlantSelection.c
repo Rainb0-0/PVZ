@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "Game.h"
 #include "GameGrid.h"
+#include "Level.h"
 #include "Object.h"
 #include "Peashooter.h"
 #include "Potato.h"
@@ -165,7 +166,8 @@ void PlantButton_Draw(PlantButton *self) {
     if (self->selected) {
         DrawRectangleLinesEx(currentRect, 10, DARKGRAY);
     }
-    if (*self->unlocked == false) {
+    if (*self->unlocked == false || (currentLevel == &LEVEL3 &&
+                                     self->newPlant == newSunflower)) {
         Color dis = HOVER_COLOR;
         dis.a = 'f';
         DrawRectangleRec(currentRect, dis);
@@ -302,7 +304,8 @@ void PlantSelection_Update() {
             current->hovered = false;
         }
         if (isClicked && IsPositionInsideRect(currentRect, mousePos) &&
-            *current->unlocked) {
+            *current->unlocked &&
+            (currentLevel == &LEVEL3 && current->newPlant != newSunflower)) {
             if (current->sinceCooldown < PLANT_COOLDOWN ||
                 current->active == false)
                 continue;

@@ -6,7 +6,7 @@
 
 typedef struct LevelSelectorButton {
     Texture2D *thumbnail;
-    bool is_active;
+    bool hovered;
     const char *description;
     Level *level;
     Rectangle bounds;

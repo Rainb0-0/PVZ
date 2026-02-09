@@ -253,8 +253,6 @@ void Game_End() {
 }
 
 void Game_Init() {
-    // TODO handle the level selection
-    currentLevel = LEVELS[3];
     PauseScreen_Init();
     Level_Init();
     for (int i = 0; i < GRID_ROWS; i++) {
@@ -280,14 +278,14 @@ void Game_Draw() {
             CloseWindow();
         Objects[i]->draw(self);
     }
-    for (int i = 0; i < GRID_ROWS; i++) {
-        float y = GetPlayfieldRect().y +
-                  i * GetCellDimensions().y + GetCellDimensions().y / 2;
-        char text[100];
-        sprintf(text, "weight: %.2f\n chomper: %d\n lawnmower: %d",
-                weights[i], chompers[i], lawnMowers[i]);
-        DrawText(text, 200, y, 50, BLACK);
-    }
+    // for (int i = 0; i < GRID_ROWS; i++) {
+    //     float y = GetPlayfieldRect().y +
+    //               i * GetCellDimensions().y + GetCellDimensions().y / 2;
+    //     char text[100];
+    //     sprintf(text, "weight: %.2f\n chomper: %d\n lawnmower: %d",
+    //             weights[i], chompers[i], lawnMowers[i]);
+    //     DrawText(text, 200, y, 50, BLACK);
+    // }
     PlantSelection_Draw();
     if (GamePaused) {
         DrawRectangle(0, 0, GetScreenWidth(),

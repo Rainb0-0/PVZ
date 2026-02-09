@@ -116,9 +116,11 @@ void SpawnLawnMowers() {
 void Level_Init() {
     DAY_TEXTURE = LoadTexture(DAY_PATH);
     NIGHT_TEXTURE = LoadTexture(NIGHT_PATH);
-    SunCount = currentLevel->initSunCount;
-    if (currentLevel->lawnMowersActive) {
-        SpawnLawnMowers();
+    if (currentLevel != NULL) {
+        SunCount = currentLevel->initSunCount;
+        if (currentLevel->lawnMowersActive) {
+            SpawnLawnMowers();
+        }
     }
     for (int i = 0; i < GRID_ROWS; i++) {
         calcluateWeight(GetCellDimensions().y * i +
@@ -138,6 +140,7 @@ void Level_Draw() {
     Vector2 origin = {0, 0};
     DrawTexturePro(*(currentLevel->background),
                    src, dst, origin, 0, WHITE);
+    Draw_Grid();
 }
 
 void SpawnSun() {

@@ -34,7 +34,7 @@ typedef struct Button {
 } Button;
 
 Button Play = {
-    SCENE_GAME,
+    SCENE_LEVELSELECT,
     "PLAY",
     false,
 };
