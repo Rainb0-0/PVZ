@@ -60,7 +60,7 @@ Level LEVEL3 = {
 
 Level LEVEL4 = {
     &DAY_TEXTURE,
-    50,
+    1000,
     true,
     0,
     0,
@@ -120,7 +120,11 @@ void Level_Init() {
     if (currentLevel->lawnMowersActive) {
         SpawnLawnMowers();
     }
-    calcluateWeight;
+    for (int i = 0; i < GRID_ROWS; i++) {
+        calcluateWeight(GetCellDimensions().y * i +
+                        GetCellDimensions().y / 2 +
+                        GetPlayfieldRect().y);
+    }
 }
 
 void Level_Draw() {

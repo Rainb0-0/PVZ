@@ -64,7 +64,7 @@ LevelSelectorButton LEVELBUTTON4 = {
     &LEVEL4,
 };
 
-LevelSelectorButton *LEVELS[LEVEL_COUNT] = {
+LevelSelectorButton *LEVELBUTTONS[LEVEL_COUNT] = {
     &LEVELBUTTON1,
     &LEVELBUTTON2,
     &LEVELBUTTON3,

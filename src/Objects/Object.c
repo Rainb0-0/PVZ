@@ -75,6 +75,7 @@ void RemoveObject(void *self, bool plant) {
         return;
     if (plant) {
         Plant *cur = (Plant *)(Objects[index]->self);
+        calcluateWeight(Objects[index]->pos->y);
         free(cur->self);
     }
     Objects[index] = NULL;

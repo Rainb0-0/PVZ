@@ -51,15 +51,15 @@ float calculateDet(float y) {
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL)
             continue;
-        if (GetRowIndex(Objects[i]->pos->y) == row) {
-            if (Objects[i]->type == PLANT) {
-                Plant *cur = (Plant *)Objects[i]->self;
-                if (cur->type != SUNFLOWER && cur->type != MARIGOLD) {
-                    n++;
-                    float temp = *cur->hp / cur->MAXHP;
-                    S += temp;
-                    Q += temp * temp;
-                }
+        if (Objects[i]->type == PLANT &&
+            GetRowIndex(Objects[i]->pos->y) == row) {
+            Plant *cur = (Plant *)Objects[i]->self;
+            if (0 < *cur->hp &&
+                cur->type != SUNFLOWER && cur->type != MARIGOLD) {
+                n++;
+                float temp = *cur->hp / cur->MAXHP;
+                S += temp;
+                Q += temp * temp;
             }
         }
     }
@@ -143,7 +143,11 @@ bool IsPositionInsideCircle(Vector2 center, float radius, Vector2 pos) {
 }
 
 void DamagePlant(Plant *plant, float damage) {
-    *plant->hp -= damage;
+    if (*plant->hp < damage) {
+        *plant->hp = 0;
+    } else {
+        *plant->hp -= damage;
+    }
     int index = FindObjectIndex(plant, false);
     calcluateWeight(Objects[index]->pos->y);
 }
@@ -250,7 +254,7 @@ void Game_End() {
 
 void Game_Init() {
     // TODO handle the level selection
-    currentLevel = LEVELS[2];
+    currentLevel = LEVELS[3];
     PauseScreen_Init();
     Level_Init();
     for (int i = 0; i < GRID_ROWS; i++) {
