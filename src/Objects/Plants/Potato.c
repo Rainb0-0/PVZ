@@ -140,7 +140,6 @@ void Potato_Update(Potato *self) {
                            self->pos.y};
         if (ZombieAtPosition(tempPos)) {
             KillZombiesInCircle(self->pos, BLAST_RADIUS);
-            // TODO some kind of cloud ?
             PlayRandomOggWithPitch(POTATO_EXPLODE_SOUND_PATH, 1);
             self->state = &POTATO_EXPLODED;
         }
