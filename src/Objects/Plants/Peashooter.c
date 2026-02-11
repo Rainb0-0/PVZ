@@ -88,8 +88,8 @@ void Peashooter_Shoot(Peashooter *self) {
 
 void Peashooter_Draw(Peashooter *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-150, -100};
-    DrawObject(Objects[index], 4, offset, WHITE);
+    Vector2 offset = {0, 0};
+    DrawObject(Objects[index], 1, offset, WHITE);
 }
 
 void Peashooter_Update(Peashooter *self) {

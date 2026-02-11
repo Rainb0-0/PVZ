@@ -15,7 +15,7 @@ Texture2D SUN_TEXTURE;
 
 const char *SUN_PATH = "Sprites/Sun.png";
 const char *SUN_COLLECT_SOUND_PATH = "Sounds/Sun/";
-const float SUN_SCALE = 3;
+const float SUN_SCALE = 1;
 
 const float SUN_FALLING_VEL = 300;
 const float SUN_MOVING_VEL = 2500;
@@ -66,7 +66,7 @@ Sun *newSun(Vector2 dest) {
 
 void Sun_Draw(Sun *self) {
     int index = FindObjectIndex(self, false);
-    Vector2 offset = {-100, -100};
+    Vector2 offset = {0, 0};
     DrawObject(Objects[index], SUN_SCALE, offset, WHITE);
 }
 
@@ -100,7 +100,7 @@ void Sun_Update(Sun *self) {
         Vector2 center = {self->pos.x, self->pos.y};
         float frameWidth = (*self->state).frameWidth;
         float frameHeight = (*self->state).frameHeight;
-        float radius = fmax(frameHeight, frameWidth);
+        float radius = fmax(frameHeight, frameWidth) / 4;
         Vector2 mousePosition = GetMousePosition();
         if (IsPositionInsideCircle(center, radius, mousePosition) &&
             self->isClicked == false) {

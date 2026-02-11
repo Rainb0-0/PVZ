@@ -14,9 +14,9 @@ const char *LEVELSTATS_FILE_PATH = "levelstats.bin";
 int LevelNormalZombiesKilled[LEVEL_COUNT];
 int LevelFlagZombiesKilled[LEVEL_COUNT];
 
-const float LEVELSELECTOR_SCALE = 1.3;
+const float LEVELSELECTOR_SCALE = 0.35;
 const float LEVELSELECTOR_MARGIN = 50 * LEVELSELECTOR_SCALE;
-const float LEVELSELECTOR_FONT_SIZE = 80;
+const float LEVELSELECTOR_FONT_SIZE = 30;
 
 Texture2D LEVELSELECTOR_BACKGROUND_TEXTURE;
 Texture2D LEVELSELECTOR_BACK_TEXTURE;
@@ -38,7 +38,7 @@ Rectangle LevelSelectBackButton = {
     1 * LEVELSELECTOR_MARGIN,
 };
 bool LevelSelectorBackButtonHover = false;
-const float LevelSelectorBackButtonScale = 4;
+const float LevelSelectorBackButtonScale = 1;
 
 LevelSelectorButton LEVELBUTTON1 = {
     &LEVEL1_THUMBNAIL_TEXTURE,
@@ -125,7 +125,7 @@ void LevelSelector_Init() {
     float totalWidth = cols * width + (cols - 1) * LEVELSELECTOR_MARGIN;
     float totalHeight = rows * height + (rows - 1) * LEVELSELECTOR_MARGIN;
     float X_OFFSET = (GetScreenWidth() - totalWidth) / 2;
-    float Y_OFFSET = (GetScreenHeight() - totalHeight) / 2;
+    float Y_OFFSET = (GetScreenHeight() - totalHeight) / 2 + 30;
     for (int i = 0; i < LEVEL_COUNT; i++) {
         int row = i / cols;
         int col = i % cols;
@@ -154,10 +154,10 @@ void DrawLevelSelectorBackground() {
     Vector2 origin = {0, 0};
     DrawTexturePro(LEVELSELECTOR_BACKGROUND_TEXTURE, src, dst, origin, 0, WHITE);
     char title[] = "LEVELS";
-    float titleScale = 1.5;
+    float titleScale = 1;
     Vector2 textSize = MeasureTextEx(FONT, title,
                                      LEVELSELECTOR_FONT_SIZE * titleScale, 1);
-    Vector2 textPosition = {(sw - textSize.x) / 2, 130};
+    Vector2 textPosition = {(sw - textSize.x) / 2, 32.5};
     DrawTextPro(FONT, title, textPosition,
                 origin, 0, LEVELSELECTOR_FONT_SIZE * titleScale, 1, BLACK);
 }

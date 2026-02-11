@@ -18,9 +18,9 @@ const char *BUTTON_NORMAL_TEXTURE_PATH = "Button.png";
 const char *BUTTON_DOWN_TEXTURE_PATH = "ButtonDown.png";
 const char *TITLE_PATH = "Title.png";
 
-const float TITLE_SCALE = 3.3;
-const float BUTTON_SCALE = 4;
-const float BUTTONS_Y_OFFSET = 1000;
+const float TITLE_SCALE = 1;
+const float BUTTON_SCALE = 1.1;
+const float BUTTONS_Y_OFFSET = 200;
 const float MENU_BUTTON_MARGIN = 10 * BUTTON_SCALE;
 const float BUTTON_FONT_SIZE = 30 * BUTTON_SCALE;
 float MENU_BUTTON_WIDTH;
@@ -119,7 +119,7 @@ void MainMenu_Draw() {
     Rectangle titleSrc = {0, 0, TITLE.width, TITLE.height};
     Rectangle titleDst = {
         (GetScreenWidth() - TITLE.width * TITLE_SCALE) / 2,
-        300,
+        50,
         TITLE.width * TITLE_SCALE,
         TITLE.height * TITLE_SCALE,
     };

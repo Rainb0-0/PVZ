@@ -27,7 +27,7 @@ const float POTATO_AWAKE_FRAME_TIME = FRAME_TIME;
 
 const float POTATO_HP = 100;
 const float POTATO_COOLDOWN = 10;
-const float BLAST_RADIUS = 600;
+const float BLAST_RADIUS = 50;
 
 State POTATO_SLEEP = {
     POTATO_SLEEP_FRAME_WIDTH,
@@ -88,9 +88,9 @@ void Potato_Init() {
 
 void Potato_Draw(Potato *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-100, -100};
+    Vector2 offset = {0, 0};
     // DrawCircle(self->pos.x, self->pos.y, BLAST_RADIUS, RED);
-    DrawObject(Objects[index], 3, offset, WHITE);
+    DrawObject(Objects[index], 0.9, offset, WHITE);
 }
 
 void Potato_Update(Potato *self) {

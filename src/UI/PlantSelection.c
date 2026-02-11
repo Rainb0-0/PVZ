@@ -29,7 +29,7 @@ const char *LOCK_PATH = "Sprites/Lock.png";
 const char *COINS_PATH = "Sprites/CoinBank.png";
 const char *PLANT_SOUND_PATH = "Sounds/Game/Plant/";
 
-const float HUD_SCALE = 3;
+const float HUD_SCALE = 0.75;
 const int BUTTON_WIDTH = 100 * HUD_SCALE;
 const int BUTTON_HEIGHT = 140 * HUD_SCALE;
 const int BUTTON_MARGIN = 16 * HUD_SCALE;
@@ -304,10 +304,11 @@ void PlantSelection_Update() {
             current->hovered = false;
         }
         if (isClicked && IsPositionInsideRect(currentRect, mousePos) &&
-            *current->unlocked &&
-            (currentLevel == &LEVEL3 && current->newPlant != newSunflower)) {
+            *current->unlocked) {
             if (current->sinceCooldown < PLANT_COOLDOWN ||
                 current->active == false)
+                continue;
+            if (currentLevel == &LEVEL3 && current->newPlant == newSunflower)
                 continue;
             ResetSelected();
             SelectedButton = current;

@@ -31,7 +31,7 @@ const int MARIGOLD_SHOP_PRICE = 20;
 FILE *SHOP_FILE;
 const char *SHOP_FILE_PATH = "shop.bin";
 
-const float SHOP_SCALE = 5;
+const float SHOP_SCALE = 1.1;
 const float COIN_BANK_SCALE = SHOP_SCALE * 1.3;
 const float SHOP_PRICE_FONT_SIZE = 24 * SHOP_SCALE;
 float SHOP_BUTTON_WIDTH;
@@ -256,7 +256,7 @@ void DrawShopBackground() {
     float titleScale = 1.5;
     Vector2 textSize = MeasureTextEx(FONT, title,
                                      SHOP_PRICE_FONT_SIZE * titleScale, 1);
-    Vector2 textPosition = {(sw - textSize.x) / 2, 120};
+    Vector2 textPosition = {(sw - textSize.x) / 2, 30};
     DrawTextPro(FONT, title, textPosition,
                 origin, 0, SHOP_PRICE_FONT_SIZE * titleScale, 1, BLACK);
 }

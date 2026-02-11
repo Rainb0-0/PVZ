@@ -56,8 +56,8 @@ void Sunflower_Init() {
 
 void Sunflower_Draw(Sunflower *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-150, -80};
-    DrawObject(Objects[index], 3.8, offset, WHITE);
+    Vector2 offset = {0, 0};
+    DrawObject(Objects[index], 1, offset, WHITE);
 }
 
 void Sunflower_Update(Sunflower *self) {

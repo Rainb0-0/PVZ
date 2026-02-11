@@ -58,8 +58,8 @@ void Chomper_Init() {
 }
 void Chomper_Draw(Chomper *self) {
     int index = FindObjectIndex(self, true);
-    Vector2 offset = {-100, -110};
-    DrawObject(Objects[index], 3.4, offset, WHITE);
+    Vector2 offset = {0, 0};
+    DrawObject(Objects[index], 0.9, offset, WHITE);
 }
 void Chomper_Update(Chomper *self) {
     if (CHOMPER_LIFE < self->timeAlive || self->hp <= 0) {

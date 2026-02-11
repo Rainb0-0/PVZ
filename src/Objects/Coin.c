@@ -31,7 +31,7 @@ const int GOLD_COIN_FRAME_WIDTH = 95;
 const int GOLD_COIN_FRAME_HEIGHT = 95;
 const int GOLD_COIN_MAX_FRAMES = 42;
 
-const float COIN_SCALE = 2;
+const float COIN_SCALE = 1;
 
 State SILVER_COIN = {
     SILVER_COIN_FRAME_WIDTH,

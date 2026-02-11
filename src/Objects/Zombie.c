@@ -169,13 +169,13 @@ void Zombie_Draw(Zombie *self) {
     if (!self->active)
         return;
     int index = FindObjectIndex(self, false);
-    Vector2 offset = {-170, -170};
+    Vector2 offset = {0, 0};
     Color tint = WHITE;
     if (chompers[GetRowIndex(self->pos.y)]) {
         tint = BLUE;
         tint = ColorBrightness(tint, 0.5);
     }
-    DrawObject(Objects[index], 3.3, offset, tint);
+    DrawObject(Objects[index], 1, offset, tint);
 }
 
 void Zombie_Update(Zombie *self) {

@@ -43,7 +43,7 @@ void DrawObject(Object *ob, float scale, Vector2 offset, Color tint) {
     }
     *ob->frameTime += GetFrameTime();
     DrawTexturePro(*(*ob->state)->texture, src, dst, origin, 0, tint);
-    // DrawCircle(ob->pos->x, ob->pos->y, 10, RED);
+    DrawCircle(ob->pos->x, ob->pos->y, 10, RED);
 }
 
 int FindObjectIndex(void *self, bool plant) {

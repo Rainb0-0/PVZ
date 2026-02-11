@@ -16,10 +16,7 @@ bool GameShouldQuit = false;
 
 int main(void) {
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-    const int WIDTH = GetScreenWidth();
-    const int HEIGHT = GetScreenHeight();
-    InitWindow(WIDTH, HEIGHT, "Plants Vs. Zombies");
-    ToggleFullscreen();
+    InitWindow(960, 600, "Plants Vs. Zombies");
     SearchAndSetResourceDir("resources");
     SceneManager_Init(SCENE_MAINMENU);
     Font_Init();
