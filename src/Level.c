@@ -114,8 +114,12 @@ void SpawnLawnMowers() {
 }
 
 void Level_Init() {
+if (!IsTextureValid(DAY_TEXTURE)){
     DAY_TEXTURE = LoadTexture(DAY_PATH);
+}
+if (!IsTextureValid(NIGHT_TEXTURE)){
     NIGHT_TEXTURE = LoadTexture(NIGHT_PATH);
+}
     if (currentLevel != NULL) {
         SunCount = currentLevel->initSunCount;
         if (currentLevel->lawnMowersActive) {

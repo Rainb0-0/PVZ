@@ -53,7 +53,9 @@ LawnMower *newLawnMower(Vector2 pos) {
 }
 
 void LawnMower_Init() {
+if (!IsTextureValid(LAWNMOWER_TEXTURE)){
     LAWNMOWER_TEXTURE = LoadTexture(LAWNMOWER_TEXTURE_PATH);
+}
 }
 
 void LawnMower_Draw(LawnMower *self) {

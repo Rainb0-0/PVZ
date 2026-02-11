@@ -82,8 +82,12 @@ Potato *newPotato(Vector2 pos) {
 }
 
 void Potato_Init() {
-    POTATO_AWAKE_TEXTURE = LoadTexture(POTATO_AWAKE_PATH);
-    POTATO_SLEEP_TEXTURE = LoadTexture(POTATO_SLEEP_PATH);
+    if (!IsTextureValid(POTATO_AWAKE_TEXTURE)) {
+        POTATO_AWAKE_TEXTURE = LoadTexture(POTATO_AWAKE_PATH);
+    }
+    if (!IsTextureValid(POTATO_SLEEP_TEXTURE)) {
+        POTATO_SLEEP_TEXTURE = LoadTexture(POTATO_SLEEP_PATH);
+    }
 }
 
 void Potato_Draw(Potato *self) {

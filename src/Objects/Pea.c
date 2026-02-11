@@ -44,9 +44,15 @@ State PEA_DESTRUCTION = {
     &DESTRUCTION};
 
 void Pea_Init() {
+if (!IsTextureValid(CREATION)){
     CREATION = LoadTexture(CREATION_PATH);
+}
+if (!IsTextureValid(NORMAL)){
     NORMAL = LoadTexture(NORMAL_PATH);
+}
+if (!IsTextureValid(DESTRUCTION)){
     DESTRUCTION = LoadTexture(DESTRUCTION_PATH);
+}
 }
 
 Pea *newPea(Peashooter *ps) {

@@ -157,12 +157,24 @@ void DamageZombie(Zombie *self, float damage) {
 }
 
 void Zombie_Init() {
+if (!IsTextureValid(NORMAL_WALKING)){
     NORMAL_WALKING = LoadTexture(NORMAL_WALKING_PATH);
+}
+if (!IsTextureValid(NORMAL_EATING)){
     NORMAL_EATING = LoadTexture(NORMAL_EATING_PATH);
+}
+if (!IsTextureValid(NORMAL_DYING)){
     NORMAL_DYING = LoadTexture(NORMAL_DYING_PATH);
+}
+if (!IsTextureValid(FLAG_WALKING)){
     FLAG_WALKING = LoadTexture(FLAG_WALKING_PATH);
+}
+if (!IsTextureValid(FLAG_EATING)){
     FLAG_EATING = LoadTexture(FLAG_EATING_PATH);
+}
+if (!IsTextureValid(FLAG_DYING)){
     FLAG_DYING = LoadTexture(FLAG_DYING_PATH);
+}
 }
 
 void Zombie_Draw(Zombie *self) {

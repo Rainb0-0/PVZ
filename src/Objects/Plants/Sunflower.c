@@ -51,7 +51,9 @@ Sunflower *newSunflower(Vector2 pos) {
 }
 
 void Sunflower_Init() {
+if (!IsTextureValid(SUNFLOWER_IDLE_TEXTURE)){
     SUNFLOWER_IDLE_TEXTURE = LoadTexture(SUNFLOWER_IDLE_PATH);
+}
 }
 
 void Sunflower_Draw(Sunflower *self) {

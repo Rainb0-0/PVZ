@@ -178,9 +178,15 @@ void Shop_Init() {
         ShopButtons[i]->bounds = rect;
         ShopButtons[i]->unlocked = &IsPlantUnlocked[i];
     }
+if (!IsTextureValid(SHOP_BACKGROUND_TEXTURE)){
     SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
+}
+if (!IsTextureValid(COIN_BANK_TEXTURE)){
     COIN_BANK_TEXTURE = LoadTexture(COIN_BANK_PATH);
+}
+if (!IsTextureValid(BACK_TEXTURE)){
     BACK_TEXTURE = LoadTexture(BACK_PATH);
+}
     BackButton.width = BACK_TEXTURE.width * SHOP_SCALE;
     BackButton.height = BACK_TEXTURE.height * SHOP_SCALE;
 }

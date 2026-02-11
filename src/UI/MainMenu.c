@@ -78,10 +78,18 @@ void Buttons_Draw() {
 }
 
 void MainMenu_Init() {
+if (!IsTextureValid(MAINMENU_BACKGROUND)){
     MAINMENU_BACKGROUND = LoadTexture(MAINMENU_BACKGROUND_PATH);
+}
+if (!IsTextureValid(TITLE)){
     TITLE = LoadTexture(TITLE_PATH);
+}
+if (!IsTextureValid(BUTTON_DOWN_TEXTURE)){
     BUTTON_DOWN_TEXTURE = LoadTexture(BUTTON_DOWN_TEXTURE_PATH);
+}
+if (!IsTextureValid(BUTTON_NORMAL_TEXTURE)){
     BUTTON_NORMAL_TEXTURE = LoadTexture(BUTTON_NORMAL_TEXTURE_PATH);
+}
     MENU_BUTTON_WIDTH = BUTTON_NORMAL_TEXTURE.width * BUTTON_SCALE;
     MENU_BUTTON_HEIGHT = BUTTON_NORMAL_TEXTURE.height * BUTTON_SCALE;
     for (int i = 0; i < BUTTONS_SIZE; i++) {

@@ -227,11 +227,21 @@ void PlantSelection_Init() {
     HOVER_COLOR.r = 'f';
     X_OFFSET = GetScreenWidth() -
                BUTTON_WIDTH - 2 * BUTTON_MARGIN;
+if (!IsTextureValid(SEED_PACKET)){
     SEED_PACKET = LoadTexture(SEED_PACKET_PATH);
+}
+if (!IsTextureValid(BACKGROUND)){
     BACKGROUND = LoadTexture(BACKGROUND_PATH);
+}
+if (!IsTextureValid(SUN_BANK)){
     SUN_BANK = LoadTexture(SUN_BANK_PATH);
+}
+if (!IsTextureValid(LOCK)){
     LOCK = LoadTexture(LOCK_PATH);
+}
+if (!IsTextureValid(COINS_TEXTURE)){
     COINS_TEXTURE = LoadTexture(COINS_PATH);
+}
     const float cellHeight = BUTTON_HEIGHT + BUTTON_MARGIN;
     for (int i = 0; i < PlantButtonsSize; i++) {
         PlantButton *current = PlantButtons[i];

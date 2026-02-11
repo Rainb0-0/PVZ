@@ -54,7 +54,9 @@ Chomper *newChomper(Vector2 pos) {
 }
 
 void Chomper_Init() {
+if (!IsTextureValid(CHOMPER_IDLE_TEXTURE)){
     CHOMPER_IDLE_TEXTURE = LoadTexture(CHOMPER_IDLE_TEXTURE_PATH);
+}
 }
 void Chomper_Draw(Chomper *self) {
     int index = FindObjectIndex(self, true);

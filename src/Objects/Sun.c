@@ -34,7 +34,9 @@ State SUN_IDLE = {
     &SUN_TEXTURE};
 
 void Sun_Init() {
+if (!IsTextureValid(SUN_TEXTURE)){
     SUN_TEXTURE = LoadTexture(SUN_PATH);
+}
 }
 
 Sun *newSun(Vector2 dest) {

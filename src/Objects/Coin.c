@@ -72,8 +72,12 @@ Coin *newCoin(Vector2 pos, bool gold) {
 }
 
 void Coin_Init() {
+if (!IsTextureValid(SILVER_COIN_TEXTURE)){
     SILVER_COIN_TEXTURE = LoadTexture(SILVER_COIN_PATH);
+}
+if (!IsTextureValid(GOLD_COIN_TEXTURE)){
     GOLD_COIN_TEXTURE = LoadTexture(GOLD_COIN_PATH);
+}
 }
 
 void Coin_Draw(Coin *self) {

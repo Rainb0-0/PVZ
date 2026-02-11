@@ -44,8 +44,12 @@ State PEASHOOTER_SHOOTING = {
     &PEASHOOTER_SHOOTING_TEXTURE};
 
 void Peashooter_Init() {
+if (!IsTextureValid(PEASHOOTER_IDLE_TEXTURE)){
     PEASHOOTER_IDLE_TEXTURE = LoadTexture(IDLE_PATH);
+}
+if (!IsTextureValid(PEASHOOTER_SHOOTING_TEXTURE)){
     PEASHOOTER_SHOOTING_TEXTURE = LoadTexture(SHOOTING_PATH);
+}
 }
 
 Plant *newPeashooterPlant(Peashooter *self) {
