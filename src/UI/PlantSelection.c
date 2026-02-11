@@ -220,6 +220,24 @@ void SunCount_Draw() {
                 suns, textPos, origin, 0, PRICE_FONT_SIZE, 1, BLACK);
 }
 
+void CoinCount_Draw() {
+    Vector2 origin = {0, 0};
+    Rectangle src = {0, 0, COINS_TEXTURE.width, COINS_TEXTURE.height};
+    Rectangle dst = {0, GetScreenHeight() - src.height * HUD_SCALE,
+                     src.width * HUD_SCALE, src.height * HUD_SCALE};
+    DrawTexturePro(COINS_TEXTURE, src, dst, origin, 0, WHITE);
+    char bal[10];
+    sprintf(bal, "%d", CoinCount);
+    float coinFontSize = 16 * HUD_SCALE;
+    Vector2 textSize = MeasureTextEx(FONT, bal, coinFontSize, 1);
+    Vector2 textPosition = {
+        COINS_TEXT_RECT.x + (COINS_TEXT_RECT.width - textSize.x) / 2,
+        GetScreenHeight() - dst.height + COINS_TEXT_RECT.y +
+            (COINS_TEXT_RECT.height - textSize.y) / 2,
+    };
+    DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
+}
+
 void PlantSelection_Init() {
     HOVER_COLOR.a = '5';
     HOVER_COLOR.g = 'f';
@@ -279,25 +297,28 @@ void PlantSelection_Draw() {
         PlantButton_Draw(PlantButtons[i]);
     }
     SunCount_Draw();
-    Rectangle src = {0, 0, COINS_TEXTURE.width, COINS_TEXTURE.height};
-    Rectangle dst = {0, GetScreenHeight() - src.height * HUD_SCALE,
-                     src.width * HUD_SCALE, src.height * HUD_SCALE};
-    DrawTexturePro(COINS_TEXTURE, src, dst, origin, 0, WHITE);
-    char bal[10];
-    sprintf(bal, "%d", CoinCount);
-    float coinFontSize = 16 * HUD_SCALE;
-    Vector2 textSize = MeasureTextEx(FONT, bal, coinFontSize, 1);
-    Vector2 textPosition = {
-        COINS_TEXT_RECT.x + (COINS_TEXT_RECT.width - textSize.x) / 2,
-        GetScreenHeight() - dst.height + COINS_TEXT_RECT.y +
-            (COINS_TEXT_RECT.height - textSize.y) / 2,
-    };
-    DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
+    CoinCount_Draw();
+    if (SelectedButton != NULL) {
+        Vector2 mousePos = GetMousePosition();
+        float width = *SelectedButton->textureWidth;
+        float height = *SelectedButton->textureHeight;
+        Rectangle src = {0, 0, width, height};
+        Rectangle dst = {
+            mousePos.x - width * HUD_SCALE / 2,
+            mousePos.y - height * HUD_SCALE / 2,
+            width * HUD_SCALE,
+            height * HUD_SCALE,
+        };
+        Color c = {255, 255, 255, 200};
+        DrawTexturePro(*SelectedButton->texture,
+                       src, dst, origin, 0, c);
+    }
 }
 
 void PlantSelection_Update() {
     Vector2 mousePos = GetMousePosition();
     bool isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+    bool justSelected = false;
     for (int i = 0; i < PlantButtonsSize; i++) {
         PlantButton *current = PlantButtons[i];
         Rectangle currentRect = {current->topLeft.x,
@@ -321,9 +342,14 @@ void PlantSelection_Update() {
                 continue;
             if (currentLevel == &LEVEL3 && current->newPlant == newSunflower)
                 continue;
-            ResetSelected();
-            SelectedButton = current;
-            current->selected = true;
+            if (current == SelectedButton) {
+                ResetSelected();
+            } else {
+                ResetSelected();
+                SelectedButton = current;
+                current->selected = true;
+                justSelected = true;
+            }
         }
         current->sinceCooldown += GetFrameTime();
     }
@@ -342,6 +368,8 @@ void PlantSelection_Update() {
                 ResetSelected();
             }
         }
-        // TODO reset selected if not in the grid
+        if (!IsPositionInsideRect(GetPlayfieldRect(), mousePos) && !justSelected) {
+            ResetSelected();
+        }
     }
 }
