@@ -7,8 +7,6 @@
 #include "raylib.h"
 #include <stdlib.h>
 
-// TODO add sound for coin collection
-// TODO ??? add some kind of coin count indicator
 float COIN_TARGET_TIME = 0.5;
 
 Texture2D SILVER_COIN_TEXTURE;
@@ -83,7 +81,7 @@ void Coin_Init() {
 void Coin_Draw(Coin *self) {
     Vector2 offset = {0, 0};
     int index = FindObjectIndex(self, false);
-    DrawCircle(self->pos.x, self->pos.y, self->state->frameHeight / 5, RED);
+    // DrawCircle(self->pos.x, self->pos.y, self->state->frameHeight / 5, RED);
     DrawObject(Objects[index], COIN_SCALE, offset, WHITE);
 }
 
@@ -113,12 +111,11 @@ void Coin_Update(Coin *self) {
     Vector2 mousePos = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
         IsPositionInsideCircle(self->pos,
-                               self->state->frameWidth,
+                               self->state->frameWidth / 5,
                                mousePos)) {
         PlayRandomOggWithPitch(COIN_COLLECTION_SOUND_PATH, 1);
         self->isClicked = true;
     }
 }
 
-// TODO add level selection
 // TODO win and lose sequence

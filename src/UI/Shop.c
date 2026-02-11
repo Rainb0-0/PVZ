@@ -13,8 +13,6 @@
 const int INIT_COIN_COUNT = 10;
 int CoinCount = 10;
 
-// TODO Add sound for clicks
-
 Texture2D SHOP_BACKGROUND_TEXTURE;
 Texture2D COIN_BANK_TEXTURE;
 Texture2D BACK_TEXTURE;

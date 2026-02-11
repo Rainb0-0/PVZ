@@ -14,6 +14,10 @@
 
 bool GameShouldQuit = false;
 
+// TODO modify level save info for level 4
+// TODO win and lose things
+// TODO game music based on scene
+
 int main(void) {
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
     InitWindow(960, 600, "Plants Vs. Zombies");
