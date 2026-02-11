@@ -10,7 +10,8 @@
 const int SunWorth = 10;
 
 const float SUN_TARGET_TIME = 0.45;
-const float SUN_AGE = 5;
+const float SUN_AGE = 10;
+const float SUN_ALPHA_TIME = 1;
 
 Texture2D SUN_TEXTURE;
 
@@ -31,7 +32,8 @@ State SUN_IDLE = {
     SUN_MAX_FRAMES,
     1,
     SUN_FRAME_TIME,
-    &SUN_TEXTURE};
+    &SUN_TEXTURE,
+};
 
 void Sun_Init() {
     if (!IsTextureValid(SUN_TEXTURE)) {
@@ -41,7 +43,7 @@ void Sun_Init() {
 
 Sun *newSun(Vector2 dest) {
     Sun *new = (Sun *)malloc(sizeof(Sun));
-    const int offsetLimit = 20;
+    const int offsetLimit = 150;
     float xOffset = rand() % offsetLimit - offsetLimit / 2;
     float yOffset = rand() % offsetLimit - offsetLimit / 2;
     dest.x = xOffset + dest.x;
@@ -49,7 +51,7 @@ Sun *newSun(Vector2 dest) {
     new->dest.x = dest.x;
     new->dest.y = dest.y;
     new->pos.x = dest.x;
-    new->pos.y = -GetCellDimensions().y;
+    new->pos.y = fmax(GetCellDimensions().y * -4 + dest.y, 0);
     new->initPos = dest;
     new->vel.x = 0;
     new->vel.y = 0;
@@ -70,13 +72,21 @@ Sun *newSun(Vector2 dest) {
 void Sun_Draw(Sun *self) {
     int index = FindObjectIndex(self, false);
     Vector2 offset = {0, 0};
-    DrawObject(Objects[index], SUN_SCALE, offset, WHITE);
+    if (self->alpha > 1.0f)
+        self->alpha = 1.0f;
+    if (self->alpha < 0.0f)
+        self->alpha = 0.0f;
+    Color c = {255, 255, 255, (unsigned char)(self->alpha * 255)};
+    DrawObject(Objects[index], SUN_SCALE, offset, c);
 }
 
 void Sun_Update(Sun *self) {
     float dt = GetFrameTime();
     float xDistance = fabs(self->pos.x - self->dest.x);
     float yDistance = fabs(self->pos.y - self->dest.y);
+    if (self->alpha < 1 && self->isFalling) {
+        self->alpha += 0.01;
+    }
     if (self->isFalling) {
         if (yDistance < POSITION_TOLERANCE.y)
             self->isFalling = false;
@@ -84,8 +94,12 @@ void Sun_Update(Sun *self) {
     } else if (self->isFalling == false && !self->isClicked) {
         self->sinceLanded += dt;
         if (SUN_AGE < self->sinceLanded) {
-            RemoveObject(self, false);
-            return;
+            if (self->alpha <= 0) {
+                RemoveObject(self, false);
+                return;
+            } else {
+                self->alpha -= 0.01;
+            }
         }
         self->vel.y = 0;
     }
