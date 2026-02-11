@@ -9,9 +9,11 @@
 
 Texture2D POTATO_SLEEP_TEXTURE;
 Texture2D POTATO_AWAKE_TEXTURE;
+Texture2D POTATO_EXPLODED_TEXTURE;
 
 const char *POTATO_SLEEP_PATH = "Sprites/Potato/sleep.png";
 const char *POTATO_AWAKE_PATH = "Sprites/Potato/awake.png";
+const char *POTATO_EXPLODED_PATH = "Sprites/Potato/exploded.png";
 const char *POTATO_GROW_SOUND_PATH = "Sounds/Potato/Grow/";
 const char *POTATO_EXPLODE_SOUND_PATH = "Sounds/Potato/Explode/";
 
@@ -24,6 +26,12 @@ const int POTATO_AWAKE_FRAME_WIDTH = 96;
 const int POTATO_AWAKE_FRAME_HEIGHT = 78;
 const int POTATO_AWAKE_MAX_FRAMES = 26;
 const float POTATO_AWAKE_FRAME_TIME = FRAME_TIME;
+
+const int POTATO_EXPLODED_FRAME_WIDTH = 132;
+const int POTATO_EXPLODED_FRAME_HEIGHT = 93;
+const int POTATO_EXPLODED_MAX_FRAMES = 1;
+const float POTATO_EXPLODED_FRAME_TIME = FRAME_TIME;
+const float POTATO_EXPLODED_DURATION = 2;
 
 const float POTATO_HP = 100;
 const float POTATO_COOLDOWN = 10;
@@ -56,7 +64,17 @@ State POTATO_AWAKE = {
     &POTATO_AWAKE_TEXTURE,
 };
 
-Plant *newPotatoPlant(Potato *self) {
+State POTATO_EXPLODED = {
+    POTATO_EXPLODED_FRAME_WIDTH,
+    POTATO_EXPLODED_FRAME_HEIGHT,
+    POTATO_EXPLODED_MAX_FRAMES,
+    1,
+    POTATO_EXPLODED_FRAME_TIME,
+    &POTATO_EXPLODED_TEXTURE,
+};
+
+Plant *
+newPotatoPlant(Potato *self) {
     Plant *pp = (Plant *)malloc(sizeof(Plant));
     pp->hp = &self->hp;
     pp->MAXHP = self->hp;
@@ -88,6 +106,9 @@ void Potato_Init() {
     if (!IsTextureValid(POTATO_SLEEP_TEXTURE)) {
         POTATO_SLEEP_TEXTURE = LoadTexture(POTATO_SLEEP_PATH);
     }
+    if (!IsTextureValid(POTATO_EXPLODED_TEXTURE)) {
+        POTATO_EXPLODED_TEXTURE = LoadTexture(POTATO_EXPLODED_PATH);
+    }
 }
 
 void Potato_Draw(Potato *self) {
@@ -113,7 +134,7 @@ void Potato_Update(Potato *self) {
         if (self->frameIndex == self->state->maxFrameIndex) {
             self->state = &POTATO_AWAKE;
         }
-    } else {
+    } else if (self->state == &POTATO_AWAKE) {
         Vector2 tempPos = {self->pos.x +
                                POSITION_TOLERANCE.x * 4,
                            self->pos.y};
@@ -121,7 +142,12 @@ void Potato_Update(Potato *self) {
             KillZombiesInCircle(self->pos, BLAST_RADIUS);
             // TODO some kind of cloud ?
             PlayRandomOggWithPitch(POTATO_EXPLODE_SOUND_PATH, 1);
-            self->hp = 0;
+            self->state = &POTATO_EXPLODED;
+        }
+    } else {
+        self->sincePlant += dt;
+        if (self->activationCooldown + POTATO_EXPLODED_DURATION < self->sincePlant) {
+            RemoveObject(self, true);
         }
     }
 }
