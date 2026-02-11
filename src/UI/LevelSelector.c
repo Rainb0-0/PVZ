@@ -7,12 +7,13 @@
 #include "raylib.h"
 #include <stdio.h>
 
+#define MAXSTATS 100
+
+int LEVEL4_SCORE[MAXSTATS];
+
 FILE *LEVELSTATS_FILE;
 
 const char *LEVELSTATS_FILE_PATH = "levelstats.bin";
-
-int LevelNormalZombiesKilled[LEVEL_COUNT];
-int LevelFlagZombiesKilled[LEVEL_COUNT];
 
 const float LEVELSELECTOR_SCALE = 0.35;
 const float LEVELSELECTOR_MARGIN = 50 * LEVELSELECTOR_SCALE;
@@ -75,59 +76,50 @@ LevelSelectorButton *LEVELBUTTONS[LEVEL_COUNT] = {
     &LEVELBUTTON4,
 };
 
-void LevelStats_WriteDefaults() {
-    int defaults[LEVEL_COUNT * 2] = {0};
-    fwrite(defaults, sizeof(int), LEVEL_COUNT * 2, LEVELSTATS_FILE);
-}
-
 void LevelStats_ReadFile() {
-    int data[LEVEL_COUNT * 2];
-    fread(data, sizeof(int), LEVEL_COUNT * 2, LEVELSTATS_FILE);
-    for (int i = 0; i < LEVEL_COUNT; i++) {
-        LevelNormalZombiesKilled[i] = data[i];
-    }
-    for (int i = LEVEL_COUNT; i < LEVEL_COUNT * 2; i++) {
-        LevelFlagZombiesKilled[i - LEVEL_COUNT] = data[i];
+    rewind(LEVELSTATS_FILE);
+    int index = 0;
+    int score;
+    while (fread(&score, sizeof(int), 1, LEVELSTATS_FILE)) {
+        LEVEL4_SCORE[index++] = score;
     }
 }
 
 void LevelStats_SaveState() {
-    int data[LEVEL_COUNT * 2];
-    for (int i = 0; i < LEVEL_COUNT; i++) {
-        data[i] = LevelNormalZombiesKilled[i];
-    }
-    for (int i = LEVEL_COUNT; i < LEVEL_COUNT * 2; i++) {
-        data[i] = LevelFlagZombiesKilled[i - LEVEL_COUNT];
-    }
+    int index = 0;
     rewind(LEVELSTATS_FILE);
-    fwrite(data, sizeof(int), LEVEL_COUNT * 2, LEVELSTATS_FILE);
+    while (LEVEL4_SCORE[index] != 0) {
+        fwrite(&LEVEL4_SCORE[index], sizeof(int), 1, LEVELSTATS_FILE);
+        index++;
+    }
 }
 
 void LevelSelector_Init() {
     if (!FileExists(LEVELSTATS_FILE_PATH)) {
         LEVELSTATS_FILE = fopen(LEVELSTATS_FILE_PATH, "wb+");
-        LevelStats_WriteDefaults();
     } else {
         LEVELSTATS_FILE = fopen(LEVELSTATS_FILE_PATH, "rb+");
     }
     LevelStats_ReadFile();
-    LEVELSELECTOR_BACKGROUND_TEXTURE =
-        LoadTexture(LEVELSELECTOR_BACKGROUND_PATH);
-if (!IsTextureValid(LEVEL1_THUMBNAIL_TEXTURE)){
-    LEVEL1_THUMBNAIL_TEXTURE = LoadTexture(LEVEL1_THUMBNAIL_PATH);
-}
-if (!IsTextureValid(LEVEL2_THUMBNAIL_TEXTURE)){
-    LEVEL2_THUMBNAIL_TEXTURE = LoadTexture(LEVEL2_THUMBNAIL_PATH);
-}
-if (!IsTextureValid(LEVEL3_THUMBNAIL_TEXTURE)){
-    LEVEL3_THUMBNAIL_TEXTURE = LoadTexture(LEVEL3_THUMBNAIL_PATH);
-}
-if (!IsTextureValid(LEVEL4_THUMBNAIL_TEXTURE)){
-    LEVEL4_THUMBNAIL_TEXTURE = LoadTexture(LEVEL4_THUMBNAIL_PATH);
-}
-if (!IsTextureValid(LEVELSELECTOR_BACK_TEXTURE)){
-    LEVELSELECTOR_BACK_TEXTURE = LoadTexture(LEVELSELECTOR_BACK_PATH);
-}
+    if (!IsTextureValid(LEVELSELECTOR_BACKGROUND_TEXTURE)) {
+        LEVELSELECTOR_BACKGROUND_TEXTURE =
+            LoadTexture(LEVELSELECTOR_BACKGROUND_PATH);
+    }
+    if (!IsTextureValid(LEVEL1_THUMBNAIL_TEXTURE)) {
+        LEVEL1_THUMBNAIL_TEXTURE = LoadTexture(LEVEL1_THUMBNAIL_PATH);
+    }
+    if (!IsTextureValid(LEVEL2_THUMBNAIL_TEXTURE)) {
+        LEVEL2_THUMBNAIL_TEXTURE = LoadTexture(LEVEL2_THUMBNAIL_PATH);
+    }
+    if (!IsTextureValid(LEVEL3_THUMBNAIL_TEXTURE)) {
+        LEVEL3_THUMBNAIL_TEXTURE = LoadTexture(LEVEL3_THUMBNAIL_PATH);
+    }
+    if (!IsTextureValid(LEVEL4_THUMBNAIL_TEXTURE)) {
+        LEVEL4_THUMBNAIL_TEXTURE = LoadTexture(LEVEL4_THUMBNAIL_PATH);
+    }
+    if (!IsTextureValid(LEVELSELECTOR_BACK_TEXTURE)) {
+        LEVELSELECTOR_BACK_TEXTURE = LoadTexture(LEVELSELECTOR_BACK_PATH);
+    }
     float width = LEVEL1_THUMBNAIL_TEXTURE.width * LEVELSELECTOR_SCALE;
     float height = LEVEL1_THUMBNAIL_TEXTURE.height * LEVELSELECTOR_SCALE;
     int rows = 2;

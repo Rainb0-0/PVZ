@@ -51,7 +51,7 @@ Sun *newSun(Vector2 dest) {
     new->dest.x = dest.x;
     new->dest.y = dest.y;
     new->pos.x = dest.x;
-    new->pos.y = fmax(GetCellDimensions().y * -4 + dest.y, 0);
+    new->pos.y = GetCellDimensions().y * -4 + dest.y;
     new->initPos = dest;
     new->vel.x = 0;
     new->vel.y = 0;

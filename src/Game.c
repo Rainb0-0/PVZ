@@ -35,6 +35,12 @@ const char *GAME_WON_SOUND = "Sounds/Level/Win/";
 const char *GAME_LOST_SOUND = "Sounds/Level/Lose/";
 
 bool GamePaused = false;
+// 0 means ongoing, 1 win, -1 lost
+int GameState = 0;
+
+const float OVERLAY_SCALE = 1.2;
+const float OVERLAY_FONT_SIZE = 30 * OVERLAY_SCALE;
+const float OVERLAY_BUTTON_MARGIN = 16 * OVERLAY_SCALE;
 
 float calculateDet(float y) {
     int n = 0;
@@ -161,8 +167,116 @@ void KillZombiesInCircle(Vector2 center, float radius) {
     }
 }
 
-void Game_End() {
-    // TODO implement game end functionality
+typedef struct OverlayButton {
+    Texture2D *texture;
+    void (*onClick)();
+    bool hovered;
+    char *text;
+    Rectangle bounds;
+} OverlayButton;
+
+void BackToMenu() {
+    Level_Destroy();
+    GamePaused = false;
+    GameState = 0;
+    SceneManager_Change(SCENE_MAINMENU);
+}
+
+void ResumeGame() {
+    GamePaused = false;
+}
+
+OverlayButton BackToMenuButton = {
+    &BUTTON_NORMAL_TEXTURE,
+    BackToMenu,
+    false,
+    "MAIN MENU",
+};
+
+OverlayButton ResumeButton = {
+    &BUTTON_NORMAL_TEXTURE,
+    ResumeGame,
+    false,
+    "RESUME",
+};
+
+OverlayButton *PauseButtons[] = {&ResumeButton, &BackToMenuButton};
+OverlayButton *GameOverButtons[] = {&BackToMenuButton};
+
+void Overlay_Draw() {
+    Color c = BLACK;
+    c.a = 200;
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), c);
+    char text[20];
+    if (GameState == -1) {
+        char temp[20] = "YOU LOST :(";
+        strcpy(text, temp);
+    } else if (GameState == 0) {
+        char temp[20] = "GAME PAUSED";
+        strcpy(text, temp);
+    } else {
+        char temp[20] = "YOU WON :D";
+        strcpy(text, temp);
+    }
+    Vector2 textSize = MeasureTextEx(FONT, text, OVERLAY_FONT_SIZE, 1);
+    Vector2 textPos = {(GetScreenWidth() - textSize.x) / 2, 200};
+    Vector2 origin = {0, 0};
+    DrawTextPro(FONT, text, textPos, origin, 0, OVERLAY_FONT_SIZE, 1, WHITE);
+    int length = 0;
+    OverlayButton **list;
+    if (GameState == 0) {
+        list = PauseButtons;
+        length = 2;
+    } else {
+        list = GameOverButtons;
+        length = 1;
+    }
+    for (int i = 0; i < length; i++) {
+        OverlayButton *cur = list[i];
+        Color o = WHITE;
+        if (cur->hovered)
+            o = LIGHTGRAY;
+        Rectangle src = {0, 0, cur->texture->width, cur->texture->height};
+        DrawTexturePro(*cur->texture, src, cur->bounds, origin, 0, o);
+        textSize = MeasureTextEx(FONT, cur->text, OVERLAY_FONT_SIZE, 1);
+        textPos.x = cur->bounds.x + (cur->bounds.width - textSize.x) / 2;
+        textPos.y = cur->bounds.y + (cur->bounds.height - textSize.y) / 2;
+        DrawTextPro(FONT, cur->text,
+                    textPos, origin, 0, OVERLAY_FONT_SIZE, 1, BLACK);
+    }
+}
+
+void Overlay_Update() {
+    int length = 0;
+    OverlayButton **list;
+    if (GameState == 0) {
+        list = PauseButtons;
+        length = 2;
+    } else {
+        list = GameOverButtons;
+        length = 1;
+    }
+    Vector2 mousePos = GetMousePosition();
+    bool isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+    for (int i = 0; i < length; i++) {
+        OverlayButton *cur = list[i];
+        Color o = WHITE;
+        if (cur->hovered)
+            o = LIGHTGRAY;
+        if (IsPositionInsideRect(cur->bounds, mousePos)) {
+            cur->hovered = true;
+            if (isClicked) {
+                cur->onClick();
+            }
+        } else {
+            cur->hovered = false;
+        }
+    }
+}
+
+void Game_End(bool won) {
+    GamePaused = true;
+    GameState = (won == true ? 1 : -1);
 }
 
 void Game_Init() {
@@ -172,6 +286,17 @@ void Game_Init() {
         float y = GetPlayfieldRect().y +
                   i * GetCellDimensions().y + GetCellDimensions().y / 2;
         calcluateWeight(y);
+    }
+
+    for (int i = 0; i < 2; i++) {
+        OverlayButton *cur = PauseButtons[i];
+        float width = cur->texture->width * OVERLAY_SCALE;
+        float height = cur->texture->height * OVERLAY_SCALE;
+        float x = (GetScreenWidth() - width) / 2;
+        float y = (GetScreenHeight() - height) / 2 +
+                  i * (height + OVERLAY_BUTTON_MARGIN);
+        Rectangle bounds = {x, y, width, height};
+        cur->bounds = bounds;
     }
 }
 
@@ -200,9 +325,18 @@ void Game_Draw() {
     //     DrawText(text, 200, y, 50, BLACK);
     // }
     PlantSelection_Draw();
+    if (GamePaused) {
+        Overlay_Draw();
+    }
 }
 
 void Game_Update() {
+    if (IsKeyPressed(KEY_ESCAPE) && GameState == 0)
+        GamePaused = !GamePaused;
+    if (GamePaused) {
+        Overlay_Update();
+        return;
+    }
     Level_Update();
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL)

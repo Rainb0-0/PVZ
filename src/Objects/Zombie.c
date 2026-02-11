@@ -217,7 +217,7 @@ void Zombie_Update(Zombie *self) {
             ChangeZombieState(self);
         }
         if (self->pos.x + self->state->frameWidth < 0) {
-            Game_End();
+            Game_End(false);
         }
         float dt = GetFrameTime();
         float yDistance = fabs(self->pos.y - self->destY);

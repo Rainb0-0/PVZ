@@ -18,6 +18,7 @@ extern bool lawnMowers[GRID_ROWS];
 extern int chompers[GRID_ROWS];
 
 extern bool GamePaused;
+extern int GameState;
 
 void calcluateWeight(float y);
 
@@ -34,6 +35,6 @@ void KillZombiesInCircle(Vector2 center, float radius);
 void Game_Init();
 void Game_Draw();
 void Game_Update();
-void Game_End();
+void Game_End(bool won);
 
 #endif

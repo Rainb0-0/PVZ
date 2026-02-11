@@ -192,6 +192,11 @@ void Level_Update() {
     }
     sinceSunSpawn += dt;
     sinceZombieSpawn += dt;
+    if (zombiesKilled ==
+            currentLevel->flagZombieCount + currentLevel->normalZombieCount &&
+        currentLevel->infiniteZombies == false) {
+        Game_End(true);
+    }
 }
 
 void Level_Destroy() {

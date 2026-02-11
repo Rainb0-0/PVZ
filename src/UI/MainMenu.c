@@ -9,13 +9,11 @@
 Texture2D MAINMENU_BACKGROUND;
 Texture2D TITLE;
 Texture2D BUTTON_NORMAL_TEXTURE;
-Texture2D BUTTON_DOWN_TEXTURE;
 
 Color BG_OVERLAY;
 
 const char *MAINMENU_BACKGROUND_PATH = "Menu.jpg";
 const char *BUTTON_NORMAL_TEXTURE_PATH = "Button.png";
-const char *BUTTON_DOWN_TEXTURE_PATH = "ButtonDown.png";
 const char *TITLE_PATH = "Title.png";
 
 const float TITLE_SCALE = 1;
@@ -58,8 +56,8 @@ void Buttons_Draw() {
                          BUTTON_NORMAL_TEXTURE.height};
         Vector2 origin = {0, 0};
         if (Buttons[i]->hovered)
-            DrawTexturePro(BUTTON_DOWN_TEXTURE,
-                           src, Buttons[i]->bounds, origin, 0, WHITE);
+            DrawTexturePro(BUTTON_NORMAL_TEXTURE,
+                           src, Buttons[i]->bounds, origin, 0, LIGHTGRAY);
         else
             DrawTexturePro(BUTTON_NORMAL_TEXTURE,
                            src, Buttons[i]->bounds, origin, 0, WHITE);
@@ -70,26 +68,21 @@ void Buttons_Draw() {
                                MENU_BUTTON_WIDTH / 2 - textSize.x / 2,
                            Buttons[i]->bounds.y +
                                MENU_BUTTON_HEIGHT / 2 - textSize.y / 2};
-        if (Buttons[i]->hovered)
-            textPos.y += 1 * BUTTON_SCALE;
         DrawTextPro(FONT, Buttons[i]->text, textPos, origin, 0,
                     BUTTON_FONT_SIZE, 1, BLACK);
     }
 }
 
 void MainMenu_Init() {
-if (!IsTextureValid(MAINMENU_BACKGROUND)){
-    MAINMENU_BACKGROUND = LoadTexture(MAINMENU_BACKGROUND_PATH);
-}
-if (!IsTextureValid(TITLE)){
-    TITLE = LoadTexture(TITLE_PATH);
-}
-if (!IsTextureValid(BUTTON_DOWN_TEXTURE)){
-    BUTTON_DOWN_TEXTURE = LoadTexture(BUTTON_DOWN_TEXTURE_PATH);
-}
-if (!IsTextureValid(BUTTON_NORMAL_TEXTURE)){
-    BUTTON_NORMAL_TEXTURE = LoadTexture(BUTTON_NORMAL_TEXTURE_PATH);
-}
+    if (!IsTextureValid(MAINMENU_BACKGROUND)) {
+        MAINMENU_BACKGROUND = LoadTexture(MAINMENU_BACKGROUND_PATH);
+    }
+    if (!IsTextureValid(TITLE)) {
+        TITLE = LoadTexture(TITLE_PATH);
+    }
+    if (!IsTextureValid(BUTTON_NORMAL_TEXTURE)) {
+        BUTTON_NORMAL_TEXTURE = LoadTexture(BUTTON_NORMAL_TEXTURE_PATH);
+    }
     MENU_BUTTON_WIDTH = BUTTON_NORMAL_TEXTURE.width * BUTTON_SCALE;
     MENU_BUTTON_HEIGHT = BUTTON_NORMAL_TEXTURE.height * BUTTON_SCALE;
     for (int i = 0; i < BUTTONS_SIZE; i++) {

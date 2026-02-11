@@ -4,7 +4,6 @@
 #include "raylib.h"
 
 extern Texture2D BUTTON_NORMAL_TEXTURE;
-extern Texture2D BUTTON_DOWN_TEXTURE;
 
 extern const float BUTTON_SCALE;
 extern const float MENU_BUTTON_MARGIN;
