@@ -19,7 +19,7 @@ static Texture2D FLAG_EATING;
 static Texture2D FLAG_DYING;
 
 const float ZOMBIE_HP = 100;
-const Vector2 ZOMBIE_VEL = {-70, 0};
+const Vector2 ZOMBIE_VEL = {-20, 0};
 const float ATTACK_DAMAGE = 10;
 const float ATTACK_COOLDOWN = 1;
 
@@ -145,36 +145,29 @@ void ChangeZombieState(Zombie *self) {
     }
 }
 
-Object *findZombie(Zombie *self) {
-    for (int i = 0; i < ObjectsCount; i++) {
-        if ((Zombie *)Objects[i]->self == self)
-            return Objects[i];
-    }
-}
-
 void DamageZombie(Zombie *self, float damage) {
     self->hp -= damage;
 }
 
 void Zombie_Init() {
-if (!IsTextureValid(NORMAL_WALKING)){
-    NORMAL_WALKING = LoadTexture(NORMAL_WALKING_PATH);
-}
-if (!IsTextureValid(NORMAL_EATING)){
-    NORMAL_EATING = LoadTexture(NORMAL_EATING_PATH);
-}
-if (!IsTextureValid(NORMAL_DYING)){
-    NORMAL_DYING = LoadTexture(NORMAL_DYING_PATH);
-}
-if (!IsTextureValid(FLAG_WALKING)){
-    FLAG_WALKING = LoadTexture(FLAG_WALKING_PATH);
-}
-if (!IsTextureValid(FLAG_EATING)){
-    FLAG_EATING = LoadTexture(FLAG_EATING_PATH);
-}
-if (!IsTextureValid(FLAG_DYING)){
-    FLAG_DYING = LoadTexture(FLAG_DYING_PATH);
-}
+    if (!IsTextureValid(NORMAL_WALKING)) {
+        NORMAL_WALKING = LoadTexture(NORMAL_WALKING_PATH);
+    }
+    if (!IsTextureValid(NORMAL_EATING)) {
+        NORMAL_EATING = LoadTexture(NORMAL_EATING_PATH);
+    }
+    if (!IsTextureValid(NORMAL_DYING)) {
+        NORMAL_DYING = LoadTexture(NORMAL_DYING_PATH);
+    }
+    if (!IsTextureValid(FLAG_WALKING)) {
+        FLAG_WALKING = LoadTexture(FLAG_WALKING_PATH);
+    }
+    if (!IsTextureValid(FLAG_EATING)) {
+        FLAG_EATING = LoadTexture(FLAG_EATING_PATH);
+    }
+    if (!IsTextureValid(FLAG_DYING)) {
+        FLAG_DYING = LoadTexture(FLAG_DYING_PATH);
+    }
 }
 
 void Zombie_Draw(Zombie *self) {
@@ -187,7 +180,7 @@ void Zombie_Draw(Zombie *self) {
         tint = BLUE;
         tint = ColorBrightness(tint, 0.5);
     }
-    DrawObject(Objects[index], 1, offset, tint);
+    DrawObject(Objects[index], 0.9, offset, tint);
 }
 
 void Zombie_Update(Zombie *self) {

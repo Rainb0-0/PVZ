@@ -83,7 +83,7 @@ void SpawnZombie(bool flag) {
     float yOffset = GetPlayfieldRect().y;
     Vector2 cellDim = GetCellDimensions();
     Vector2 pos = {
-        GetScreenWidth() - 100,
+        GetScreenWidth() - 50,
         row * cellDim.y + yOffset + cellDim.y / 2,
     };
     Zombie *nz = newZombie(pos, flag);
@@ -114,12 +114,12 @@ void SpawnLawnMowers() {
 }
 
 void Level_Init() {
-if (!IsTextureValid(DAY_TEXTURE)){
-    DAY_TEXTURE = LoadTexture(DAY_PATH);
-}
-if (!IsTextureValid(NIGHT_TEXTURE)){
-    NIGHT_TEXTURE = LoadTexture(NIGHT_PATH);
-}
+    if (!IsTextureValid(DAY_TEXTURE)) {
+        DAY_TEXTURE = LoadTexture(DAY_PATH);
+    }
+    if (!IsTextureValid(NIGHT_TEXTURE)) {
+        NIGHT_TEXTURE = LoadTexture(NIGHT_PATH);
+    }
     if (currentLevel != NULL) {
         SunCount = currentLevel->initSunCount;
         if (currentLevel->lawnMowersActive) {

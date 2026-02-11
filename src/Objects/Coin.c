@@ -72,18 +72,19 @@ Coin *newCoin(Vector2 pos, bool gold) {
 }
 
 void Coin_Init() {
-if (!IsTextureValid(SILVER_COIN_TEXTURE)){
-    SILVER_COIN_TEXTURE = LoadTexture(SILVER_COIN_PATH);
-}
-if (!IsTextureValid(GOLD_COIN_TEXTURE)){
-    GOLD_COIN_TEXTURE = LoadTexture(GOLD_COIN_PATH);
-}
+    if (!IsTextureValid(SILVER_COIN_TEXTURE)) {
+        SILVER_COIN_TEXTURE = LoadTexture(SILVER_COIN_PATH);
+    }
+    if (!IsTextureValid(GOLD_COIN_TEXTURE)) {
+        GOLD_COIN_TEXTURE = LoadTexture(GOLD_COIN_PATH);
+    }
 }
 
 void Coin_Draw(Coin *self) {
-    Vector2 offset = {-60, -60};
+    Vector2 offset = {0, 0};
     int index = FindObjectIndex(self, false);
-    DrawObject(Objects[index], COIN_SCALE * 1.15, offset, WHITE);
+    DrawCircle(self->pos.x, self->pos.y, self->state->frameHeight / 5, RED);
+    DrawObject(Objects[index], COIN_SCALE, offset, WHITE);
 }
 
 void Coin_Update(Coin *self) {

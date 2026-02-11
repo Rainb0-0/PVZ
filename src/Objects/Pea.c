@@ -44,20 +44,20 @@ State PEA_DESTRUCTION = {
     &DESTRUCTION};
 
 void Pea_Init() {
-if (!IsTextureValid(CREATION)){
-    CREATION = LoadTexture(CREATION_PATH);
-}
-if (!IsTextureValid(NORMAL)){
-    NORMAL = LoadTexture(NORMAL_PATH);
-}
-if (!IsTextureValid(DESTRUCTION)){
-    DESTRUCTION = LoadTexture(DESTRUCTION_PATH);
-}
+    if (!IsTextureValid(CREATION)) {
+        CREATION = LoadTexture(CREATION_PATH);
+    }
+    if (!IsTextureValid(NORMAL)) {
+        NORMAL = LoadTexture(NORMAL_PATH);
+    }
+    if (!IsTextureValid(DESTRUCTION)) {
+        DESTRUCTION = LoadTexture(DESTRUCTION_PATH);
+    }
 }
 
 Pea *newPea(Peashooter *ps) {
     Pea *p = (Pea *)malloc(sizeof(Pea));
-    float xOffset = +100;
+    float xOffset = +35;
     p->pos.x = ps->pos.x + xOffset;
     p->pos.y = ps->pos.y;
     p->attackDamage = PEA_ATTACK_DAMAGE;
@@ -79,7 +79,7 @@ void ChangePeaState(Pea *self) {
 
 void Pea_Draw(Pea *self) {
     int index = FindObjectIndex(self, false);
-    float scale = 3;
+    float scale = 1;
     Vector2 offset = {-PEA_NORMAL_FRAME_WIDTH / 2 * scale,
                       -PEA_NORMAL_FRAME_HEIGHT / 2 * scale};
     DrawObject(Objects[index], scale, offset, WHITE);

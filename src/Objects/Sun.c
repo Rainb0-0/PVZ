@@ -17,8 +17,7 @@ const char *SUN_PATH = "Sprites/Sun.png";
 const char *SUN_COLLECT_SOUND_PATH = "Sounds/Sun/";
 const float SUN_SCALE = 1;
 
-const float SUN_FALLING_VEL = 300;
-const float SUN_MOVING_VEL = 2500;
+const float SUN_FALLING_VEL = 100;
 
 const int SUN_FRAME_WIDTH = 140;
 const int SUN_FRAME_HEIGHT = 140;
@@ -34,14 +33,14 @@ State SUN_IDLE = {
     &SUN_TEXTURE};
 
 void Sun_Init() {
-if (!IsTextureValid(SUN_TEXTURE)){
-    SUN_TEXTURE = LoadTexture(SUN_PATH);
-}
+    if (!IsTextureValid(SUN_TEXTURE)) {
+        SUN_TEXTURE = LoadTexture(SUN_PATH);
+    }
 }
 
 Sun *newSun(Vector2 dest) {
     Sun *new = (Sun *)malloc(sizeof(Sun));
-    const int offsetLimit = 300;
+    const int offsetLimit = 20;
     float xOffset = rand() % offsetLimit - offsetLimit / 2;
     float yOffset = rand() % offsetLimit - offsetLimit / 2;
     dest.x = xOffset + dest.x;
@@ -84,7 +83,8 @@ void Sun_Update(Sun *self) {
         self->vel.y = 0;
     }
     if (self->isClicked) {
-        if (xDistance < POSITION_TOLERANCE.x && yDistance < POSITION_TOLERANCE.y) {
+        if (xDistance < POSITION_TOLERANCE.x &&
+            yDistance < POSITION_TOLERANCE.y) {
             SunCount += SunWorth;
             RemoveObject(self, false);
         }
@@ -108,8 +108,10 @@ void Sun_Update(Sun *self) {
             self->isClicked == false) {
             self->isClicked = true;
             self->isFalling = false;
-            self->dest.x = X_OFFSET + (GetScreenWidth() - X_OFFSET) / 2;
-            self->dest.y = GetScreenHeight() - 250;
+            self->dest.x = GetScreenWidth() -
+                           (GetScreenWidth() - X_OFFSET) / 2;
+            self->dest.y = GetScreenHeight() -
+                           (GetScreenWidth() - X_OFFSET) / 2;
             PlayRandomOggWithPitch(SUN_COLLECT_SOUND_PATH, 1);
         }
     }

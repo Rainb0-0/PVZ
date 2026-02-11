@@ -115,7 +115,7 @@ void Potato_Update(Potato *self) {
         }
     } else {
         Vector2 tempPos = {self->pos.x +
-                               POSITION_TOLERANCE.x * 12,
+                               POSITION_TOLERANCE.x * 4,
                            self->pos.y};
         if (ZombieAtPosition(tempPos)) {
             KillZombiesInCircle(self->pos, BLAST_RADIUS);

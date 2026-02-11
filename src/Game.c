@@ -113,7 +113,7 @@ Plant *PlantAtPosition(Vector2 pos) {
         if (Objects[i]->type == PLANT) {
             float xDistance = fabs(Objects[i]->pos->x - pos.x);
             float yDistance = fabs(Objects[i]->pos->y - pos.y);
-            if (xDistance < POSITION_TOLERANCE.x * 12 &&
+            if (xDistance < POSITION_TOLERANCE.x * 4 &&
                 yDistance < POSITION_TOLERANCE.y)
                 return (Plant *)Objects[i]->self;
         }
@@ -255,6 +255,7 @@ void Game_End() {
 void Game_Init() {
     PauseScreen_Init();
     Level_Init();
+    PlantSelection_Init();
     for (int i = 0; i < GRID_ROWS; i++) {
         float y = GetPlayfieldRect().y +
                   i * GetCellDimensions().y + GetCellDimensions().y / 2;

@@ -13,7 +13,7 @@ const char *LAWNMOWER_TEXTURE_PATH = "Sprites/LawnMower.png";
 const char *LAWNMOWER_SOUND_PATH = "Sounds/LawnMower/";
 
 const int DAMAGE = 1000;
-const Vector2 VEL = {700, 0};
+const Vector2 VEL = {300, 0};
 
 const int LAWNMOWER_FRAME_WIDTH = 92;
 const int LAWNMOWER_FRAME_HEIGHT = 75;
@@ -53,16 +53,16 @@ LawnMower *newLawnMower(Vector2 pos) {
 }
 
 void LawnMower_Init() {
-if (!IsTextureValid(LAWNMOWER_TEXTURE)){
-    LAWNMOWER_TEXTURE = LoadTexture(LAWNMOWER_TEXTURE_PATH);
-}
+    if (!IsTextureValid(LAWNMOWER_TEXTURE)) {
+        LAWNMOWER_TEXTURE = LoadTexture(LAWNMOWER_TEXTURE_PATH);
+    }
 }
 
 void LawnMower_Draw(LawnMower *self) {
     int index = FindObjectIndex(self, false);
     Vector2 offset = {-45, 0};
     if (self->active)
-        offset.y += rand() % 5;
+        offset.y += rand() % 3;
     DrawObject(Objects[index], 1, offset, WHITE);
 }
 
