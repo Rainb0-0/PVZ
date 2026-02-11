@@ -10,6 +10,7 @@
 const int SunWorth = 10;
 
 const float SUN_TARGET_TIME = 0.45;
+const float SUN_AGE = 5;
 
 Texture2D SUN_TEXTURE;
 
@@ -62,6 +63,7 @@ Sun *newSun(Vector2 dest) {
     new->draw = Sun_Draw;
     new->isFalling = true;
     new->isClicked = false;
+    new->sinceLanded = 0;
     return new;
 }
 
@@ -80,6 +82,11 @@ void Sun_Update(Sun *self) {
             self->isFalling = false;
         self->vel.y = SUN_FALLING_VEL;
     } else if (self->isFalling == false && !self->isClicked) {
+        self->sinceLanded += dt;
+        if (SUN_AGE < self->sinceLanded) {
+            RemoveObject(self, false);
+            return;
+        }
         self->vel.y = 0;
     }
     if (self->isClicked) {

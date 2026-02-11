@@ -21,6 +21,7 @@ typedef struct Sun {
     State *state;
     int frameIndex;
     float frameTime;
+    float sinceLanded;
     void (*draw)(struct Sun *self);
     void (*update)(struct Sun *self);
 } Sun;
