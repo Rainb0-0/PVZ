@@ -22,13 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Button {
-    void (*onClick)();
-    bool hovered;
-    char *text;
-    Rectangle bounds;
-} Button;
-
 int SunCount = 100;
 
 const Vector2 POSITION_TOLERANCE = {10, 10};
@@ -88,7 +81,7 @@ Zombie *ZombieAtPosition(Vector2 pos) {
     return NULL;
 }
 
-bool isZombieInLaneOfPos(Vector2 pos) {
+bool IsZombieInLaneOfPosition(Vector2 pos) {
     Vector2 snappedPos = SnapPosToGrid(pos);
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL)
@@ -168,92 +161,11 @@ void KillZombiesInCircle(Vector2 center, float radius) {
     }
 }
 
-void BackToMenu() {
-    SceneManager_Change(SCENE_MAINMENU);
-    Level_Destroy();
-    GamePaused = false;
-}
-
-void Unpause() {
-    GamePaused = false;
-}
-
-Button Unpause_Button = {
-    Unpause,
-    false,
-    "Unpause",
-};
-
-Button BackToMenu_Button = {
-    BackToMenu,
-    false,
-    "Main Menu",
-};
-
-Button *PauseButtons[] = {&Unpause_Button, &BackToMenu_Button};
-
-void PauseScreen_Init() {
-    int SIZE = sizeof(PauseButtons) / sizeof(PauseButtons[0]);
-    float Y_OFFSET = (GetScreenHeight() -
-                      (SIZE * (MENU_BUTTON_HEIGHT + MENU_BUTTON_MARGIN) -
-                       MENU_BUTTON_MARGIN)) /
-                     2;
-    for (int i = 0; i < SIZE; i++) {
-        PauseButtons[i]->bounds.y =
-            Y_OFFSET + i * (MENU_BUTTON_HEIGHT + MENU_BUTTON_MARGIN);
-        PauseButtons[i]->bounds.x = (GetScreenWidth() - MENU_BUTTON_WIDTH) / 2;
-        PauseButtons[i]->bounds.width = MENU_BUTTON_WIDTH;
-        PauseButtons[i]->bounds.height = MENU_BUTTON_HEIGHT;
-    }
-}
-
-void PauseScreen_Draw() {
-    int SIZE = sizeof(PauseButtons) / sizeof(PauseButtons[0]);
-    for (int i = 0; i < SIZE; i++) {
-        Rectangle src = {0, 0, BUTTON_NORMAL_TEXTURE.width,
-                         BUTTON_NORMAL_TEXTURE.height};
-        Vector2 origin = {0, 0};
-        if (PauseButtons[i]->hovered)
-            DrawTexturePro(BUTTON_DOWN_TEXTURE, src,
-                           PauseButtons[i]->bounds, origin, 0, WHITE);
-        else
-            DrawTexturePro(BUTTON_NORMAL_TEXTURE, src,
-                           PauseButtons[i]->bounds, origin, 0, WHITE);
-        Vector2 textSize = MeasureTextEx(FONT,
-                                         PauseButtons[i]->text,
-                                         BUTTON_FONT_SIZE, 1);
-        Vector2 textPos = {PauseButtons[i]->bounds.x +
-                               MENU_BUTTON_WIDTH / 2 - textSize.x / 2,
-                           PauseButtons[i]->bounds.y +
-                               MENU_BUTTON_HEIGHT / 2 - textSize.y / 2};
-        if (PauseButtons[i]->hovered)
-            textPos.y += 1 * BUTTON_SCALE;
-        DrawTextPro(FONT, PauseButtons[i]->text,
-                    textPos, origin, 0, BUTTON_FONT_SIZE, 1, WHITE);
-    }
-}
-
-void PauseScreen_Update() {
-    int SIZE = sizeof(PauseButtons) / sizeof(PauseButtons[0]);
-    Vector2 mousePos = GetMousePosition();
-    for (int i = 0; i < SIZE; i++) {
-        if (IsPositionInsideRect(PauseButtons[i]->bounds, mousePos)) {
-            PauseButtons[i]->hovered = true;
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                PauseButtons[i]->onClick();
-            }
-        } else {
-            PauseButtons[i]->hovered = false;
-        }
-    }
-}
-
 void Game_End() {
     // TODO implement game end functionality
 }
 
 void Game_Init() {
-    PauseScreen_Init();
     Level_Init();
     PlantSelection_Init();
     for (int i = 0; i < GRID_ROWS; i++) {
@@ -288,20 +200,9 @@ void Game_Draw() {
     //     DrawText(text, 200, y, 50, BLACK);
     // }
     PlantSelection_Draw();
-    if (GamePaused) {
-        DrawRectangle(0, 0, GetScreenWidth(),
-                      GetScreenHeight(), BG_OVERLAY);
-        PauseScreen_Draw();
-    }
 }
 
 void Game_Update() {
-    if (IsKeyPressed(KEY_ESCAPE))
-        GamePaused = !GamePaused;
-    if (GamePaused) {
-        PauseScreen_Update();
-        return;
-    }
     Level_Update();
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL)

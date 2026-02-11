@@ -144,7 +144,7 @@ void Level_Draw() {
     Vector2 origin = {0, 0};
     DrawTexturePro(*(currentLevel->background),
                    src, dst, origin, 0, WHITE);
-    Draw_Grid();
+    // Draw_Grid();
 }
 
 void SpawnSun() {

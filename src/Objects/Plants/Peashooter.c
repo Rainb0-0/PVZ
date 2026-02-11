@@ -44,12 +44,12 @@ State PEASHOOTER_SHOOTING = {
     &PEASHOOTER_SHOOTING_TEXTURE};
 
 void Peashooter_Init() {
-if (!IsTextureValid(PEASHOOTER_IDLE_TEXTURE)){
-    PEASHOOTER_IDLE_TEXTURE = LoadTexture(IDLE_PATH);
-}
-if (!IsTextureValid(PEASHOOTER_SHOOTING_TEXTURE)){
-    PEASHOOTER_SHOOTING_TEXTURE = LoadTexture(SHOOTING_PATH);
-}
+    if (!IsTextureValid(PEASHOOTER_IDLE_TEXTURE)) {
+        PEASHOOTER_IDLE_TEXTURE = LoadTexture(IDLE_PATH);
+    }
+    if (!IsTextureValid(PEASHOOTER_SHOOTING_TEXTURE)) {
+        PEASHOOTER_SHOOTING_TEXTURE = LoadTexture(SHOOTING_PATH);
+    }
 }
 
 Plant *newPeashooterPlant(Peashooter *self) {
@@ -104,7 +104,7 @@ void Peashooter_Update(Peashooter *self) {
         if (
             self->frameIndex == self->state->maxFrameIndex &&
             PEASHOOTER_COOLDOWN <= self->sinceShot) {
-            if (isZombieInLaneOfPos(self->pos)) {
+            if (IsZombieInLaneOfPosition(self->pos)) {
                 ChangePeashooterState(self);
             }
         }
@@ -117,7 +117,7 @@ void Peashooter_Update(Peashooter *self) {
                 PlayRandomOggWithPitch(SHOOT_SOUND_PATH, 0.3);
             }
         } else if (self->frameIndex == self->state->maxFrameIndex) {
-            if (!isZombieInLaneOfPos(self->pos) ||
+            if (!IsZombieInLaneOfPosition(self->pos) ||
                 self->sinceShot < PEASHOOTER_COOLDOWN) {
                 ChangePeashooterState(self);
             }

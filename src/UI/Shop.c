@@ -178,15 +178,15 @@ void Shop_Init() {
         ShopButtons[i]->bounds = rect;
         ShopButtons[i]->unlocked = &IsPlantUnlocked[i];
     }
-if (!IsTextureValid(SHOP_BACKGROUND_TEXTURE)){
-    SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
-}
-if (!IsTextureValid(COIN_BANK_TEXTURE)){
-    COIN_BANK_TEXTURE = LoadTexture(COIN_BANK_PATH);
-}
-if (!IsTextureValid(BACK_TEXTURE)){
-    BACK_TEXTURE = LoadTexture(BACK_PATH);
-}
+    if (!IsTextureValid(SHOP_BACKGROUND_TEXTURE)) {
+        SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
+    }
+    if (!IsTextureValid(COIN_BANK_TEXTURE)) {
+        COIN_BANK_TEXTURE = LoadTexture(COIN_BANK_PATH);
+    }
+    if (!IsTextureValid(BACK_TEXTURE)) {
+        BACK_TEXTURE = LoadTexture(BACK_PATH);
+    }
     BackButton.width = BACK_TEXTURE.width * SHOP_SCALE;
     BackButton.height = BACK_TEXTURE.height * SHOP_SCALE;
 }
@@ -249,10 +249,10 @@ void DrawShopBackground() {
     float height = SHOP_BACKGROUND_TEXTURE.height;
     float sw = GetScreenWidth();
     float sh = GetScreenHeight();
-    float COIN_BANK_SCALE;
-    COIN_BANK_SCALE = fmax(sw / width, sh / height);
-    width = width * COIN_BANK_SCALE;
-    height = height * COIN_BANK_SCALE;
+    float COIN_BANK_AR;
+    COIN_BANK_AR = fmax(sw / width, sh / height);
+    width = width * COIN_BANK_AR;
+    height = height * COIN_BANK_AR;
     Rectangle src = {0, 0, SHOP_BACKGROUND_TEXTURE.width,
                      SHOP_BACKGROUND_TEXTURE.height};
     Rectangle dst = {(sw - width) / 2, 0, width, height};
@@ -272,7 +272,7 @@ void DrawCoinBank() {
     float x = (GetScreenWidth() - src.width * COIN_BANK_SCALE) / 2;
     Rectangle dst = {
         x,
-        GetScreenHeight() - 250,
+        GetScreenHeight() - src.height * COIN_BANK_SCALE,
         src.width * COIN_BANK_SCALE,
         src.height * COIN_BANK_SCALE,
     };

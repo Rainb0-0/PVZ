@@ -22,7 +22,7 @@ extern bool GamePaused;
 void calcluateWeight(float y);
 
 Zombie *ZombieAtPosition(Vector2 pos);
-bool isZombieInLaneOfPos(Vector2 pos);
+bool IsZombieInLaneOfPosition(Vector2 pos);
 Plant *PlantAtPosition(Vector2 pos);
 
 bool IsPositionInsideRect(Rectangle rect, Vector2 pos);
