@@ -12,7 +12,7 @@ Texture2D NORMAL;
 Texture2D DESTRUCTION;
 
 const Vector2 PEA_VELOCITY = {500, 0};
-const float PEA_ATTACK_DAMAGE = 10;
+const float PEA_ATTACK_DAMAGE = 20;
 const char *CREATION_PATH = "Sprites/Pea/creation.png";
 const char *NORMAL_PATH = "Sprites/Pea/normal.png";
 const char *DESTRUCTION_PATH = "Sprites/Pea/destruction.png";

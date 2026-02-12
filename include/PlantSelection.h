@@ -16,6 +16,7 @@ typedef struct PlantButton {
     bool *unlocked; // for shop
     bool hovered;
     bool selected;
+    float maxCooldown;
     Vector2 topLeft;
     Vector2 bottomRight;
 } PlantButton;

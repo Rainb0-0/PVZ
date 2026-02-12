@@ -14,7 +14,7 @@ Sound PEASHOOTER_SHOOT_SOUND;
 static char *IDLE_PATH = "Sprites/Peashooter/normal.png";
 static char *SHOOTING_PATH = "Sprites/Peashooter/shooting.png";
 static char *SHOOT_SOUND_PATH = "Sounds/Peashooter/";
-const float PEASHOOTER_HP = 100;
+const float PEASHOOTER_HP = 300;
 const float PEASHOOTER_COOLDOWN = 1;
 // IDLE
 const int PEASHOOTER_IDLE_FRAME_WIDTH = 80;

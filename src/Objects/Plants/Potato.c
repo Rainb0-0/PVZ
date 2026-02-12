@@ -33,8 +33,8 @@ const int POTATO_EXPLODED_MAX_FRAMES = 1;
 const float POTATO_EXPLODED_FRAME_TIME = FRAME_TIME;
 const float POTATO_EXPLODED_DURATION = 2;
 
-const float POTATO_HP = 100;
-const float POTATO_COOLDOWN = 10;
+const float POTATO_HP = 300;
+const float POTATO_COOLDOWN = 15;
 const float BLAST_RADIUS = 50;
 
 State POTATO_SLEEP = {

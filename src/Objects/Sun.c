@@ -7,7 +7,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-const int SunWorth = 10;
+const int SunWorth = 25;
 
 const float SUN_TARGET_TIME = 0.45;
 const float SUN_AGE = 10;

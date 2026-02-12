@@ -15,8 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int PLANT_COOLDOWN = 1;
-
 Texture2D BACKGROUND;
 Texture2D SEED_PACKET;
 Texture2D SUN_BANK;
@@ -55,9 +53,14 @@ const char *ZOMBIE_HEAD_PATH = "Sprites/Meter/head.png";
 const char *METER_PATH = "Sprites/Meter/meter.png";
 const float METER_HEIGHT = 27;
 
-const int CHOMPER_PRICE = 75;
-const int PEASHOOTER_PRICE = 50;
-const int SUNFLOWER_PRICE = 25;
+const int CHOMPER_PRICE = 150;
+const float CHOMPER_PLANT_COOLDOWN = 40;
+const int PEASHOOTER_PRICE = 100;
+const float PEASHOOTER_PLANT_COOLDOWN = 7.5;
+const int SUNFLOWER_PRICE = 50;
+const float SUNFLOWER_PLANT_COOLDOWN = 7.5;
+const int POTATO_PRICE = 25;
+const float POTATO_PLANT_COOLDOWN = 30;
 
 PlantButton *SelectedButton = NULL;
 
@@ -73,6 +76,7 @@ PlantButton PeashooterButton = {
     &IsPlantUnlocked[PEASHOOTER],
     true,
     false,
+    PEASHOOTER_PLANT_COOLDOWN,
 };
 
 PlantButton SunflowerButton = {
@@ -87,6 +91,7 @@ PlantButton SunflowerButton = {
     &IsPlantUnlocked[SUNFLOWER],
     true,
     false,
+    SUNFLOWER_PLANT_COOLDOWN,
 };
 
 PlantButton ChomperButton = {
@@ -101,6 +106,7 @@ PlantButton ChomperButton = {
     &IsPlantUnlocked[CHOMPER],
     true,
     false,
+    CHOMPER_PLANT_COOLDOWN,
 };
 
 PlantButton PotatoButton = {
@@ -109,12 +115,13 @@ PlantButton PotatoButton = {
     &POTATO_AWAKE_FRAME_HEIGHT,
     (Object * (*)(void *)) newPotatoObject,
     (void *(*)(Vector2))newPotato,
-    CHOMPER_PRICE,
+    POTATO_PRICE,
     0,
     false,
     &IsPlantUnlocked[POTATO],
     true,
     false,
+    POTATO_PLANT_COOLDOWN,
 };
 
 PlantButton *PlantButtons[] = {&SunflowerButton,
@@ -159,14 +166,14 @@ void PlantButton_Draw(PlantButton *self) {
     Rectangle dst = {mid.x - width / 2, mid.y - height / 2, width, height};
     Vector2 origin = {0, 0};
     DrawTexturePro(*self->texture, src, dst, origin, 0, WHITE);
-    char price[] = "0";
+    char price[10] = "0";
     sprintf(price, "%d", self->price);
     Vector2 textSize = MeasureTextEx(FONT, price, PRICE_FONT_SIZE, 1);
     Vector2 textPosition = {
         self->topLeft.x + BUTTON_PRICE_RECT.x + (BUTTON_PRICE_RECT.width - textSize.x) / 2,
         self->topLeft.y + BUTTON_PRICE_RECT.y + (BUTTON_PRICE_RECT.height - textSize.y) / 2};
     DrawTextEx(FONT, price, textPosition, PRICE_FONT_SIZE, 1, BLACK);
-    if (self->hovered && PLANT_COOLDOWN <= self->sinceCooldown) {
+    if (self->hovered && self->maxCooldown <= self->sinceCooldown) {
         if (self->active)
             DrawRectangleRec(currentRect, HOVER_COLOR);
     }
@@ -188,10 +195,10 @@ void PlantButton_Draw(PlantButton *self) {
                              LOCK.width * lockScale, LOCK.height * lockScale};
         DrawTexturePro(LOCK, lockSrc, lockDst, origin, 0, WHITE);
     }
-    if ((self->sinceCooldown < PLANT_COOLDOWN || self->active == false) &&
+    if ((self->sinceCooldown < self->maxCooldown || self->active == false) &&
         *self->unlocked) {
-        float barHeight = self->sinceCooldown *
-                          currentRect.height / PLANT_COOLDOWN;
+        float barHeight = (1 - self->sinceCooldown / self->maxCooldown) *
+                          currentRect.height;
         if (currentRect.height < barHeight)
             barHeight = currentRect.height;
         Rectangle barRec = {
@@ -380,7 +387,7 @@ void PlantSelection_Update() {
         }
         if (isClicked && IsPositionInsideRect(currentRect, mousePos) &&
             *current->unlocked) {
-            if (current->sinceCooldown < PLANT_COOLDOWN ||
+            if (current->sinceCooldown < current->maxCooldown ||
                 current->active == false)
                 continue;
             if (currentLevel == &LEVEL3 && current->newPlant == newSunflower)

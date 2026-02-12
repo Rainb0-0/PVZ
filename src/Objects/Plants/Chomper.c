@@ -11,7 +11,7 @@ Texture2D CHOMPER_IDLE_TEXTURE;
 
 const char *CHOMPER_IDLE_TEXTURE_PATH = "Sprites/Chomper.png";
 
-const float CHOMPER_HP = 100;
+const float CHOMPER_HP = 300;
 const float CHOMPER_LIFE = 20;
 const Vector2 VEL_COEF = {1.0 / 3, 1.0 / 3};
 

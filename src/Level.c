@@ -13,8 +13,8 @@ Texture2D NIGHT_TEXTURE;
 const char *DAY_PATH = "Sprites/Levels/day.png";
 const char *NIGHT_PATH = "Sprites/Levels/night.png";
 
-const float SUN_SPAWN_COOLDOWN = 5;
-const float ZOMBIE_SPAWN_COOLDOWN = 5;
+const float SUN_SPAWN_COOLDOWN = 10;
+const float ZOMBIE_SPAWN_COOLDOWN = 15;
 
 Level *currentLevel;
 

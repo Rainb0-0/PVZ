@@ -9,8 +9,8 @@
 
 Texture2D SUNFLOWER_IDLE_TEXTURE;
 
-const int SUNFLOWER_HP = 100;
-const float SUNFLOWER_COOLDOWN = 7.5;
+const int SUNFLOWER_HP = 300;
+const float SUNFLOWER_COOLDOWN = 15;
 
 const char *SUNFLOWER_IDLE_PATH = "Sprites/Sunflower.png";
 const int SUNFLOWER_IDLE_FRAME_WIDTH = 80;
@@ -51,9 +51,9 @@ Sunflower *newSunflower(Vector2 pos) {
 }
 
 void Sunflower_Init() {
-if (!IsTextureValid(SUNFLOWER_IDLE_TEXTURE)){
-    SUNFLOWER_IDLE_TEXTURE = LoadTexture(SUNFLOWER_IDLE_PATH);
-}
+    if (!IsTextureValid(SUNFLOWER_IDLE_TEXTURE)) {
+        SUNFLOWER_IDLE_TEXTURE = LoadTexture(SUNFLOWER_IDLE_PATH);
+    }
 }
 
 void Sunflower_Draw(Sunflower *self) {
