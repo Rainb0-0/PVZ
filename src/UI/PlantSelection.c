@@ -29,7 +29,7 @@ const char *LOCK_PATH = "Sprites/Lock.png";
 const char *COINS_PATH = "Sprites/CoinBank.png";
 const char *PLANT_SOUND_PATH = "Sounds/Game/Plant/";
 
-const float HUD_SCALE = 0.75;
+const float HUD_SCALE = 0.6;
 const int BUTTON_WIDTH = 100 * HUD_SCALE;
 const int BUTTON_HEIGHT = 140 * HUD_SCALE;
 const int BUTTON_MARGIN = 16 * HUD_SCALE;
@@ -235,7 +235,7 @@ void CoinCount_Draw() {
     DrawTexturePro(COINS_TEXTURE, src, dst, origin, 0, WHITE);
     char bal[10];
     sprintf(bal, "%d", CoinCount);
-    float coinFontSize = 16 * HUD_SCALE;
+    float coinFontSize = 20 * HUD_SCALE;
     Vector2 textSize = MeasureTextEx(FONT, bal, coinFontSize, 1);
     Vector2 textPosition = {
         COINS_TEXT_RECT.x + (COINS_TEXT_RECT.width - textSize.x) / 2,

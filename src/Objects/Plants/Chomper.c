@@ -54,9 +54,9 @@ Chomper *newChomper(Vector2 pos) {
 }
 
 void Chomper_Init() {
-if (!IsTextureValid(CHOMPER_IDLE_TEXTURE)){
-    CHOMPER_IDLE_TEXTURE = LoadTexture(CHOMPER_IDLE_TEXTURE_PATH);
-}
+    if (!IsTextureValid(CHOMPER_IDLE_TEXTURE)) {
+        CHOMPER_IDLE_TEXTURE = LoadTexture(CHOMPER_IDLE_TEXTURE_PATH);
+    }
 }
 void Chomper_Draw(Chomper *self) {
     int index = FindObjectIndex(self, true);
@@ -65,8 +65,10 @@ void Chomper_Draw(Chomper *self) {
 }
 void Chomper_Update(Chomper *self) {
     if (CHOMPER_LIFE < self->timeAlive || self->hp <= 0) {
+        self->hp = -1;
         chompers[GetRowIndex(self->pos.y)]--;
         RemoveObject(self, true);
+        calcluateWeight(self->pos.y);
         return;
     }
     self->timeAlive += GetFrameTime();

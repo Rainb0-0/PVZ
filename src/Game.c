@@ -365,7 +365,7 @@ void Game_Draw() {
     //     char text[100];
     //     sprintf(text, "weight: %.2f\n chomper: %d\n lawnmower: %d",
     //             weights[i], chompers[i], lawnMowers[i]);
-    //     DrawText(text, 200, y, 50, BLACK);
+    //     DrawText(text, 100, y, 15, BLACK);
     // }
     PlantSelection_Draw();
     if (GamePaused) {
@@ -390,6 +390,8 @@ void Game_Update() {
     if (GamePaused) {
         Overlay_Update();
         return;
+    } else {
+        mh.playing = true;
     }
     GameDuration += GetFrameTime();
     Level_Update();
