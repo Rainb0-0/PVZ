@@ -4,12 +4,15 @@
 #include "Game.h"
 #include "GameGrid.h"
 #include "Level.h"
+#include "MainMenu.h"
+#include "Music.h"
 #include "Object.h"
 #include "Peashooter.h"
 #include "Potato.h"
 #include "Shop.h"
 #include "Sound.h"
 #include "Sunflower.h"
+#include "Wallnut.h"
 #include "raylib.h"
 #include <math.h>
 #include <stdio.h>
@@ -48,9 +51,11 @@ Color HOVER_COLOR;
 
 Texture2D ZOMBIE_HEAD_TEXTURE;
 Texture2D METER_TEXTURE;
+Texture2D PROGRESS_TEXTURE;
 
 const char *ZOMBIE_HEAD_PATH = "Sprites/Meter/head.png";
 const char *METER_PATH = "Sprites/Meter/meter.png";
+const char *PROGRESS_PATH = "Sprites/Meter/text.png";
 const float METER_HEIGHT = 27;
 
 const int CHOMPER_PRICE = 150;
@@ -61,6 +66,8 @@ const int SUNFLOWER_PRICE = 50;
 const float SUNFLOWER_PLANT_COOLDOWN = 7.5;
 const int POTATO_PRICE = 25;
 const float POTATO_PLANT_COOLDOWN = 30;
+const int WALLNUT_PRICE = 50;
+const float WALLNUT_PLANT_COOLDOWN = 30;
 
 PlantButton *SelectedButton = NULL;
 
@@ -124,10 +131,29 @@ PlantButton PotatoButton = {
     POTATO_PLANT_COOLDOWN,
 };
 
-PlantButton *PlantButtons[] = {&SunflowerButton,
-                               &PeashooterButton,
-                               &ChomperButton,
-                               &PotatoButton};
+PlantButton WallnutButton = {
+    &WALLNUT_NORMAL_TEXTURE,
+    &WALLNUT_FRAME_WIDTH,
+    &WALLNUT_FRAME_HEIGHT,
+    (Object * (*)(void *)) newWallnutObject,
+    (void *(*)(Vector2))newWallnut,
+    WALLNUT_PRICE,
+    0,
+    false,
+    &IsPlantUnlocked[WALLNUT],
+    true,
+    false,
+    WALLNUT_PLANT_COOLDOWN,
+};
+
+PlantButton *
+    PlantButtons[] = {
+        &SunflowerButton,
+        &PeashooterButton,
+        &PotatoButton,
+        &WallnutButton,
+        &ChomperButton,
+};
 
 const int PlantButtonsSize = sizeof(PlantButtons) / sizeof(PlantButtons[0]);
 float X_OFFSET;
@@ -204,6 +230,9 @@ void PlantButton_Draw(PlantButton *self) {
         }
         if (currentRect.height < barHeight)
             barHeight = currentRect.height;
+        if (currentLevel == &LEVEL3 && self->newPlant == newSunflower) {
+            barHeight = 0;
+        }
         Rectangle barRec = {
             currentRect.x,
             currentRect.y + currentRect.height - barHeight,
@@ -255,7 +284,48 @@ void CoinCount_Draw() {
     DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
 }
 
+const float PAUSEBUTTON_SCALE = HUD_SCALE * 0.5;
+bool PAUSEBUTTON_HOVERED = false;
+
+void PauseButton_Draw() {
+    float width = BUTTON_NORMAL_TEXTURE.width;
+    float height = BUTTON_NORMAL_TEXTURE.height;
+    Rectangle src = {0, 0, width, height};
+    Rectangle dst = {(GetScreenWidth() - width * PAUSEBUTTON_SCALE) / 2, 0,
+                     width * PAUSEBUTTON_SCALE, height * PAUSEBUTTON_SCALE};
+    Vector2 origin = {0, 0};
+    Color c = WHITE;
+    if (PAUSEBUTTON_HOVERED)
+        c = LIGHTGRAY;
+    DrawTexturePro(BUTTON_NORMAL_TEXTURE, src, dst, origin, 0, c);
+    char text[] = "PAUSE";
+    float fontSize = PRICE_FONT_SIZE;
+    Vector2 textSize = MeasureTextEx(FONT, text, fontSize, 1);
+    Vector2 textPos = {dst.x + (dst.width - textSize.x) / 2,
+                       dst.y + (dst.height - textSize.y) / 2};
+    DrawTextPro(FONT, text, textPos, origin, 0, fontSize, 1, BLACK);
+}
+
+void PauseButton_Update() {
+    float width = BUTTON_NORMAL_TEXTURE.width;
+    float height = BUTTON_NORMAL_TEXTURE.height;
+    Rectangle dst = {(GetScreenWidth() - width * PAUSEBUTTON_SCALE) / 2, 0,
+                     width * PAUSEBUTTON_SCALE, height * PAUSEBUTTON_SCALE};
+    Vector2 mousePos = GetMousePosition();
+    if (IsPositionInsideRect(dst, mousePos)) {
+        PAUSEBUTTON_HOVERED = true;
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            PlayRandomOgg(BUTTON_CLIKC_SOUND_PATH, 1, false);
+            mh.playing = false;
+            GamePaused = true;
+        }
+    } else {
+        PAUSEBUTTON_HOVERED = false;
+    }
+}
+
 void Meter_Draw() {
+    float localScale = HUD_SCALE * 1.75;
     float fraction = ((float)zombiesKilled) /
                      (currentLevel->normalZombieCount +
                       currentLevel->flagZombieCount);
@@ -263,21 +333,31 @@ void Meter_Draw() {
     int w1 = (int)(fullW * fraction + 0.5f);
     int w2 = fullW - w1;
     float offset = 5;
+    Rectangle progressSrc = {0, 0, PROGRESS_TEXTURE.width,
+                             PROGRESS_TEXTURE.height};
     Rectangle src1 = {fullW - w1, METER_HEIGHT, w1, METER_HEIGHT};
     Rectangle src2 = {0, 0, w2, METER_HEIGHT};
 
-    Rectangle dst1 = {w2 * HUD_SCALE + offset, offset,
-                      w1 * HUD_SCALE, METER_HEIGHT * HUD_SCALE};
-    Rectangle dst2 = {offset, offset, w2 * HUD_SCALE, METER_HEIGHT * HUD_SCALE};
-
+    Rectangle dst1 = {w2 * localScale + offset,
+                      PROGRESS_TEXTURE.height * localScale + offset,
+                      w1 * localScale, METER_HEIGHT * localScale};
+    Rectangle dst2 = {offset, PROGRESS_TEXTURE.height * localScale + offset,
+                      w2 * localScale, METER_HEIGHT * localScale};
+    Rectangle progressDst = {
+        dst2.x + (METER_TEXTURE.width - PROGRESS_TEXTURE.width) * localScale / 2,
+        offset + 1,
+        PROGRESS_TEXTURE.width * localScale,
+        PROGRESS_TEXTURE.height * localScale,
+    };
     Vector2 origin = {0, 0};
     Rectangle srcHead = {0, 0, ZOMBIE_HEAD_TEXTURE.width,
                          ZOMBIE_HEAD_TEXTURE.height};
-    Rectangle dstHead = {dst1.x - srcHead.width * HUD_SCALE / 2 + offset / 2,
-                         offset,
-                         srcHead.width * HUD_SCALE, srcHead.height * HUD_SCALE};
+    Rectangle dstHead = {dst1.x - srcHead.width * localScale / 2,
+                         dst1.y,
+                         srcHead.width * localScale, srcHead.height * localScale};
     DrawTexturePro(METER_TEXTURE, src1, dst1, origin, 1, WHITE);
     DrawTexturePro(METER_TEXTURE, src2, dst2, origin, 0, WHITE);
+    DrawTexturePro(PROGRESS_TEXTURE, progressSrc, progressDst, origin, 0, WHITE);
     DrawTexturePro(ZOMBIE_HEAD_TEXTURE, srcHead, dstHead, origin, 0, WHITE);
 }
 
@@ -308,6 +388,9 @@ void PlantSelection_Init() {
     }
     if (!IsTextureValid(ZOMBIE_HEAD_TEXTURE)) {
         ZOMBIE_HEAD_TEXTURE = LoadTexture(ZOMBIE_HEAD_PATH);
+    }
+    if (!IsTextureValid(PROGRESS_TEXTURE)) {
+        PROGRESS_TEXTURE = LoadTexture(PROGRESS_PATH);
     }
     const float cellHeight = BUTTON_HEIGHT + BUTTON_MARGIN;
     for (int i = 0; i < PlantButtonsSize; i++) {
@@ -367,6 +450,9 @@ void PlantSelection_Draw() {
     if (currentLevel != &LEVEL4) {
         Meter_Draw();
     }
+    if (!GamePaused) {
+        PauseButton_Draw();
+    }
 }
 
 void PlantSelection_Update() {
@@ -385,7 +471,11 @@ void PlantSelection_Update() {
             current->active = true;
         }
         if (IsPositionInsideRect(currentRect, mousePos) && *current->unlocked) {
-            current->hovered = true;
+            if (currentLevel == &LEVEL3 && current->newPlant == newSunflower) {
+                ;
+            } else {
+                current->hovered = true;
+            }
         } else {
             current->hovered = false;
         }
@@ -425,5 +515,8 @@ void PlantSelection_Update() {
         if (!IsPositionInsideRect(GetPlayfieldRect(), mousePos) && !justSelected) {
             ResetSelected();
         }
+    }
+    if (!GamePaused) {
+        PauseButton_Update();
     }
 }

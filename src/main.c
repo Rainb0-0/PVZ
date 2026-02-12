@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "Sun.h"
 #include "Sunflower.h"
+#include "Wallnut.h"
 #include "Zombie.h"
 #include "raylib.h"
 #include "resource_dir.h"
@@ -37,9 +38,10 @@ int main(void) {
     Pea_Init();
     Sun_Init();
     Coin_Init();
+    Wallnut_Init();
     LevelSelector_Init();
     PlantSelection_Init();
-    InitMusicHandler(&mh, 1);
+    InitMusicHandler(&mh, 0.5);
     while (!GameShouldQuit) {
         if (WindowShouldClose())
             if (IsKeyDown(KEY_ESCAPE) == false)

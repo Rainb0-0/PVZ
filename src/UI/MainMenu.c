@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Music.h"
 #include "SceneManager.h"
+#include "Sound.h"
 #include "main.h"
 #include "raylib.h"
 #include "stdlib.h"
@@ -16,6 +17,7 @@ Color BG_OVERLAY;
 const char *MAINMENU_BACKGROUND_PATH = "Menu.jpg";
 const char *BUTTON_NORMAL_TEXTURE_PATH = "Button.png";
 const char *TITLE_PATH = "Title.png";
+const char *BUTTON_CLIKC_SOUND_PATH = "Sounds/Button/";
 
 const float TITLE_SCALE = 1;
 const float BUTTON_SCALE = 1.1;
@@ -95,6 +97,7 @@ void MainMenu_Init() {
         cur->bounds.width = MENU_BUTTON_WIDTH;
         cur->bounds.height = MENU_BUTTON_HEIGHT;
     }
+    CacheAllOgg(BUTTON_CLIKC_SOUND_PATH);
 }
 
 void MainMenu_Draw() {
@@ -138,6 +141,7 @@ void MainMenu_Update() {
         if (IsPositionInsideRect(Buttons[i]->bounds, mousePos)) {
             Buttons[i]->hovered = true;
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                PlayRandomOgg(BUTTON_CLIKC_SOUND_PATH, 1, false);
                 SceneManager_Change(Buttons[i]->dest);
             }
         } else {

@@ -2,8 +2,10 @@
 #include "Font.h"
 #include "Game.h"
 #include "Level.h"
+#include "MainMenu.h"
 #include "Music.h"
 #include "SceneManager.h"
+#include "Sound.h"
 #include "math.h"
 #include "raylib.h"
 #include <stdio.h>
@@ -32,6 +34,8 @@ const char *LEVEL1_THUMBNAIL_PATH = "Sprites/Thumbnails/1.png";
 const char *LEVEL2_THUMBNAIL_PATH = "Sprites/Thumbnails/2.png";
 const char *LEVEL3_THUMBNAIL_PATH = "Sprites/Thumbnails/3.png";
 const char *LEVEL4_THUMBNAIL_PATH = "Sprites/Thumbnails/4.png";
+
+const char *LEVEL_START_SOUND_PATH = "Sounds/Level/Start/";
 
 Rectangle LevelSelectBackButton = {
     1 * LEVELSELECTOR_MARGIN,
@@ -145,6 +149,7 @@ void LevelSelector_Init() {
 
         LEVELBUTTONS[i]->bounds = bounds;
     }
+    CacheAllOgg(LEVEL_START_SOUND_PATH);
 }
 
 void DrawLevelSelectorBackground() {
@@ -204,6 +209,9 @@ void LevelSelector_Draw() {
 }
 
 void LevelSelector_Update() {
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        SceneManager_Change(SCENE_MAINMENU);
+    }
     Vector2 mousePos = GetMousePosition();
     for (int i = 0; i < LEVEL_COUNT; i++) {
         if (IsPositionInsideRect(LEVELBUTTONS[i]->bounds, mousePos)) {
@@ -212,6 +220,7 @@ void LevelSelector_Update() {
                 currentLevel = LEVELBUTTONS[i]->level;
                 Game_Init();
                 SceneManager_Change(SCENE_GAME);
+                PlayRandomOgg(LEVEL_START_SOUND_PATH, 1, false);
                 SwitchPlaylist(&mh, GAME_MUSIC_PATH);
             }
         } else {
@@ -227,6 +236,7 @@ void LevelSelector_Update() {
     if (IsPositionInsideRect(backButtonRect, mousePos)) {
         LevelSelectorBackButtonHover = true;
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            PlayRandomOgg(BUTTON_CLIKC_SOUND_PATH, 1, false);
             SceneManager_Change(SCENE_MAINMENU);
         }
     } else {

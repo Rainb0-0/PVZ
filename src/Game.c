@@ -58,7 +58,7 @@ float calculateDet(float y) {
             GetRowIndex(Objects[i]->pos->y) == row) {
             Plant *cur = (Plant *)Objects[i]->self;
             if (0 < *cur->hp &&
-                cur->type != SUNFLOWER && cur->type != MARIGOLD) {
+                cur->type != SUNFLOWER) {
                 n++;
                 float temp = *cur->hp / cur->MAXHP;
                 S += temp;
@@ -303,6 +303,7 @@ void Overlay_Update() {
         if (IsPositionInsideRect(cur->bounds, mousePos)) {
             cur->hovered = true;
             if (isClicked) {
+                PlayRandomOgg(BUTTON_CLIKC_SOUND_PATH, 1, false);
                 cur->onClick();
             }
         } else {

@@ -20,8 +20,8 @@ static Texture2D FLAG_DYING;
 
 const float ZOMBIE_HP = 270;
 const Vector2 ZOMBIE_VEL = {-15, 0};
-const float ATTACK_DAMAGE = 30;
-const float ATTACK_COOLDOWN = 1;
+const float ATTACK_DAMAGE = 40;
+const float ATTACK_COOLDOWN = 1.5;
 
 const char *ZOMBIE_EATING_SOUND_PATH = "Sounds/Zombie/Eating/";
 const char *ZOMBIE_GROAN_SOUND_PATH = "Sounds/Zombie/Talking/";

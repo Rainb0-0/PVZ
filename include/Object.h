@@ -10,6 +10,7 @@
 #include "State.h"
 #include "Sun.h"
 #include "Sunflower.h"
+#include "Wallnut.h"
 #include "Zombie.h"
 #include "raylib.h"
 
@@ -47,6 +48,7 @@ Object *newZombieObject(Zombie *self);
 Object *newPeaObject(Pea *self);
 Object *newPotatoObject(Potato *self);
 Object *newPeashooterObject(Peashooter *self);
+Object *newWallnutObject(Wallnut *self);
 Object *newChomperObject(Chomper *self);
 Object *newSunflowerObject(Sunflower *self);
 Object *newSunObject(Sun *self);

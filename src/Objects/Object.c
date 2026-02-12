@@ -8,6 +8,7 @@
 #include "Potato.h"
 #include "Sun.h"
 #include "Sunflower.h"
+#include "Wallnut.h"
 #include "Zombie.h"
 #include "raylib.h"
 #include <stdio.h>
@@ -170,6 +171,20 @@ Object *newChomperObject(Chomper *self) {
     co->frameTime = &self->frameTime;
     co->pos = &self->pos;
     return co;
+}
+
+Object *newWallnutObject(Wallnut *self) {
+    Object *so = (Object *)malloc(sizeof(Object));
+    Plant *pla = newWallnutPlant(self);
+    so->draw = self->draw;
+    so->update = self->update;
+    so->frameIndex = &self->frameIndex;
+    so->state = &self->state;
+    so->frameTime = &self->frameTime;
+    so->type = PLANT;
+    so->self = pla;
+    so->pos = &self->pos;
+    return so;
 }
 
 Object *newSunflowerObject(Sunflower *self) {

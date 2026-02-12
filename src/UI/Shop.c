@@ -1,16 +1,19 @@
 #include "Shop.h"
 #include "Font.h"
 #include "Game.h"
+#include "MainMenu.h"
 #include "Plant.h"
 #include "PlantSelection.h"
 #include "SceneManager.h"
+#include "Sound.h"
+#include "Wallnut.h"
 #include "raylib.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-const int INIT_COIN_COUNT = 10;
+const int INIT_COIN_COUNT = 50;
 int CoinCount = 10;
 
 Texture2D SHOP_BACKGROUND_TEXTURE;
@@ -19,12 +22,14 @@ Texture2D BACK_TEXTURE;
 const char *SHOP_BACKGROUND_PATH = "Shop.png";
 const char *COIN_BANK_PATH = "Sprites/CoinBank.png";
 const char *BACK_PATH = "Back.png";
+const char *BUY_SOUND_PATH = "Sounds/Shop/Buy/";
+const char *FAIL_SOUND_PATH = "Sounds/Shop/Fail/";
 
 const int PEASHOOTER_SHOP_PRICE = 0;
 const int SUNFLOWER_SHOP_PRICE = 0;
 const int POTATO_SHOP_PRICE = 5;
-const int CHOMPER_SHOP_PRICE = 10;
-const int MARIGOLD_SHOP_PRICE = 20;
+const int CHOMPER_SHOP_PRICE = 20;
+const int WALLNUT_SHOP_PRICE = 10;
 
 FILE *SHOP_FILE;
 const char *SHOP_FILE_PATH = "shop.bin";
@@ -94,10 +99,20 @@ ShopButton ShopChomperButton = {
     CHOMPER,
 };
 
+ShopButton ShopWallnutButton = {
+    &WALLNUT_NORMAL_TEXTURE,
+    &WALLNUT_FRAME_WIDTH,
+    &WALLNUT_FRAME_HEIGHT,
+    false,
+    WALLNUT_SHOP_PRICE,
+    WALLNUT,
+};
+
 ShopButton *ShopButtons[PLANTCOUNT] = {
     &ShopPeashooterButton,
     &ShopSunflowrButton,
     &ShopPotatoButton,
+    &ShopWallnutButton,
     &ShopChomperButton,
 };
 
@@ -164,17 +179,17 @@ void Shop_Init() {
     Shop_ReadFile();
     SHOP_BUTTON_WIDTH = SEED_PACKET.width * SHOP_SCALE;
     SHOP_BUTTON_HEIGHT = SEED_PACKET.height * SHOP_SCALE;
-    float totalWidth = (PLANTCOUNT - 1) * SHOP_BUTTON_WIDTH +
-                       (PLANTCOUNT - 2) * SHOP_BUTTON_MARGIN;
+    float totalWidth = (PLANTCOUNT)*SHOP_BUTTON_WIDTH +
+                       (PLANTCOUNT - 1) * SHOP_BUTTON_MARGIN;
     float X_OFFSET = (GetScreenWidth() - totalWidth) / 2;
     float Y_OFFSET = (GetScreenHeight() / 2) - SHOP_BUTTON_HEIGHT / 1.2;
-    for (int i = 0; i < PLANTCOUNT - 1; i++) { // TODO marigold support
+    for (int i = 0; i < PLANTCOUNT; i++) {
         Rectangle rect = {X_OFFSET +
                               i * (SHOP_BUTTON_WIDTH + SHOP_BUTTON_MARGIN),
                           Y_OFFSET, SHOP_BUTTON_WIDTH,
                           SHOP_BUTTON_HEIGHT};
         ShopButtons[i]->bounds = rect;
-        ShopButtons[i]->unlocked = &IsPlantUnlocked[i];
+        ShopButtons[i]->unlocked = &IsPlantUnlocked[ShopButtons[i]->type];
     }
     if (!IsTextureValid(SHOP_BACKGROUND_TEXTURE)) {
         SHOP_BACKGROUND_TEXTURE = LoadTexture(SHOP_BACKGROUND_PATH);
@@ -187,6 +202,8 @@ void Shop_Init() {
     }
     BackButton.width = BACK_TEXTURE.width * SHOP_SCALE;
     BackButton.height = BACK_TEXTURE.height * SHOP_SCALE;
+    CacheAllOgg(BUY_SOUND_PATH);
+    CacheAllOgg(FAIL_SOUND_PATH);
 }
 
 void DrawShopButton(ShopButton *self) {
@@ -293,7 +310,7 @@ void DrawCoinBank() {
 
 void Shop_Draw() {
     DrawShopBackground();
-    for (int i = 0; i < PLANTCOUNT - 1; i++) { // TODO marigold support
+    for (int i = 0; i < PLANTCOUNT; i++) {
         DrawShopButton(ShopButtons[i]);
     }
     DrawCoinBank();
@@ -313,8 +330,11 @@ void Shop_Update() {
         Shop_WriteDefaults();
         Shop_ReadFile();
     }
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        SceneManager_Change(SCENE_MAINMENU);
+    }
     Vector2 mousePos = GetMousePosition();
-    for (int i = 0; i < PLANTCOUNT - 1; i++) {
+    for (int i = 0; i < PLANTCOUNT; i++) {
         ShopButton *current = ShopButtons[i];
         if (IsPositionInsideRect(current->bounds, mousePos)) {
             current->hovered = true;
@@ -324,7 +344,10 @@ void Shop_Update() {
                     IsPlantUnlocked[current->type] = true;
                     Shop_SaveState();
                     fflush(SHOP_FILE);
+                    PlayRandomOgg(BUY_SOUND_PATH, 1, false);
                     break;
+                } else if (CoinCount < current->price) {
+                    PlayRandomOgg(FAIL_SOUND_PATH, 1, false);
                 }
             }
         } else {
@@ -334,6 +357,7 @@ void Shop_Update() {
     if (IsPositionInsideRect(BackButton, mousePos)) {
         BackButtonHover = true;
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            PlayRandomOgg(BUTTON_CLIKC_SOUND_PATH, 1, false);
             SceneManager_Change(SCENE_MAINMENU);
         }
     } else {

@@ -8,7 +8,7 @@ typedef enum PlantType {
     SUNFLOWER,
     POTATO,
     CHOMPER,
-    MARIGOLD,
+    WALLNUT,
     PLANTCOUNT
 } PlantType;
 

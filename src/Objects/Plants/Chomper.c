@@ -3,6 +3,7 @@
 #include "GameGrid.h"
 #include "Object.h"
 #include "Plant.h"
+#include "Sound.h"
 #include "State.h"
 #include "raylib.h"
 #include <stdlib.h>
@@ -10,6 +11,7 @@
 Texture2D CHOMPER_IDLE_TEXTURE;
 
 const char *CHOMPER_IDLE_TEXTURE_PATH = "Sprites/Chomper.png";
+const char *CHOMPER_PLANT_SOUND_PATH = "Sounds/Chomper/";
 
 const float CHOMPER_HP = 300;
 const float CHOMPER_LIFE = 20;
@@ -64,6 +66,9 @@ void Chomper_Draw(Chomper *self) {
     DrawObject(Objects[index], 0.9, offset, WHITE);
 }
 void Chomper_Update(Chomper *self) {
+    if (self->timeAlive == 0) {
+        PlayRandomOgg(CHOMPER_PLANT_SOUND_PATH, 1, true);
+    }
     if (CHOMPER_LIFE < self->timeAlive || self->hp <= 0) {
         self->hp = -1;
         chompers[GetRowIndex(self->pos.y)]--;
