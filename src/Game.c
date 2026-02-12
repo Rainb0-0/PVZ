@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// TODO add score count, save for level 4
+
 int SunCount = 100;
 
 const Vector2 POSITION_TOLERANCE = {10, 10};
