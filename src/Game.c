@@ -341,6 +341,8 @@ void Game_Init() {
         Rectangle bounds = {x, y, width, height};
         cur->bounds = bounds;
     }
+    CacheAllOgg(GAME_WON_SOUND);
+    CacheAllOgg(GAME_LOST_SOUND);
 }
 
 void Game_Draw() {

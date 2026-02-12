@@ -199,6 +199,9 @@ void PlantButton_Draw(PlantButton *self) {
         *self->unlocked) {
         float barHeight = (1 - self->sinceCooldown / self->maxCooldown) *
                           currentRect.height;
+        if (SunCount < self->price) {
+            barHeight = currentRect.height;
+        }
         if (currentRect.height < barHeight)
             barHeight = currentRect.height;
         Rectangle barRec = {
@@ -319,6 +322,7 @@ void PlantSelection_Init() {
         current->sinceCooldown = 0;
     }
     ResetSelected();
+    PlayRandomOgg(PLANT_SOUND_PATH, 0, false);
 }
 
 void PlantSelection_Draw() {

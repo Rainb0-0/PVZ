@@ -50,6 +50,7 @@ void Peashooter_Init() {
     if (!IsTextureValid(PEASHOOTER_SHOOTING_TEXTURE)) {
         PEASHOOTER_SHOOTING_TEXTURE = LoadTexture(SHOOTING_PATH);
     }
+    CacheAllOgg(SHOOT_SOUND_PATH);
 }
 
 Plant *newPeashooterPlant(Peashooter *self) {

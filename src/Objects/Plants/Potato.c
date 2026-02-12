@@ -35,7 +35,7 @@ const float POTATO_EXPLODED_DURATION = 2;
 
 const float POTATO_HP = 300;
 const float POTATO_COOLDOWN = 15;
-const float BLAST_RADIUS = 50;
+const float BLAST_RADIUS = 70;
 
 State POTATO_SLEEP = {
     POTATO_SLEEP_FRAME_WIDTH,
@@ -109,6 +109,8 @@ void Potato_Init() {
     if (!IsTextureValid(POTATO_EXPLODED_TEXTURE)) {
         POTATO_EXPLODED_TEXTURE = LoadTexture(POTATO_EXPLODED_PATH);
     }
+    CacheAllOgg(POTATO_GROW_SOUND_PATH);
+    CacheAllOgg(POTATO_EXPLODE_SOUND_PATH);
 }
 
 void Potato_Draw(Potato *self) {

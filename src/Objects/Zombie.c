@@ -168,6 +168,9 @@ void Zombie_Init() {
     if (!IsTextureValid(FLAG_DYING)) {
         FLAG_DYING = LoadTexture(FLAG_DYING_PATH);
     }
+    CacheAllOgg(ZOMBIE_DIE_SOUND_PATH);
+    CacheAllOgg(ZOMBIE_GROAN_SOUND_PATH);
+    CacheAllOgg(ZOMBIE_DIE_SOUND_PATH);
 }
 
 void Zombie_Draw(Zombie *self) {

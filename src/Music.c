@@ -118,7 +118,12 @@ void UpdateMusicHandler(MusicHandler *mh, float dt) {
         }
     }
     SetMusicVolume(mh->current, mh->volume);
-    if (!IsMusicStreamPlaying(mh->current)) {
+    if (IsKeyDown(KEY_F)) {
+        float current = GetMusicTimePlayed(mh->current);
+        float jump = 30.0f;
+        SeekMusicStream(mh->current, current + jump);
+    }
+    if (GetMusicTimePlayed(mh->current) >= GetMusicTimeLength(mh->current)) {
         int newTrack;
         do {
             newTrack = (rand() % mh->trackCount) + 1;

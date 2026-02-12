@@ -22,29 +22,36 @@ Sound *GetCachedSound(const char *filePath) {
             return &soundCache[i].sound;
         }
     }
-
-    if (soundCacheCount >= MAX_SOUNDS) {
-        printf("Sound cache full!\n");
-        return NULL;
-    }
-
     Sound newSound = LoadSound(filePath);
     if (newSound.frameCount == 0)
         return NULL;
-
     strcpy(soundCache[soundCacheCount].path, filePath);
     soundCache[soundCacheCount].sound = newSound;
     soundCache[soundCacheCount].loaded = 1;
     soundCacheCount++;
-
     return &soundCache[soundCacheCount - 1].sound;
+}
+
+void CacheAllOgg(const char *directoryPath) {
+    DIR *dir = opendir(directoryPath);
+    if (!dir)
+        return;
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        const char *filename = entry->d_name;
+        if (strstr(filename, ".ogg")) {
+            char filePath[256];
+            snprintf(filePath, sizeof(filePath), "%s/%s", directoryPath, filename);
+            GetCachedSound(filePath);
+        }
+    }
+    closedir(dir);
 }
 
 void PlayRandomOgg(const char *directoryPath, float volume, bool randomPitch) {
     DIR *dir = opendir(directoryPath);
     if (!dir)
         return;
-
     int maxNumber = 0;
     struct dirent *entry;
     while ((entry = readdir(dir)) != NULL) {
@@ -61,14 +68,11 @@ void PlayRandomOgg(const char *directoryPath, float volume, bool randomPitch) {
         }
     }
     closedir(dir);
-
     if (maxNumber == 0)
         return;
-
     int randomNum = (rand() % maxNumber) + 1;
     char filePath[256];
     snprintf(filePath, sizeof(filePath), "%s/%d.ogg", directoryPath, randomNum);
-
     Sound *sound = GetCachedSound(filePath);
     if (!sound)
         return;

@@ -53,6 +53,7 @@ void Pea_Init() {
     if (!IsTextureValid(DESTRUCTION)) {
         DESTRUCTION = LoadTexture(DESTRUCTION_PATH);
     }
+    CacheAllOgg(PEA_SPLAT_SOUND_PATH);
 }
 
 Pea *newPea(Peashooter *ps) {

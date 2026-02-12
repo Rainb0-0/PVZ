@@ -39,6 +39,7 @@ void Sun_Init() {
     if (!IsTextureValid(SUN_TEXTURE)) {
         SUN_TEXTURE = LoadTexture(SUN_PATH);
     }
+    CacheAllOgg(SUN_COLLECT_SOUND_PATH);
 }
 
 Sun *newSun(Vector2 dest) {

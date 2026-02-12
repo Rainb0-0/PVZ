@@ -56,6 +56,7 @@ void LawnMower_Init() {
     if (!IsTextureValid(LAWNMOWER_TEXTURE)) {
         LAWNMOWER_TEXTURE = LoadTexture(LAWNMOWER_TEXTURE_PATH);
     }
+    CacheAllOgg(LAWNMOWER_SOUND_PATH);
 }
 
 void LawnMower_Draw(LawnMower *self) {

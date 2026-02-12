@@ -79,7 +79,7 @@ void SpawnZombie(bool flag) {
     float yOffset = GetPlayfieldRect().y;
     Vector2 cellDim = GetCellDimensions();
     Vector2 pos = {
-        GetScreenWidth() - 50,
+        GetScreenWidth(),
         row * cellDim.y + yOffset + cellDim.y / 2,
     };
     Zombie *nz = newZombie(pos, flag);

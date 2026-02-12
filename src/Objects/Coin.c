@@ -76,6 +76,7 @@ void Coin_Init() {
     if (!IsTextureValid(GOLD_COIN_TEXTURE)) {
         GOLD_COIN_TEXTURE = LoadTexture(GOLD_COIN_PATH);
     }
+    CacheAllOgg(COIN_COLLECTION_SOUND_PATH);
 }
 
 void Coin_Draw(Coin *self) {
