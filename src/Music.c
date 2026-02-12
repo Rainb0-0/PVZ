@@ -1,4 +1,5 @@
 #include "Music.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +124,9 @@ void UpdateMusicHandler(MusicHandler *mh, float dt) {
         float jump = 30.0f;
         SeekMusicStream(mh->current, current + jump);
     }
-    if (GetMusicTimePlayed(mh->current) >= GetMusicTimeLength(mh->current)) {
+    float delta = fabs(GetMusicTimePlayed(mh->current) -
+                       GetMusicTimeLength(mh->current));
+    if (delta < 1) {
         int newTrack;
         do {
             newTrack = (rand() % mh->trackCount) + 1;
