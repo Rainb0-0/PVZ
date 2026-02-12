@@ -48,6 +48,13 @@ Rectangle COINS_TEXT_RECT = {
 };
 Color HOVER_COLOR;
 
+Texture2D ZOMBIE_HEAD_TEXTURE;
+Texture2D METER_TEXTURE;
+
+const char *ZOMBIE_HEAD_PATH = "Sprites/Meter/head.png";
+const char *METER_PATH = "Sprites/Meter/meter.png";
+const float METER_HEIGHT = 27;
+
 const int CHOMPER_PRICE = 75;
 const int PEASHOOTER_PRICE = 50;
 const int SUNFLOWER_PRICE = 25;
@@ -238,6 +245,32 @@ void CoinCount_Draw() {
     DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
 }
 
+void Meter_Draw() {
+    float fraction = ((float)zombiesKilled) /
+                     (currentLevel->normalZombieCount +
+                      currentLevel->flagZombieCount);
+    int fullW = METER_TEXTURE.width;
+    int w1 = (int)(fullW * fraction + 0.5f);
+    int w2 = fullW - w1;
+    float offset = 5;
+    Rectangle src1 = {fullW - w1, METER_HEIGHT, w1, METER_HEIGHT};
+    Rectangle src2 = {0, 0, w2, METER_HEIGHT};
+
+    Rectangle dst1 = {w2 * HUD_SCALE + offset, offset,
+                      w1 * HUD_SCALE, METER_HEIGHT * HUD_SCALE};
+    Rectangle dst2 = {offset, offset, w2 * HUD_SCALE, METER_HEIGHT * HUD_SCALE};
+
+    Vector2 origin = {0, 0};
+    Rectangle srcHead = {0, 0, ZOMBIE_HEAD_TEXTURE.width,
+                         ZOMBIE_HEAD_TEXTURE.height};
+    Rectangle dstHead = {dst1.x - srcHead.width * HUD_SCALE / 2 + offset / 2,
+                         offset,
+                         srcHead.width * HUD_SCALE, srcHead.height * HUD_SCALE};
+    DrawTexturePro(METER_TEXTURE, src1, dst1, origin, 1, WHITE);
+    DrawTexturePro(METER_TEXTURE, src2, dst2, origin, 0, WHITE);
+    DrawTexturePro(ZOMBIE_HEAD_TEXTURE, srcHead, dstHead, origin, 0, WHITE);
+}
+
 void PlantSelection_Init() {
     HOVER_COLOR.a = '5';
     HOVER_COLOR.g = 'f';
@@ -259,6 +292,12 @@ void PlantSelection_Init() {
     }
     if (!IsTextureValid(COINS_TEXTURE)) {
         COINS_TEXTURE = LoadTexture(COINS_PATH);
+    }
+    if (!IsTextureValid(METER_TEXTURE)) {
+        METER_TEXTURE = LoadTexture(METER_PATH);
+    }
+    if (!IsTextureValid(ZOMBIE_HEAD_TEXTURE)) {
+        ZOMBIE_HEAD_TEXTURE = LoadTexture(ZOMBIE_HEAD_PATH);
     }
     const float cellHeight = BUTTON_HEIGHT + BUTTON_MARGIN;
     for (int i = 0; i < PlantButtonsSize; i++) {
@@ -312,6 +351,9 @@ void PlantSelection_Draw() {
         Color c = {255, 255, 255, 200};
         DrawTexturePro(*SelectedButton->texture,
                        src, dst, origin, 0, c);
+    }
+    if (currentLevel != &LEVEL4) {
+        Meter_Draw();
     }
 }
 

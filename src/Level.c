@@ -56,7 +56,7 @@ Level LEVEL3 = {
 
 Level LEVEL4 = {
     &DAY_TEXTURE,
-    1000,
+    100,
     true,
     0,
     0,

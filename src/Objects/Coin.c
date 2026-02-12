@@ -117,5 +117,3 @@ void Coin_Update(Coin *self) {
         self->isClicked = true;
     }
 }
-
-// TODO win and lose sequence

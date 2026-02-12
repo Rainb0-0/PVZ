@@ -26,6 +26,8 @@ extern Level LEVEL4;
 
 extern Level *currentLevel;
 extern int zombiesKilled;
+extern int normalZombiesSpawned;
+extern int flagZombiesSpawned;
 
 void Level_Init();
 void Level_Draw();

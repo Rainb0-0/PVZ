@@ -83,7 +83,6 @@ void RemoveObject(void *self, bool plant) {
 }
 
 void AddObject(Object *ob) {
-    // TODO dynamic
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL) {
             Objects[i] = ob;
