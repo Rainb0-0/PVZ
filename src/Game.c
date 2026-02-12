@@ -7,6 +7,7 @@
 #include "Level.h"
 #include "LevelSelector.h"
 #include "MainMenu.h"
+#include "Music.h"
 #include "Object.h"
 #include "Pea.h"
 #include "Peashooter.h"
@@ -183,6 +184,7 @@ void BackToMenu() {
     GamePaused = false;
     GameState = 0;
     SceneManager_Change(SCENE_MAINMENU);
+    StopMusicSmooth(&mh);
 }
 
 void ResumeGame() {
@@ -233,36 +235,38 @@ void Overlay_Draw() {
     } else {
         list = GameOverButtons;
         length = 1;
-        char currentScore[20] = "score : ";
-        sprintf(currentScore + strlen(currentScore), "%.2f", GameDuration);
-        Vector2 textSizeCurScore = MeasureTextEx(FONT, currentScore, OVERLAY_FONT_SIZE, 1);
-        Vector2 textPosCurScore = {(GetScreenWidth() - textSizeCurScore.x) / 2,
-                                   textPos.y + textSize.y};
-        DrawTextPro(FONT, currentScore, textPosCurScore, origin, 0,
-                    OVERLAY_FONT_SIZE, 1, WHITE);
-        char maxScore[20] = "max score : ";
-        int scoreIndex = 0;
-        if (currentLevel == &LEVEL1) {
-            scoreIndex = 0;
-        } else if (currentLevel == &LEVEL2) {
-            scoreIndex = 1;
-        } else if (currentLevel == &LEVEL3) {
-            scoreIndex = 2;
-        } else {
-            scoreIndex = 3;
+        if (currentLevel == &LEVEL4) {
+            char currentScore[20] = "score : ";
+            sprintf(currentScore + strlen(currentScore), "%.2f", GameDuration);
+            Vector2 textSizeCurScore = MeasureTextEx(FONT, currentScore, OVERLAY_FONT_SIZE, 1);
+            Vector2 textPosCurScore = {(GetScreenWidth() - textSizeCurScore.x) / 2,
+                                       textPos.y + textSize.y};
+            DrawTextPro(FONT, currentScore, textPosCurScore, origin, 0,
+                        OVERLAY_FONT_SIZE, 1, WHITE);
+            char maxScore[20] = "max score : ";
+            int scoreIndex = 0;
+            if (currentLevel == &LEVEL1) {
+                scoreIndex = 0;
+            } else if (currentLevel == &LEVEL2) {
+                scoreIndex = 1;
+            } else if (currentLevel == &LEVEL3) {
+                scoreIndex = 2;
+            } else {
+                scoreIndex = 3;
+            }
+            if (LEVELSTATS[scoreIndex] < GameDuration) {
+                LEVELSTATS[scoreIndex] = GameDuration;
+                LevelStats_SaveState();
+                LevelStats_ReadFile();
+            }
+            sprintf(maxScore + strlen(maxScore), "%.2f", LEVELSTATS[scoreIndex]);
+            Vector2 textSizeMaxScore = MeasureTextEx(FONT, maxScore,
+                                                     OVERLAY_FONT_SIZE, 1);
+            Vector2 textPosMaxScore = {(GetScreenWidth() - textSizeMaxScore.x) / 2,
+                                       textPosCurScore.y + textSizeMaxScore.y};
+            DrawTextPro(FONT, maxScore, textPosMaxScore,
+                        origin, 0, OVERLAY_FONT_SIZE, 1, WHITE);
         }
-        if (LEVELSTATS[scoreIndex] < GameDuration) {
-            LEVELSTATS[scoreIndex] = GameDuration;
-            LevelStats_SaveState();
-            LevelStats_ReadFile();
-        }
-        sprintf(maxScore + strlen(maxScore), "%.2f", LEVELSTATS[scoreIndex]);
-        Vector2 textSizeMaxScore = MeasureTextEx(FONT, maxScore,
-                                                 OVERLAY_FONT_SIZE, 1);
-        Vector2 textPosMaxScore = {(GetScreenWidth() - textSizeMaxScore.x) / 2,
-                                   textPosCurScore.y + textSizeMaxScore.y};
-        DrawTextPro(FONT, maxScore, textPosMaxScore,
-                    origin, 0, OVERLAY_FONT_SIZE, 1, WHITE);
     }
     for (int i = 0; i < length; i++) {
         OverlayButton *cur = list[i];
@@ -310,6 +314,12 @@ void Overlay_Update() {
 void Game_End(bool won) {
     GamePaused = true;
     GameState = (won == true ? 1 : -1);
+    StopMusicSmooth(&mh);
+    if (won) {
+        PlayRandomOgg(GAME_WON_SOUND, 1, false);
+    } else {
+        PlayRandomOgg(GAME_LOST_SOUND, 1, false);
+    }
 }
 
 void Game_Init() {
@@ -364,11 +374,19 @@ void Game_Draw() {
 }
 
 void Game_Update() {
-    if (IsKeyPressed(KEY_E)) {
+    if (IsKeyPressed(KEY_W)) {
         Game_End(true);
     }
-    if (IsKeyPressed(KEY_ESCAPE) && GameState == 0)
+    if (IsKeyPressed(KEY_L)) {
+        Game_End(false);
+    }
+    if (IsKeyPressed(KEY_N)) {
+        NextTrack(&mh);
+    }
+    if (IsKeyPressed(KEY_ESCAPE) && GameState == 0) {
         GamePaused = !GamePaused;
+        mh.playing = !mh.playing;
+    }
     if (GamePaused) {
         Overlay_Update();
         return;

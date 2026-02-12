@@ -1,6 +1,7 @@
 #include "MainMenu.h"
 #include "Font.h"
 #include "Game.h"
+#include "Music.h"
 #include "SceneManager.h"
 #include "main.h"
 #include "raylib.h"
@@ -129,6 +130,9 @@ void MainMenu_Draw() {
 }
 
 void MainMenu_Update() {
+    if (!mh.playing) {
+        PlayPlaylist(&mh, MENU_MUSIC_PATH);
+    }
     Vector2 mousePos = GetMousePosition();
     for (int i = 0; i < BUTTONS_SIZE; i++) {
         if (IsPositionInsideRect(Buttons[i]->bounds, mousePos)) {

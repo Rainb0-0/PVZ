@@ -189,7 +189,7 @@ void Zombie_Update(Zombie *self) {
     if (self->hp <= 0 &&
         !(self->state == &DYING || self->state == &DYING_FLAG)) {
         ChangeZombieState(self);
-        PlayRandomOggWithPitch(ZOMBIE_DIE_SOUND_PATH, 1);
+        PlayRandomOgg(ZOMBIE_DIE_SOUND_PATH, 1, true);
         int chance = rand() % 2;
         if (chance) {
             Coin *nc = newCoin(self->pos, self->isFlagZombie);
@@ -239,7 +239,7 @@ void Zombie_Update(Zombie *self) {
         }
         float chance = (float)rand() / RAND_MAX;
         if (chance < 0.00005) {
-            PlayRandomOggWithPitch(ZOMBIE_GROAN_SOUND_PATH, 0.5);
+            PlayRandomOgg(ZOMBIE_GROAN_SOUND_PATH, 0.5, true);
         }
     } else if (self->state == &EATING || self->state == &EATING_FLAG) {
         Plant *current = PlantAtPosition(self->pos);
@@ -250,7 +250,7 @@ void Zombie_Update(Zombie *self) {
         if (current) {
             if (ATTACK_COOLDOWN <= self->sinceAttack) {
                 DamagePlant(current, self->attackDamage);
-                PlayRandomOggWithPitch(ZOMBIE_EATING_SOUND_PATH, 1);
+                PlayRandomOgg(ZOMBIE_EATING_SOUND_PATH, 1, true);
                 self->sinceAttack = 0;
             }
         } else {

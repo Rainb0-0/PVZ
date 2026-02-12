@@ -76,7 +76,7 @@ void LawnMower_Update(LawnMower *self) {
     if (self->active == false) {
         if (here != NULL) {
             self->active = true;
-            PlayRandomOggWithPitch(LAWNMOWER_SOUND_PATH, 1);
+            PlayRandomOgg(LAWNMOWER_SOUND_PATH, 1, false);
             self->state = &LAWNMOWER_ACTIVE;
             lawnMowers[GetRowIndex(self->pos.y)] = 0;
             DamageZombie(here, DAMAGE);

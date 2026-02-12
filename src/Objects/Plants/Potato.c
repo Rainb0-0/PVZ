@@ -127,7 +127,7 @@ void Potato_Update(Potato *self) {
     if (self->state == &POTATO_SLEEP) {
         self->sincePlant += dt;
         if (self->activationCooldown <= self->sincePlant) {
-            PlayRandomOggWithPitch(POTATO_GROW_SOUND_PATH, 1);
+            PlayRandomOgg(POTATO_GROW_SOUND_PATH, 1, true);
             self->state = &POTATO_ACTIVATION;
         }
     } else if (self->state == &POTATO_ACTIVATION) {
@@ -140,7 +140,7 @@ void Potato_Update(Potato *self) {
                            self->pos.y};
         if (ZombieAtPosition(tempPos)) {
             KillZombiesInCircle(self->pos, BLAST_RADIUS);
-            PlayRandomOggWithPitch(POTATO_EXPLODE_SOUND_PATH, 1);
+            PlayRandomOgg(POTATO_EXPLODE_SOUND_PATH, 1, true);
             self->state = &POTATO_EXPLODED;
         }
     } else {

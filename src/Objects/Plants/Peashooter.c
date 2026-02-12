@@ -114,7 +114,7 @@ void Peashooter_Update(Peashooter *self) {
             if (PEASHOOTER_COOLDOWN <= self->sinceShot) {
                 self->sinceShot = 0;
                 Peashooter_Shoot(self);
-                PlayRandomOggWithPitch(SHOOT_SOUND_PATH, 0.3);
+                PlayRandomOgg(SHOOT_SOUND_PATH, 0.3, true);
             }
         } else if (self->frameIndex == self->state->maxFrameIndex) {
             if (!IsZombieInLaneOfPosition(self->pos) ||

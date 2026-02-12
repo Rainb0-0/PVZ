@@ -311,6 +311,7 @@ void PlantSelection_Init() {
         current->bottomRight.y = bottomRight.y;
         current->sinceCooldown = 0;
     }
+    ResetSelected();
 }
 
 void PlantSelection_Draw() {
@@ -337,7 +338,7 @@ void PlantSelection_Draw() {
     }
     SunCount_Draw();
     CoinCount_Draw();
-    if (SelectedButton != NULL) {
+    if (SelectedButton != NULL && GamePaused == false) {
         Vector2 mousePos = GetMousePosition();
         float width = *SelectedButton->textureWidth;
         float height = *SelectedButton->textureHeight;
@@ -406,7 +407,7 @@ void PlantSelection_Update() {
                 calcluateWeight(pos.y);
                 SelectedButton->sinceCooldown = 0;
                 SunCount -= SelectedButton->price;
-                PlayRandomOggWithPitch(PLANT_SOUND_PATH, 1);
+                PlayRandomOgg(PLANT_SOUND_PATH, 1, true);
                 ResetSelected();
             }
         }

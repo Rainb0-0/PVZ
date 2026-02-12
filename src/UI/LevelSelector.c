@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "Game.h"
 #include "Level.h"
+#include "Music.h"
 #include "SceneManager.h"
 #include "math.h"
 #include "raylib.h"
@@ -211,6 +212,7 @@ void LevelSelector_Update() {
                 currentLevel = LEVELBUTTONS[i]->level;
                 Game_Init();
                 SceneManager_Change(SCENE_GAME);
+                SwitchPlaylist(&mh, GAME_MUSIC_PATH);
             }
         } else {
             LEVELBUTTONS[i]->hovered = false;

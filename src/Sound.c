@@ -40,11 +40,7 @@ Sound *GetCachedSound(const char *filePath) {
     return &soundCache[soundCacheCount - 1].sound;
 }
 
-void PlayRandomOggWithPitch(const char *directoryPath, float volume) {
-    if (!IsAudioDeviceReady()) {
-        InitAudioDevice();
-    }
-
+void PlayRandomOgg(const char *directoryPath, float volume, bool randomPitch) {
     DIR *dir = opendir(directoryPath);
     if (!dir)
         return;
@@ -76,9 +72,10 @@ void PlayRandomOggWithPitch(const char *directoryPath, float volume) {
     Sound *sound = GetCachedSound(filePath);
     if (!sound)
         return;
-
-    float randomPitch = 0.85f + ((float)rand() / RAND_MAX) * 0.5f;
-    SetSoundPitch(*sound, randomPitch);
+    float pitch = 1;
+    if (randomPitch)
+        pitch = 0.85f + ((float)rand() / RAND_MAX) * 0.5f;
+    SetSoundPitch(*sound, pitch);
     SetSoundVolume(*sound, volume);
     PlaySound(*sound);
 }

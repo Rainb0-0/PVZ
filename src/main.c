@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "LawnMower.h"
 #include "LevelSelector.h"
+#include "Music.h"
 #include "Pea.h"
 #include "Peashooter.h"
 #include "PlantSelection.h"
@@ -23,6 +24,9 @@ int main(void) {
     InitWindow(960, 600, "Plants Vs. Zombies");
     SearchAndSetResourceDir("resources");
     SceneManager_Init(SCENE_MAINMENU);
+    if (!IsAudioDeviceReady()) {
+        InitAudioDevice();
+    }
     Font_Init();
     LawnMower_Init();
     Zombie_Init();
@@ -35,6 +39,7 @@ int main(void) {
     Coin_Init();
     LevelSelector_Init();
     PlantSelection_Init();
+    InitMusicHandler(&mh, 1);
     while (!GameShouldQuit) {
         if (WindowShouldClose())
             if (IsKeyDown(KEY_ESCAPE) == false)
@@ -44,6 +49,7 @@ int main(void) {
         BeginDrawing();
         ClearBackground(BLACK);
         SceneManager_Draw();
+        UpdateMusicHandler(&mh, GetFrameTime());
         EndDrawing();
     }
     CloseWindow();

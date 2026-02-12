@@ -133,7 +133,7 @@ void Sun_Update(Sun *self) {
                            (GetScreenWidth() - X_OFFSET) / 2;
             self->dest.y = GetScreenHeight() -
                            (GetScreenWidth() - X_OFFSET) / 2;
-            PlayRandomOggWithPitch(SUN_COLLECT_SOUND_PATH, 1);
+            PlayRandomOgg(SUN_COLLECT_SOUND_PATH, 1, true);
         }
     }
 }

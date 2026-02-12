@@ -113,7 +113,7 @@ void Coin_Update(Coin *self) {
         IsPositionInsideCircle(self->pos,
                                self->state->frameWidth / 5,
                                mousePos)) {
-        PlayRandomOggWithPitch(COIN_COLLECTION_SOUND_PATH, 1);
+        PlayRandomOgg(COIN_COLLECTION_SOUND_PATH, 1, true);
         self->isClicked = true;
     }
 }

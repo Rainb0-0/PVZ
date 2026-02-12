@@ -97,7 +97,7 @@ void Pea_Update(Pea *self) {
         if (here != NULL) {
             DamageZombie(here, self->attackDamage);
             ChangePeaState(self);
-            PlayRandomOggWithPitch(PEA_SPLAT_SOUND_PATH, 1);
+            PlayRandomOgg(PEA_SPLAT_SOUND_PATH, 1, true);
         } else {
             float dt = GetFrameTime();
             self->pos.x += self->vel.x * dt;
