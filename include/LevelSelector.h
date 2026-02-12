@@ -12,6 +12,11 @@ typedef struct LevelSelectorButton {
     Rectangle bounds;
 } LevelSelectorButton;
 
+extern float LEVELSTATS[LEVEL_COUNT];
+
+void LevelStats_SaveState();
+void LevelStats_ReadFile();
+
 void LevelSelector_Init();
 void LevelSelector_Draw();
 void LevelSelector_Update();

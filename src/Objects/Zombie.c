@@ -216,7 +216,7 @@ void Zombie_Update(Zombie *self) {
         if (PlantAtPosition(self->pos)) {
             ChangeZombieState(self);
         }
-        if (self->pos.x + self->state->frameWidth < 0) {
+        if (self->pos.x + self->state->frameWidth / 2 < 0) {
             Game_End(false);
         }
         float dt = GetFrameTime();

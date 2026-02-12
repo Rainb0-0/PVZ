@@ -5,6 +5,7 @@
 #include "GameGrid.h"
 #include "LawnMower.h"
 #include "Level.h"
+#include "LevelSelector.h"
 #include "MainMenu.h"
 #include "Object.h"
 #include "Pea.h"
@@ -39,6 +40,8 @@ const char *GAME_LOST_SOUND = "Sounds/Level/Lose/";
 bool GamePaused = false;
 // 0 means ongoing, 1 win, -1 lost
 int GameState = 0;
+
+float GameDuration = 0;
 
 const float OVERLAY_SCALE = 1.2;
 const float OVERLAY_FONT_SIZE = 30 * OVERLAY_SCALE;
@@ -211,7 +214,7 @@ void Overlay_Draw() {
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), c);
     char text[20];
     if (GameState == -1) {
-        char temp[20] = "YOU LOST :(";
+        char temp[20] = "YOU LOST D:";
         strcpy(text, temp);
     } else if (GameState == 0) {
         char temp[20] = "GAME PAUSED";
@@ -232,6 +235,36 @@ void Overlay_Draw() {
     } else {
         list = GameOverButtons;
         length = 1;
+        char currentScore[20] = "score : ";
+        sprintf(currentScore + strlen(currentScore), "%.2f", GameDuration);
+        Vector2 textSizeCurScore = MeasureTextEx(FONT, currentScore, OVERLAY_FONT_SIZE, 1);
+        Vector2 textPosCurScore = {(GetScreenWidth() - textSizeCurScore.x) / 2,
+                                   textPos.y + textSize.y};
+        DrawTextPro(FONT, currentScore, textPosCurScore, origin, 0,
+                    OVERLAY_FONT_SIZE, 1, WHITE);
+        char maxScore[20] = "max score : ";
+        int scoreIndex = 0;
+        if (currentLevel == &LEVEL1) {
+            scoreIndex = 0;
+        } else if (currentLevel == &LEVEL2) {
+            scoreIndex = 1;
+        } else if (currentLevel == &LEVEL3) {
+            scoreIndex = 2;
+        } else {
+            scoreIndex = 3;
+        }
+        if (LEVELSTATS[scoreIndex] < GameDuration) {
+            LEVELSTATS[scoreIndex] = GameDuration;
+            LevelStats_SaveState();
+            LevelStats_ReadFile();
+        }
+        sprintf(maxScore + strlen(maxScore), "%.2f", LEVELSTATS[scoreIndex]);
+        Vector2 textSizeMaxScore = MeasureTextEx(FONT, maxScore,
+                                                 OVERLAY_FONT_SIZE, 1);
+        Vector2 textPosMaxScore = {(GetScreenWidth() - textSizeMaxScore.x) / 2,
+                                   textPosCurScore.y + textSizeMaxScore.y};
+        DrawTextPro(FONT, maxScore, textPosMaxScore,
+                    origin, 0, OVERLAY_FONT_SIZE, 1, WHITE);
     }
     for (int i = 0; i < length; i++) {
         OverlayButton *cur = list[i];
@@ -289,7 +322,7 @@ void Game_Init() {
                   i * GetCellDimensions().y + GetCellDimensions().y / 2;
         calcluateWeight(y);
     }
-
+    GameDuration = 0;
     for (int i = 0; i < 2; i++) {
         OverlayButton *cur = PauseButtons[i];
         float width = cur->texture->width * OVERLAY_SCALE;
@@ -333,12 +366,16 @@ void Game_Draw() {
 }
 
 void Game_Update() {
+    if (IsKeyPressed(KEY_E)) {
+        Game_End(true);
+    }
     if (IsKeyPressed(KEY_ESCAPE) && GameState == 0)
         GamePaused = !GamePaused;
     if (GamePaused) {
         Overlay_Update();
         return;
     }
+    GameDuration += GetFrameTime();
     Level_Update();
     for (int i = 0; i < ObjectsCount; i++) {
         if (Objects[i] == NULL)

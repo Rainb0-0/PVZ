@@ -13,15 +13,11 @@ Texture2D NIGHT_TEXTURE;
 const char *DAY_PATH = "Sprites/Levels/day.png";
 const char *NIGHT_PATH = "Sprites/Levels/night.png";
 
-// TODO add sun decay
-
 const float SUN_SPAWN_COOLDOWN = 5;
 const float ZOMBIE_SPAWN_COOLDOWN = 5;
 
 Level *currentLevel;
 
-// texture, init sun, infinite?,
-// normal, flag, cooldown, lawnmower, naturla sun, name
 Level LEVEL1 = {
     &DAY_TEXTURE,
     100,
