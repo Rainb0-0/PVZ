@@ -7,9 +7,7 @@
 #include "raylib.h"
 #include <stdio.h>
 
-#define MAXSTATS 100
-
-int LEVEL4_SCORE[MAXSTATS];
+float LEVELSTATS[LEVEL_COUNT];
 
 FILE *LEVELSTATS_FILE;
 
@@ -76,27 +74,34 @@ LevelSelectorButton *LEVELBUTTONS[LEVEL_COUNT] = {
     &LEVELBUTTON4,
 };
 
+// 4 floats, the max time the player has survived in seconds
+void LevelStats_WriteDefaults() {
+    rewind(LEVELSTATS_FILE);
+    float temp = 0;
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        fwrite(&temp, sizeof(float), 1, LEVELSTATS_FILE);
+        LEVELSTATS[i] = 0;
+    }
+}
+
 void LevelStats_ReadFile() {
     rewind(LEVELSTATS_FILE);
-    int index = 0;
-    int score;
-    while (fread(&score, sizeof(int), 1, LEVELSTATS_FILE)) {
-        LEVEL4_SCORE[index++] = score;
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        fread(&LEVELSTATS[i], sizeof(float), 1, LEVELSTATS_FILE);
     }
 }
 
 void LevelStats_SaveState() {
-    int index = 0;
     rewind(LEVELSTATS_FILE);
-    while (LEVEL4_SCORE[index] != 0) {
-        fwrite(&LEVEL4_SCORE[index], sizeof(int), 1, LEVELSTATS_FILE);
-        index++;
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        fwrite(&LEVELSTATS[i], sizeof(float), 1, LEVELSTATS_FILE);
     }
 }
 
 void LevelSelector_Init() {
     if (!FileExists(LEVELSTATS_FILE_PATH)) {
         LEVELSTATS_FILE = fopen(LEVELSTATS_FILE_PATH, "wb+");
+        LevelStats_WriteDefaults();
     } else {
         LEVELSTATS_FILE = fopen(LEVELSTATS_FILE_PATH, "rb+");
     }
