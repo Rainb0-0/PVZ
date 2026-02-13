@@ -99,9 +99,10 @@ bool IsZombieInLaneOfPosition(Vector2 pos) {
         if (Objects[i]->type == ZOMBIE) {
             Zombie *current = (Zombie *)(Objects[i]->self);
             float xDistance = current->pos.x - snappedPos.x;
-            if (SnapPosToGrid(current->pos).y == snappedPos.y &&
-                0 < current->hp && 0 < xDistance < POSITION_TOLERANCE.x &&
-                current->pos.x < X_OFFSET && current->active) {
+            float yDistance = fabs(SnapPosToGrid(current->pos).y - snappedPos.y);
+            if (yDistance < POSITION_TOLERANCE.y && 0 < xDistance &&
+                0 < current->hp && current->pos.x < GetScreenWidth() &&
+                current->active) {
                 return true;
             }
         }

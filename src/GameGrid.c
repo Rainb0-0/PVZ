@@ -5,7 +5,7 @@
 Rectangle GetPlayfieldRect() {
     float sw = (float)GetScreenWidth();
     float sh = (float)GetScreenHeight();
-    return (Rectangle){sw * 0.04f, sh * 0.09f, sw * 0.8f, sh * 0.89f};
+    return (Rectangle){sw * 0.18f, sh * 0.12f, sw * 0.72f, sh * 0.84f};
 }
 
 Vector2 GetCellDimensions() {

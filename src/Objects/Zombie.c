@@ -189,6 +189,7 @@ void Zombie_Draw(Zombie *self) {
 void Zombie_Update(Zombie *self) {
     if (self->active == false)
         return;
+    Vector2 mousePos = GetMousePosition();
     if (self->hp <= 0 &&
         !(self->state == &DYING || self->state == &DYING_FLAG)) {
         ChangeZombieState(self);

@@ -30,17 +30,16 @@ const char *LOCK_PATH = "Sprites/Lock.png";
 const char *COINS_PATH = "Sprites/CoinBank.png";
 const char *PLANT_SOUND_PATH = "Sounds/Game/Plant/";
 
-const float HUD_SCALE = 0.6;
-const int BUTTON_WIDTH = 100 * HUD_SCALE;
-const int BUTTON_HEIGHT = 140 * HUD_SCALE;
-const int BUTTON_MARGIN = 16 * HUD_SCALE;
-const int PRICE_FONT_SIZE = 20 * HUD_SCALE;
-const Rectangle BUTTON_TEXTURE_RECT = {7 * HUD_SCALE,
-                                       18 * HUD_SCALE,
-                                       85 * HUD_SCALE,
-                                       85 * HUD_SCALE};
-const Rectangle BUTTON_PRICE_RECT = {
-    5 * HUD_SCALE, 110 * HUD_SCALE, 60 * HUD_SCALE, 25 * HUD_SCALE};
+const float HUD_SCALE = 0.9;
+const int BUTTON_WIDTH = 100;
+const int BUTTON_HEIGHT = 140;
+const int BUTTON_MARGIN = 5 * HUD_SCALE;
+const int PRICE_FONT_SIZE = 12 * HUD_SCALE;
+Rectangle SUN_BANK_RECATANGLE;
+const Rectangle BUTTON_TEXTURE_RECT = {7, 18, 85, 85};
+const Vector2 BACKGROUND_MARGINS = {9 * HUD_SCALE, 9 * HUD_SCALE};
+const Rectangle BUTTON_PRICE_RECT = {5, 110, 60, 25};
+const Rectangle SUN_COUNT_RECT = {12, 62, 54, 22};
 Rectangle COINS_TEXT_RECT = {
     37 * HUD_SCALE,
     10 * HUD_SCALE,
@@ -156,8 +155,7 @@ PlantButton *
 };
 
 const int PlantButtonsSize = sizeof(PlantButtons) / sizeof(PlantButtons[0]);
-float X_OFFSET;
-float Y_OFFSET = BUTTON_MARGIN * 1.5;
+float X_OFFSET = 10 * HUD_SCALE;
 
 void ResetSelected() {
     for (int i = 0; i < PlantButtonsSize; i++) {
@@ -167,37 +165,41 @@ void ResetSelected() {
 }
 
 void PlantButton_Draw(PlantButton *self) {
+    Vector2 origin = {0, 0};
+    Rectangle spsrc = {0, 0, SEED_PACKET.width, SEED_PACKET.height};
     Rectangle currentRect = {self->topLeft.x,
                              self->topLeft.y,
                              self->bottomRight.x - self->topLeft.x,
                              self->bottomRight.y - self->topLeft.y};
-    DrawTextureEx(SEED_PACKET, self->topLeft, 0, HUD_SCALE, WHITE);
+    DrawTexturePro(SEED_PACKET, spsrc, currentRect, origin, 0, WHITE);
     Rectangle src = {0, 0, *self->textureWidth, *self->textureHeight};
     float height = *self->textureHeight;
     float width = *self->textureWidth;
+    float scale = currentRect.height / SEED_PACKET.height;
     if (height < width) {
-        height = height * BUTTON_TEXTURE_RECT.width / width;
-        width = BUTTON_TEXTURE_RECT.width;
+        height = height * BUTTON_TEXTURE_RECT.width * scale / width;
+        width = BUTTON_TEXTURE_RECT.width * scale;
     } else if (width < height) {
-        width = width * BUTTON_TEXTURE_RECT.height / height;
-        height = BUTTON_TEXTURE_RECT.height;
+        width = width * BUTTON_TEXTURE_RECT.height * scale / height;
+        height = BUTTON_TEXTURE_RECT.height * scale;
     } else {
-        width = BUTTON_TEXTURE_RECT.width;
-        height = BUTTON_TEXTURE_RECT.height;
+        width = BUTTON_TEXTURE_RECT.width * scale;
+        height = BUTTON_TEXTURE_RECT.height * scale;
     }
-    Vector2 mid = {self->topLeft.x + BUTTON_WIDTH / 2,
+    Vector2 mid = {self->topLeft.x + currentRect.width / 2,
                    self->topLeft.y +
-                       BUTTON_TEXTURE_RECT.y +
-                       BUTTON_TEXTURE_RECT.height / 2};
+                       BUTTON_TEXTURE_RECT.y * scale +
+                       BUTTON_TEXTURE_RECT.height * scale / 2};
     Rectangle dst = {mid.x - width / 2, mid.y - height / 2, width, height};
-    Vector2 origin = {0, 0};
     DrawTexturePro(*self->texture, src, dst, origin, 0, WHITE);
     char price[10] = "0";
     sprintf(price, "%d", self->price);
     Vector2 textSize = MeasureTextEx(FONT, price, PRICE_FONT_SIZE, 1);
     Vector2 textPosition = {
-        self->topLeft.x + BUTTON_PRICE_RECT.x + (BUTTON_PRICE_RECT.width - textSize.x) / 2,
-        self->topLeft.y + BUTTON_PRICE_RECT.y + (BUTTON_PRICE_RECT.height - textSize.y) / 2};
+        self->topLeft.x + BUTTON_PRICE_RECT.x * scale +
+            (BUTTON_PRICE_RECT.width * scale - textSize.x) / 2,
+        self->topLeft.y + BUTTON_PRICE_RECT.y * scale +
+            (BUTTON_PRICE_RECT.height * scale - textSize.y) / 2};
     DrawTextEx(FONT, price, textPosition, PRICE_FONT_SIZE, 1, BLACK);
     if (self->hovered && self->maxCooldown <= self->sinceCooldown) {
         if (self->active)
@@ -211,7 +213,7 @@ void PlantButton_Draw(PlantButton *self) {
         Color dis = HOVER_COLOR;
         dis.a = 'f';
         DrawRectangleRec(currentRect, dis);
-        float lockScale = HUD_SCALE / 1.5;
+        float lockScale = HUD_SCALE / 3;
         Vector2 lockPos = {currentRect.x + currentRect.width / 2 -
                                LOCK.width * lockScale / 2,
                            currentRect.y + currentRect.height / 2 -
@@ -246,22 +248,22 @@ void PlantButton_Draw(PlantButton *self) {
 }
 
 void SunCount_Draw() {
-    float width = GetScreenWidth() - X_OFFSET - 2 * BUTTON_MARGIN;
-    float height = SUN_BANK.height * width / SUN_BANK.width;
+    // float width = BACKGROUND.h;
     Rectangle src = {0, 0, SUN_BANK.width, SUN_BANK.height};
-    Rectangle dst = {
-        X_OFFSET + BUTTON_MARGIN,
-        GetScreenHeight() - height - BUTTON_MARGIN,
-        width,
-        height,
-    };
     Vector2 origin = {0, 0};
-    DrawTexturePro(SUN_BANK, src, dst, origin, 0, WHITE);
+    DrawTexturePro(SUN_BANK, src, SUN_BANK_RECATANGLE, origin, 0, WHITE);
     char suns[10];
     sprintf(suns, "%d", SunCount);
     Vector2 textSize = MeasureTextEx(FONT, suns, PRICE_FONT_SIZE, 1);
-    Vector2 textPos = {X_OFFSET + BUTTON_MARGIN + (width - textSize.x) / 2,
-                       GetScreenHeight() - BUTTON_MARGIN * 1.5 - textSize.y};
+    float scale = SUN_BANK_RECATANGLE.height / SUN_BANK.height;
+    Vector2 textPos = {
+        SUN_BANK_RECATANGLE.x +
+            SUN_COUNT_RECT.x * scale +
+            (SUN_COUNT_RECT.width * scale - textSize.x) / 2,
+        SUN_BANK_RECATANGLE.y +
+            SUN_COUNT_RECT.y * scale +
+            (SUN_COUNT_RECT.height * scale - textSize.y) / 2,
+    };
     DrawTextPro(FONT,
                 suns, textPos, origin, 0, PRICE_FONT_SIZE, 1, BLACK);
 }
@@ -284,14 +286,15 @@ void CoinCount_Draw() {
     DrawTextPro(FONT, bal, textPosition, origin, 0, coinFontSize, 1, WHITE);
 }
 
-const float PAUSEBUTTON_SCALE = HUD_SCALE * 0.5;
+const float PAUSEBUTTON_SCALE = HUD_SCALE * 0.3;
 bool PAUSEBUTTON_HOVERED = false;
 
 void PauseButton_Draw() {
     float width = BUTTON_NORMAL_TEXTURE.width;
     float height = BUTTON_NORMAL_TEXTURE.height;
     Rectangle src = {0, 0, width, height};
-    Rectangle dst = {(GetScreenWidth() - width * PAUSEBUTTON_SCALE) / 2, 0,
+    Rectangle dst = {GetScreenWidth() - width * PAUSEBUTTON_SCALE,
+                     GetScreenHeight() - height * PAUSEBUTTON_SCALE,
                      width * PAUSEBUTTON_SCALE, height * PAUSEBUTTON_SCALE};
     Vector2 origin = {0, 0};
     Color c = WHITE;
@@ -303,13 +306,14 @@ void PauseButton_Draw() {
     Vector2 textSize = MeasureTextEx(FONT, text, fontSize, 1);
     Vector2 textPos = {dst.x + (dst.width - textSize.x) / 2,
                        dst.y + (dst.height - textSize.y) / 2};
-    DrawTextPro(FONT, text, textPos, origin, 0, fontSize, 1, BLACK);
+    DrawTextPro(FONT, text, textPos, origin, 0, fontSize, 1, WHITE);
 }
 
 void PauseButton_Update() {
     float width = BUTTON_NORMAL_TEXTURE.width;
     float height = BUTTON_NORMAL_TEXTURE.height;
-    Rectangle dst = {(GetScreenWidth() - width * PAUSEBUTTON_SCALE) / 2, 0,
+    Rectangle dst = {GetScreenWidth() - width * PAUSEBUTTON_SCALE,
+                     GetScreenHeight() - height * PAUSEBUTTON_SCALE,
                      width * PAUSEBUTTON_SCALE, height * PAUSEBUTTON_SCALE};
     Vector2 mousePos = GetMousePosition();
     if (IsPositionInsideRect(dst, mousePos)) {
@@ -325,27 +329,29 @@ void PauseButton_Update() {
 }
 
 void Meter_Draw() {
-    float localScale = HUD_SCALE * 1.75;
+    float localScale = HUD_SCALE;
     float fraction = ((float)zombiesKilled) /
                      (currentLevel->normalZombieCount +
                       currentLevel->flagZombieCount);
     int fullW = METER_TEXTURE.width;
-    int w1 = (int)(fullW * fraction + 0.5f);
+    int w1 = (int)(fullW * fraction);
     int w2 = fullW - w1;
-    float offset = 5;
+    float offset = 20;
     Rectangle progressSrc = {0, 0, PROGRESS_TEXTURE.width,
                              PROGRESS_TEXTURE.height};
     Rectangle src1 = {fullW - w1, METER_HEIGHT, w1, METER_HEIGHT};
     Rectangle src2 = {0, 0, w2, METER_HEIGHT};
 
-    Rectangle dst1 = {w2 * localScale + offset,
-                      PROGRESS_TEXTURE.height * localScale + offset,
+    Rectangle dst1 = {GetScreenWidth() - w1 * localScale - offset,
+                      PROGRESS_TEXTURE.height * localScale + offset / 2,
                       w1 * localScale, METER_HEIGHT * localScale};
-    Rectangle dst2 = {offset, PROGRESS_TEXTURE.height * localScale + offset,
+    Rectangle dst2 = {GetScreenWidth() - fullW * localScale - offset,
+                      PROGRESS_TEXTURE.height * localScale + offset / 2,
                       w2 * localScale, METER_HEIGHT * localScale};
     Rectangle progressDst = {
-        dst2.x + (METER_TEXTURE.width - PROGRESS_TEXTURE.width) * localScale / 2,
-        offset + 1,
+        GetScreenWidth() - fullW * localScale +
+            (fullW - PROGRESS_TEXTURE.width) * localScale / 2 - offset,
+        offset / 2 + 1,
         PROGRESS_TEXTURE.width * localScale,
         PROGRESS_TEXTURE.height * localScale,
     };
@@ -355,7 +361,7 @@ void Meter_Draw() {
     Rectangle dstHead = {dst1.x - srcHead.width * localScale / 2,
                          dst1.y,
                          srcHead.width * localScale, srcHead.height * localScale};
-    DrawTexturePro(METER_TEXTURE, src1, dst1, origin, 1, WHITE);
+    DrawTexturePro(METER_TEXTURE, src1, dst1, origin, 0, WHITE);
     DrawTexturePro(METER_TEXTURE, src2, dst2, origin, 0, WHITE);
     DrawTexturePro(PROGRESS_TEXTURE, progressSrc, progressDst, origin, 0, WHITE);
     DrawTexturePro(ZOMBIE_HEAD_TEXTURE, srcHead, dstHead, origin, 0, WHITE);
@@ -366,8 +372,15 @@ void PlantSelection_Init() {
     HOVER_COLOR.g = 'f';
     HOVER_COLOR.b = 'f';
     HOVER_COLOR.r = 'f';
-    X_OFFSET = GetScreenWidth() -
-               BUTTON_WIDTH - 2 * BUTTON_MARGIN;
+    float sbh = BACKGROUND.height * HUD_SCALE - BACKGROUND_MARGINS.y * 2;
+    float width = sbh * SUN_BANK.width / SUN_BANK.height;
+    Rectangle tmp = {
+        BACKGROUND_MARGINS.x + X_OFFSET,
+        BACKGROUND_MARGINS.y,
+        width,
+        sbh,
+    };
+    SUN_BANK_RECATANGLE = tmp;
     if (!IsTextureValid(SEED_PACKET)) {
         SEED_PACKET = LoadTexture(SEED_PACKET_PATH);
     }
@@ -395,9 +408,14 @@ void PlantSelection_Init() {
     const float cellHeight = BUTTON_HEIGHT + BUTTON_MARGIN;
     for (int i = 0; i < PlantButtonsSize; i++) {
         PlantButton *current = PlantButtons[i];
-        Vector2 topLeft = {X_OFFSET + BUTTON_MARGIN, i * cellHeight + Y_OFFSET};
-        Vector2 bottomRight = {topLeft.x + BUTTON_WIDTH,
-                               topLeft.y + BUTTON_HEIGHT};
+        float height = BACKGROUND.height * HUD_SCALE - 2 * BACKGROUND_MARGINS.y;
+        float width = height * BUTTON_WIDTH / BUTTON_HEIGHT;
+        Vector2 topLeft = {X_OFFSET + SUN_BANK_RECATANGLE.width +
+                               SUN_BANK_RECATANGLE.x +
+                               i * (width + BUTTON_MARGIN),
+                           BACKGROUND_MARGINS.y};
+        Vector2 bottomRight = {topLeft.x + width,
+                               topLeft.y + height};
         current->topLeft.x = topLeft.x;
         current->topLeft.y = topLeft.y;
         current->bottomRight.x = bottomRight.x;
@@ -409,23 +427,18 @@ void PlantSelection_Init() {
 }
 
 void PlantSelection_Draw() {
+    float bgScale = HUD_SCALE * 1;
     Rectangle backgroundDst = {
         X_OFFSET,
         0,
-        GetScreenWidth() - X_OFFSET,
-        GetScreenHeight(),
+        BACKGROUND.width * bgScale,
+        BACKGROUND.height * bgScale,
     };
     Rectangle backgroundSrc = {
         0, 0, BACKGROUND.width, BACKGROUND.height};
     Vector2 origin = {0, 0};
-    NPatchInfo npi;
-    npi.source = backgroundSrc;
-    npi.bottom = 0;
-    npi.left = 0;
-    npi.right = 0;
-    npi.top = 0;
-    npi.layout = NPATCH_NINE_PATCH;
-    DrawTextureNPatch(BACKGROUND, npi, backgroundDst, origin, 0, WHITE);
+    DrawTexturePro(BACKGROUND, backgroundSrc, backgroundDst,
+                   origin, 0, WHITE);
     for (int i = 0; i < PlantButtonsSize; i++) {
         PlantButton *temp = PlantButtons[i];
         PlantButton_Draw(PlantButtons[i]);

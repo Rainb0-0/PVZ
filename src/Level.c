@@ -79,7 +79,7 @@ void SpawnZombie(bool flag) {
     float yOffset = GetPlayfieldRect().y;
     Vector2 cellDim = GetCellDimensions();
     Vector2 pos = {
-        GetScreenWidth(),
+        GetScreenWidth() + 50,
         row * cellDim.y + yOffset + cellDim.y / 2,
     };
     Zombie *nz = newZombie(pos, flag);
@@ -133,9 +133,9 @@ void Level_Draw() {
     float sw = GetScreenWidth();
     float sh = GetScreenHeight();
     float aspectRatio = sw / sh;
-    float height = currentLevel->background->height * 0.95;
+    float height = currentLevel->background->height;
     float width = height * aspectRatio;
-    Rectangle src = {220, 20, width, height};
+    Rectangle src = {0, 0, width, height};
     Rectangle dst = {0, 0, sw, sh};
     Vector2 origin = {0, 0};
     DrawTexturePro(*(currentLevel->background),

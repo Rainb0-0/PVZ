@@ -15,7 +15,7 @@ static char *IDLE_PATH = "Sprites/Peashooter/normal.png";
 static char *SHOOTING_PATH = "Sprites/Peashooter/shooting.png";
 static char *SHOOT_SOUND_PATH = "Sounds/Peashooter/";
 const float PEASHOOTER_HP = 300;
-const float PEASHOOTER_COOLDOWN = 1;
+const float PEASHOOTER_COOLDOWN = 0.9;
 // IDLE
 const int PEASHOOTER_IDLE_FRAME_WIDTH = 80;
 const int PEASHOOTER_IDLE_FRAME_HEIGHT = 80;

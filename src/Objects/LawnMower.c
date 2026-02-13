@@ -61,10 +61,10 @@ void LawnMower_Init() {
 
 void LawnMower_Draw(LawnMower *self) {
     int index = FindObjectIndex(self, false);
-    Vector2 offset = {-45, 0};
+    Vector2 offset = {-25, 25};
     if (self->active)
         offset.y += rand() % 3;
-    DrawObject(Objects[index], 1, offset, WHITE);
+    DrawObject(Objects[index], 0.8, offset, WHITE);
 }
 
 void LawnMower_Update(LawnMower *self) {

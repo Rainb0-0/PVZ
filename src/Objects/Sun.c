@@ -83,13 +83,13 @@ void Sun_Draw(Sun *self) {
 
 void Sun_Update(Sun *self) {
     float dt = GetFrameTime();
-    float xDistance = fabs(self->pos.x - self->dest.x);
-    float yDistance = fabs(self->pos.y - self->dest.y);
+    float xDistance = self->dest.x - self->pos.x;
+    float yDistance = self->dest.y - self->pos.y;
     if (self->alpha < 1 && self->isFalling) {
         self->alpha += 0.01;
     }
     if (self->isFalling) {
-        if (yDistance < POSITION_TOLERANCE.y)
+        if (fabs(yDistance) < POSITION_TOLERANCE.y)
             self->isFalling = false;
         self->vel.y = SUN_FALLING_VEL;
     } else if (self->isFalling == false && !self->isClicked) {
@@ -105,8 +105,8 @@ void Sun_Update(Sun *self) {
         self->vel.y = 0;
     }
     if (self->isClicked) {
-        if (xDistance < POSITION_TOLERANCE.x &&
-            yDistance < POSITION_TOLERANCE.y) {
+        if (fabs(xDistance) < POSITION_TOLERANCE.x &&
+            fabs(yDistance) < POSITION_TOLERANCE.y) {
             SunCount += SunWorth;
             RemoveObject(self, false);
         }
@@ -130,10 +130,10 @@ void Sun_Update(Sun *self) {
             self->isClicked == false) {
             self->isClicked = true;
             self->isFalling = false;
-            self->dest.x = GetScreenWidth() -
-                           (GetScreenWidth() - X_OFFSET) / 2;
-            self->dest.y = GetScreenHeight() -
-                           (GetScreenWidth() - X_OFFSET) / 2;
+            self->dest.x = SUN_BANK_RECATANGLE.x +
+                           SUN_BANK_RECATANGLE.width / 2;
+            self->dest.y = SUN_BANK_RECATANGLE.y +
+                           SUN_BANK_RECATANGLE.height / 2;
             PlayRandomOgg(SUN_COLLECT_SOUND_PATH, 1, true);
         }
     }

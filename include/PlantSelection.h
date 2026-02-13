@@ -23,6 +23,8 @@ typedef struct PlantButton {
 
 extern float X_OFFSET;
 
+extern Rectangle SUN_BANK_RECATANGLE;
+
 extern PlantButton *PlantButtons[];
 extern const int PlantButtonsSize;
 

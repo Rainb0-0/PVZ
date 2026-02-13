@@ -22,7 +22,7 @@ int main(void) {
     SetConfigFlags(FLAG_VSYNC_HINT |
                    FLAG_WINDOW_HIGHDPI |
                    FLAG_WINDOW_UNDECORATED);
-    InitWindow(960, 600, "Plants Vs. Zombies");
+    InitWindow(1000, 600, "Plants Vs. Zombies");
     SearchAndSetResourceDir("resources");
     SceneManager_Init(SCENE_MAINMENU);
     if (!IsAudioDeviceReady()) {
