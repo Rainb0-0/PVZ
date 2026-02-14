@@ -69,7 +69,7 @@ const float POTATO_PLANT_COOLDOWN = 30;
 const int WALLNUT_PRICE = 50;
 const float WALLNUT_PLANT_COOLDOWN = 30;
 const int JALAPENO_PRICE = 200;
-const float JALAPENO_PLANT_COOLDOWN = 30;
+const float JALAPENO_PLANT_COOLDOWN = 1;
 
 PlantButton *SelectedButton = NULL;
 
