@@ -17,6 +17,7 @@ static Texture2D NORMAL_DYING;
 static Texture2D FLAG_WALKING;
 static Texture2D FLAG_EATING;
 static Texture2D FLAG_DYING;
+static Texture2D CHARRED_TEXTURE;
 
 const float ZOMBIE_HP = 270;
 const Vector2 ZOMBIE_VEL = {-15, 0};
@@ -36,6 +37,8 @@ char *FLAG_WALKING_PATH = "Sprites/FlagZombie/walking.png";
 char *FLAG_EATING_PATH = "Sprites/FlagZombie/eating.png";
 char *FLAG_DYING_PATH = "Sprites/FlagZombie/dying.png";
 
+const char *CHARRED_PATH = "Sprites/Burnt.png";
+
 // WALKING
 const int ZOMBIE_WALKING_FRAME_WIDTH = 148;
 const int ZOMBIE_WALKING_FRAME_HEIGHT = 148;
@@ -54,6 +57,12 @@ const int ZOMBIE_DYING_FRAME_HEIGHT = 148;
 const int ZOMBIE_DYING_MAX_FRAMES = 165;
 const int ZOMBIE_DYING_TEXTURE_ROWS = 11;
 const float ZOMBIE_DYING_FRAME_TIME = 0.01;
+
+const int CHARRED_FRAME_WIDTH = 148;
+const int CHARRED_FRAME_HEIGHT = 148;
+const int CHARRED_MAX_FRAMES = 172;
+const int CHARRED_TEXTURE_ROWS = 4;
+const float CHARRED_FRAME_TIME = 0.01;
 
 // WALKING
 State WALKING = {
@@ -101,6 +110,15 @@ State DYING_FLAG = {
     ZOMBIE_DYING_FRAME_TIME,
     &FLAG_DYING};
 
+State CHARRED = {
+    CHARRED_FRAME_WIDTH,
+    CHARRED_FRAME_HEIGHT,
+    CHARRED_MAX_FRAMES,
+    CHARRED_TEXTURE_ROWS,
+    CHARRED_FRAME_TIME,
+    &CHARRED_TEXTURE,
+};
+
 Zombie *newZombie(Vector2 pos, bool isFlag) {
     Zombie *z = (Zombie *)malloc(sizeof(Zombie));
     z->hp = ZOMBIE_HP;
@@ -126,6 +144,10 @@ Zombie *newZombie(Vector2 pos, bool isFlag) {
 
 void ChangeZombieState(Zombie *self) {
     self->frameIndex = 0;
+    if (self->hp == CHARRED_DEATH) {
+        self->state = &CHARRED;
+        return;
+    }
     if (self->isFlagZombie) {
         if (self->hp <= 0) {
             self->state = &DYING_FLAG;
@@ -145,7 +167,15 @@ void ChangeZombieState(Zombie *self) {
     }
 }
 
+void KillZombie(Zombie *self, ZOMBIE_DEATH_HP hp) {
+    self->hp = hp;
+}
+
 void DamageZombie(Zombie *self, float damage) {
+    if (self->hp <= damage) {
+        KillZombie(self, NORMAL_DEATH);
+        return;
+    }
     self->hp -= damage;
 }
 
@@ -167,6 +197,9 @@ void Zombie_Init() {
     }
     if (!IsTextureValid(FLAG_DYING)) {
         FLAG_DYING = LoadTexture(FLAG_DYING_PATH);
+    }
+    if (!IsTextureValid(CHARRED_TEXTURE)) {
+        CHARRED_TEXTURE = LoadTexture(CHARRED_PATH);
     }
     CacheAllOgg(ZOMBIE_DIE_SOUND_PATH);
     CacheAllOgg(ZOMBIE_GROAN_SOUND_PATH);
@@ -191,7 +224,8 @@ void Zombie_Update(Zombie *self) {
         return;
     Vector2 mousePos = GetMousePosition();
     if (self->hp <= 0 &&
-        !(self->state == &DYING || self->state == &DYING_FLAG)) {
+        !(self->state == &DYING || self->state == &DYING_FLAG ||
+          self->state == &CHARRED)) {
         ChangeZombieState(self);
         PlayRandomOgg(ZOMBIE_DIE_SOUND_PATH, 1, true);
         int chance = rand() % 2;

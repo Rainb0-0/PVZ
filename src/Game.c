@@ -166,7 +166,7 @@ void KillZombiesInCircle(Vector2 center, float radius) {
             float dy = current->pos.y - center.y;
             float distance = sqrt(dx * dx + dy * dy);
             if (distance <= radius) {
-                current->hp = -1;
+                KillZombie(current, CHARRED_DEATH);
             }
         }
     }
@@ -182,7 +182,7 @@ void KillZombiesInRow(Vector2 pos) {
             int curRow = GetRowIndex(current->pos.y);
             if (row == curRow &&
                 IsPositionInsideRect(GetPlayfieldRect(), current->pos)) {
-                current->hp = -1;
+                KillZombie(current, CHARRED_DEATH);
             }
         }
     }

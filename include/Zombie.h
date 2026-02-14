@@ -11,10 +11,10 @@ extern State EATING_FLAG;
 extern State DYING;
 extern State DYING_FLAG;
 
-// typedef enum ZOMBIE_DEATH_HP {
-//     NORMAL = -100,
-//     BURNT = -200,
-// };
+typedef enum ZOMBIE_DEATH_HP {
+    NORMAL_DEATH = -100,
+    CHARRED_DEATH = -200,
+} ZOMBIE_DEATH_HP;
 
 typedef struct Zombie {
     float hp;
@@ -36,6 +36,7 @@ void Zombie_Init();
 Zombie *newZombie(Vector2 pos, bool isFlag);
 void ChangeZombieState(Zombie *self);
 void DamageZombie(Zombie *self, float damage);
+void KillZombie(Zombie *self, ZOMBIE_DEATH_HP hp);
 
 void Zombie_Draw(Zombie *self);
 void Zombie_Update(Zombie *self);
