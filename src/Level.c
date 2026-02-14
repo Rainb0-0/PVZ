@@ -14,7 +14,7 @@ const char *DAY_PATH = "Sprites/Levels/day.png";
 const char *NIGHT_PATH = "Sprites/Levels/night.png";
 
 const float SUN_SPAWN_COOLDOWN = 10;
-const float ZOMBIE_SPAWN_COOLDOWN = 1;
+const float ZOMBIE_SPAWN_COOLDOWN = 10;
 
 Level *currentLevel;
 

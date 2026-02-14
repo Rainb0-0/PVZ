@@ -222,6 +222,11 @@ void Zombie_Draw(Zombie *self) {
 void Zombie_Update(Zombie *self) {
     if (self->active == false)
         return;
+    if (IsKeyDown(KEY_K)) {
+        self->vel.x = ZOMBIE_VEL.x * 5;
+    } else {
+        self->vel.x = ZOMBIE_VEL.x;
+    }
     Vector2 mousePos = GetMousePosition();
     if (self->hp <= 0 &&
         !(self->state == &DYING || self->state == &DYING_FLAG ||
@@ -254,7 +259,7 @@ void Zombie_Update(Zombie *self) {
         if (PlantAtPosition(self->pos)) {
             ChangeZombieState(self);
         }
-        if (self->pos.x + self->state->frameWidth / 2 < 0) {
+        if (self->pos.x < 0) {
             Game_End(false);
         }
         float dt = GetFrameTime();
