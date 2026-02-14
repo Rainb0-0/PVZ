@@ -1,6 +1,7 @@
 #include "Shop.h"
 #include "Font.h"
 #include "Game.h"
+#include "Jalapeno.h"
 #include "MainMenu.h"
 #include "Plant.h"
 #include "PlantSelection.h"
@@ -30,6 +31,7 @@ const int SUNFLOWER_SHOP_PRICE = 0;
 const int POTATO_SHOP_PRICE = 5;
 const int CHOMPER_SHOP_PRICE = 20;
 const int WALLNUT_SHOP_PRICE = 10;
+const int JALAPENO_SHOP_PRICE = 30;
 
 FILE *SHOP_FILE;
 const char *SHOP_FILE_PATH = "shop.bin";
@@ -108,12 +110,23 @@ ShopButton ShopWallnutButton = {
     WALLNUT,
 };
 
-ShopButton *ShopButtons[PLANTCOUNT] = {
-    &ShopPeashooterButton,
-    &ShopSunflowrButton,
-    &ShopPotatoButton,
-    &ShopWallnutButton,
-    &ShopChomperButton,
+ShopButton ShopJalapenoButton = {
+    &JALAPENO_TEXTURE,
+    &JALAPENO_FRAME_WIDTH,
+    &JALAPENO_FRAME_HEIGHT,
+    false,
+    JALAPENO_SHOP_PRICE,
+    JALAPENO,
+};
+
+ShopButton *
+    ShopButtons[PLANTCOUNT] = {
+        &ShopPeashooterButton,
+        &ShopSunflowrButton,
+        &ShopPotatoButton,
+        &ShopWallnutButton,
+        &ShopChomperButton,
+        &ShopJalapenoButton,
 };
 
 // TODO add marigold

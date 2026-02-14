@@ -3,6 +3,7 @@
 
 #include "Chomper.h"
 #include "Coin.h"
+#include "Jalapeno.h"
 #include "LawnMower.h"
 #include "Pea.h"
 #include "Peashooter.h"
@@ -49,6 +50,7 @@ Object *newPeaObject(Pea *self);
 Object *newPotatoObject(Potato *self);
 Object *newPeashooterObject(Peashooter *self);
 Object *newWallnutObject(Wallnut *self);
+Object *newJalapenoObject(Jalapeno *self);
 Object *newChomperObject(Chomper *self);
 Object *newSunflowerObject(Sunflower *self);
 Object *newSunObject(Sun *self);

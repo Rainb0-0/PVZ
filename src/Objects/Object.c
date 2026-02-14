@@ -187,6 +187,20 @@ Object *newWallnutObject(Wallnut *self) {
     return so;
 }
 
+Object *newJalapenoObject(Jalapeno *self) {
+    Object *jo = (Object *)malloc(sizeof(Object));
+    Plant *jp = newJalapenoPlant(self);
+    jo->draw = self->draw;
+    jo->update = self->update;
+    jo->frameIndex = &self->frameIndex;
+    jo->state = &self->state;
+    jo->frameTime = &self->frameTime;
+    jo->type = PLANT;
+    jo->self = jp;
+    jo->pos = &self->pos;
+    return jo;
+}
+
 Object *newSunflowerObject(Sunflower *self) {
     Object *so = (Object *)malloc(sizeof(Object));
     Plant *pla = newSunflowerPlant(self);

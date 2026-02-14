@@ -172,6 +172,21 @@ void KillZombiesInCircle(Vector2 center, float radius) {
     }
 }
 
+void KillZombiesInRow(Vector2 pos) {
+    int row = GetRowIndex(pos.y);
+    for (int i = 0; i < ObjectsCount; i++) {
+        if (Objects[i] == NULL)
+            continue;
+        if (Objects[i]->type == ZOMBIE) {
+            Zombie *current = (Zombie *)Objects[i]->self;
+            int curRow = GetRowIndex(current->pos.y);
+            if (row == curRow) {
+                current->hp = -1;
+            }
+        }
+    }
+}
+
 typedef struct OverlayButton {
     Texture2D *texture;
     void (*onClick)();

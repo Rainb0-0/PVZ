@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "Game.h"
 #include "GameGrid.h"
+#include "Jalapeno.h"
 #include "Level.h"
 #include "MainMenu.h"
 #include "Music.h"
@@ -67,6 +68,8 @@ const int POTATO_PRICE = 25;
 const float POTATO_PLANT_COOLDOWN = 30;
 const int WALLNUT_PRICE = 50;
 const float WALLNUT_PLANT_COOLDOWN = 30;
+const int JALAPENO_PRICE = 200;
+const float JALAPENO_PLANT_COOLDOWN = 1;
 
 PlantButton *SelectedButton = NULL;
 
@@ -145,6 +148,21 @@ PlantButton WallnutButton = {
     WALLNUT_PLANT_COOLDOWN,
 };
 
+PlantButton JalapenoButton = {
+    &JALAPENO_TEXTURE,
+    &JALAPENO_FRAME_WIDTH,
+    &JALAPENO_FRAME_HEIGHT,
+    (Object * (*)(void *)) newJalapenoObject,
+    (void *(*)(Vector2))newJalapeno,
+    JALAPENO_PRICE,
+    0,
+    false,
+    &IsPlantUnlocked[JALAPENO],
+    true,
+    false,
+    JALAPENO_PLANT_COOLDOWN,
+};
+
 PlantButton *
     PlantButtons[] = {
         &SunflowerButton,
@@ -152,6 +170,7 @@ PlantButton *
         &PotatoButton,
         &WallnutButton,
         &ChomperButton,
+        &JalapenoButton,
 };
 
 const int PlantButtonsSize = sizeof(PlantButtons) / sizeof(PlantButtons[0]);

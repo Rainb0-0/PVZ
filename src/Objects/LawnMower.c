@@ -68,7 +68,7 @@ void LawnMower_Draw(LawnMower *self) {
 }
 
 void LawnMower_Update(LawnMower *self) {
-    if (GetScreenWidth() < self->pos.x) {
+    if (GetScreenWidth() + 100 < self->pos.x) {
         RemoveObject(self, false);
         calcluateWeight(self->pos.y);
         return;

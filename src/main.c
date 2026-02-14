@@ -1,5 +1,6 @@
 #include "Chomper.h"
 #include "Font.h"
+#include "Jalapeno.h"
 #include "LawnMower.h"
 #include "LevelSelector.h"
 #include "Music.h"
@@ -36,6 +37,7 @@ int main(void) {
     Potato_Init();
     Sunflower_Init();
     Pea_Init();
+    Jalapeno_Init();
     Sun_Init();
     Coin_Init();
     Wallnut_Init();

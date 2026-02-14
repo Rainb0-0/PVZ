@@ -31,6 +31,7 @@ bool IsPositionInsideCircle(Vector2 center, float radius, Vector2 pos);
 
 void DamagePlant(Plant *plant, float damage);
 void KillZombiesInCircle(Vector2 center, float radius);
+void KillZombiesInRow(Vector2 pos);
 
 void Game_Init();
 void Game_Draw();

@@ -142,6 +142,31 @@
       "-std=c++17",
       "-c",
       "-o",
+      "obj/x64/Debug/PVZ/Jalapeno.o",
+      "../../include/Jalapeno.h"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/include/Jalapeno.h",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Jalapeno.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
       "obj/x64/Debug/PVZ/LawnMower.o",
       "../../include/LawnMower.h"
     ],
@@ -873,6 +898,31 @@
     "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
     "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/Objects/Plants/Chomper.c",
     "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Chomper.o"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-MD",
+      "-MP",
+      "-DDEBUG",
+      "-DPLATFORM_DESKTOP",
+      "-DGRAPHICS_API_OPENGL_33",
+      "-D_GLFW_X11",
+      "-I../../src",
+      "-I../../include",
+      "-I../external/raylib-master/src",
+      "-m64",
+      "-Wshadow",
+      "-g",
+      "-std=c++17",
+      "-c",
+      "-o",
+      "obj/x64/Debug/PVZ/Jalapeno.o",
+      "../../src/Objects/Plants/Jalapeno.c"
+    ],
+    "directory": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files",
+    "file": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/src/Objects/Plants/Jalapeno.c",
+    "output": "/home/rainb0-0/code/UNI/TERM1/BP/PVZ/build/build_files/obj/x64/Debug/PVZ/Jalapeno.o"
   },
   {
     "arguments": [
