@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Animation.h"
 #include "Chomper.h"
 #include "Coin.h"
 #include "Game.h"
@@ -238,5 +239,18 @@ Object *newCoinObject(Coin *self) {
     so->frameTime = &self->frameTime;
     so->pos = &self->pos;
     so->self = self;
+    return so;
+}
+
+Object *newAnimationObject(Animation *self) {
+    Object *so = (Object *)malloc(sizeof(Object));
+    so->self = self;
+    so->pos = &self->pos;
+    so->draw = self->draw;
+    so->update = self->update;
+    so->frameIndex = &self->frameIndex;
+    so->frameTime = &self->frameTime;
+    so->state = &self->state;
+    so->type = ANIMATION;
     return so;
 }

@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "Animation.h"
 #include "Chomper.h"
 #include "Coin.h"
 #include "Jalapeno.h"
@@ -22,6 +23,7 @@ typedef enum ObjectType {
     SUN,
     ZOMBIE,
     COIN,
+    ANIMATION,
     TYPECOUNT
 } ObjectType;
 
@@ -55,5 +57,6 @@ Object *newChomperObject(Chomper *self);
 Object *newSunflowerObject(Sunflower *self);
 Object *newSunObject(Sun *self);
 Object *newCoinObject(Coin *self);
+Object *newAnimationObject(Animation *self);
 
 #endif

@@ -180,7 +180,8 @@ void KillZombiesInRow(Vector2 pos) {
         if (Objects[i]->type == ZOMBIE) {
             Zombie *current = (Zombie *)Objects[i]->self;
             int curRow = GetRowIndex(current->pos.y);
-            if (row == curRow) {
+            if (row == curRow &&
+                IsPositionInsideRect(GetPlayfieldRect(), current->pos)) {
                 current->hp = -1;
             }
         }

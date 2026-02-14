@@ -11,6 +11,11 @@ extern State EATING_FLAG;
 extern State DYING;
 extern State DYING_FLAG;
 
+// typedef enum ZOMBIE_DEATH_HP {
+//     NORMAL = -100,
+//     BURNT = -200,
+// };
+
 typedef struct Zombie {
     float hp;
     float attackDamage;
