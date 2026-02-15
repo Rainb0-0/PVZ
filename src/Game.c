@@ -83,7 +83,7 @@ Zombie *ZombieAtPosition(Vector2 pos) {
             float xDistance = fabs(current->pos.x - pos.x);
             float yDistance = fabs(current->pos.y - pos.y);
             if (xDistance < POSITION_TOLERANCE.x &&
-                yDistance < POSITION_TOLERANCE.y &&
+                GetRowIndex(pos.y) == GetRowIndex(current->pos.y) &&
                 0 < current->hp)
                 return current;
         }
@@ -118,7 +118,7 @@ Plant *PlantAtPosition(Vector2 pos) {
             float xDistance = fabs(Objects[i]->pos->x - pos.x);
             float yDistance = fabs(Objects[i]->pos->y - pos.y);
             if (xDistance < POSITION_TOLERANCE.x * 4 &&
-                yDistance < POSITION_TOLERANCE.y)
+                GetRowIndex(pos.y) == GetRowIndex(Objects[i]->pos->y))
                 return (Plant *)Objects[i]->self;
         }
     }
